@@ -1,0 +1,11 @@
+# dart
+.pub
+packages
+pubspec.lock
+
+# docs
+dartdoc-viewer/
+
+# coverage
+lcov_coverage.lcov
+lcov_report/
