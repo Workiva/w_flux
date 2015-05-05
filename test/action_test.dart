@@ -37,16 +37,20 @@ void main() {
       action.dispatch('990 guerrero');
     });
 
-    test('should support other stream methods', () {
+    test('should support other stream methods', () async {
+      Completer completer = new Completer();
 
+      // The point of this test is to exercise the `where` method which is made available
+      // on an action by extending stream and overriding `listen`
       Stream<String> filteredStream = action.where((value) => value == 'water');
       expectAsync(filteredStream.listen)((payload) {
         expect(payload, equals('water'));
+        completer.complete();
       });
 
       // Oil doesn't pass through the filter
-      action.dispatch('oil');
       action.dispatch('water');
+      return completer.future;
     });
 
   });
