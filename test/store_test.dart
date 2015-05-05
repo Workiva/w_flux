@@ -44,7 +44,6 @@ void main() {
         completer.complete();
       });
 
-      // On first trigger name is Evan Weible, which doesn't pass through the filter
       _store.trigger();
       return completer.future;
     });

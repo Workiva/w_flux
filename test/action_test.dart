@@ -48,7 +48,6 @@ void main() {
         completer.complete();
       });
 
-      // Oil doesn't pass through the filter
       action.dispatch('water');
       return completer.future;
     });
