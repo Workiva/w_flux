@@ -14,7 +14,7 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
 
   List<StreamSubscription> _subscriptions = [];
 
-  componentWillMount() {
+  componentDidMount(rootNode) {
     getStoreHandlers().forEach((store, handler) {
       StreamSubscription subscription = store.listen(handler);
       _subscriptions.add(subscription);
@@ -23,9 +23,17 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
 
   componentWillUnmount() {
     _subscriptions.forEach((StreamSubscription subscription) {
-      subscription.cancel();
+      if (subscription != null) {
+        subscription.cancel();
+      }
     });
   }
 
-  Map<Store, Function> getStoreHandlers();
+  Map<Store, Function> getStoreHandlers() {
+    return {};
+  }
+
+  void addSubscription(StreamSubscription subscription) {
+    _subscriptions.add(subscription);
+  }
 }
