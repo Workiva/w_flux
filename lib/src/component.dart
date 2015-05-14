@@ -14,7 +14,7 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
 
   List<StreamSubscription> _subscriptions = [];
 
-  componentDidMount(rootNode) {
+  componentWillMount() {
     getStoreHandlers().forEach((store, handler) {
       StreamSubscription subscription = store.listen(handler);
       _subscriptions.add(subscription);
