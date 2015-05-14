@@ -3,6 +3,7 @@ library w_flux.test.store_test;
 import 'dart:async';
 
 import 'package:w_flux/w_flux.dart';
+import 'package:rate_limit/rate_limit.dart';
 import 'package:test/test.dart';
 
 
@@ -46,6 +47,24 @@ void main() {
 
       _store.trigger();
       return completer.future;
+    });
+
+    test('should support stream transforms', () {
+
+      // ensure that multiple trigger executions only emits 1 throttled trigger to external listeners
+      store = new Store(transformer: new Throttler(const Duration(milliseconds: 30)));
+      num counter = 0;
+      expectAsync(store.listen)((payload) {
+        counter++;
+        expect(payload, equals(store));
+        expect(counter, equals(1));
+      });
+
+      store.trigger();
+      store.trigger();
+      store.trigger();
+      store.trigger();
+      store.trigger();
     });
 
   });
