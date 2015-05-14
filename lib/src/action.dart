@@ -3,7 +3,7 @@ library w_flux.action;
 import 'dart:async';
 
 
-class Action<T> extends Stream<T> {
+class Action<T> extends Stream<T> implements Function {
 
   Stream<T> _stream;
   StreamController<T> _streamController;
@@ -11,6 +11,10 @@ class Action<T> extends Stream<T> {
   Action() {
     _streamController = new StreamController<T>();
     _stream = _streamController.stream.asBroadcastStream();
+  }
+
+  void call([T payload]) {
+    dispatch(payload);
   }
 
   void dispatch([T payload]) {

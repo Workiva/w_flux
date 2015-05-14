@@ -52,5 +52,13 @@ void main() {
       return completer.future;
     });
 
+    test('should dispatch by default when called', () {
+      expectAsync(action.listen)((payload) {
+        expect(payload, equals('990 guerrero'));
+      });
+
+      action('990 guerrero');
+    });
+
   });
 }
