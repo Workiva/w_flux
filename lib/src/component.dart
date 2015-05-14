@@ -23,9 +23,15 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
 
   componentWillUnmount() {
     _subscriptions.forEach((StreamSubscription subscription) {
-      subscription.cancel();
+      if (subscription != null) {
+        subscription.cancel();
+      }
     });
   }
 
-  Map<Store, Function> getStoreHandlers();
+  Map<Store, Function> getStoreHandlers() => {};
+
+  void addSubscription(StreamSubscription subscription) {
+    _subscriptions.add(subscription);
+  }
 }
