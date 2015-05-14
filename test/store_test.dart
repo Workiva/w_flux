@@ -48,5 +48,35 @@ void main() {
       return completer.future;
     });
 
+    test('should trigger in response to an action', () {
+      Action _action = new Action();
+      store.triggerOnAction(_action);
+      expectAsync(store.listen)((payload) {
+        expect(payload, equals(store));
+      });
+      _action.dispatch();
+    });
+
+    test('should execute a given method and then trigger in response to an action', () {
+      Action _action = new Action();
+      num counter = 0;
+      store.triggerOnAction(_action, (_) => counter++);
+      expectAsync(store.listen)((payload) {
+        expect(payload, equals(store));
+        expect(counter, equals(1));
+      });
+      _action.dispatch();
+    });
+
+    test('should execute a given method and then trigger in response to an action with payload', () {
+      Action<num> _action = new Action<num>();
+      num counter = 0;
+      store.triggerOnAction(_action, (payload) => counter = payload);
+      expectAsync(store.listen)((payload) {
+        expect(payload, equals(store));
+        expect(counter, equals(17));
+      });
+      _action.dispatch(17);
+    });
   });
 }
