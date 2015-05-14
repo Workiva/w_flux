@@ -25,6 +25,19 @@ class Store extends Stream<Store> {
     _streamController.add(this);
   }
 
+  triggerOnAction(Stream action, [void onAction(T payload)]) {
+    if (onAction != null) {
+      action.listen((payload) {
+        onAction(payload);
+        trigger();
+      });
+    } else {
+      action.listen((_) {
+        trigger();
+      });
+    }
+  }
+
   StreamSubscription<Store> listen(void onData(Store event), { Function onError, void onDone(), bool cancelOnError}) {
     return _stream.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
