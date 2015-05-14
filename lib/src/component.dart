@@ -29,9 +29,7 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
     });
   }
 
-  Map<Store, Function> getStoreHandlers() {
-    return {};
-  }
+  Map<Store, Function> getStoreHandlers() => {};
 
   void addSubscription(StreamSubscription subscription) {
     _subscriptions.add(subscription);
