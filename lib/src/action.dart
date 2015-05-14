@@ -13,6 +13,10 @@ class Action<T> extends Stream<T> {
     _stream = _streamController.stream.asBroadcastStream();
   }
 
+  void call([T payload]) {
+    dispatch(payload);
+  }
+
   void dispatch([T payload]) {
     _streamController.add(payload);
   }
