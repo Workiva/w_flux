@@ -8,9 +8,17 @@ class Store extends Stream<Store> {
   StreamController<Store> _streamController;
   Stream<Store> _stream;
 
-  Store() {
+  Store({StreamTransformer<T, dynamic> transformer}) {
     _streamController = new StreamController<Store>();
-    _stream = _streamController.stream.asBroadcastStream();
+
+    // apply a transform to the stream if supplied
+    if (transformer != null) {
+      _stream = _streamController.stream
+      .transform(transformer)
+      .asBroadcastStream();
+    } else {
+      _stream = _streamController.stream.asBroadcastStream();
+    }
   }
 
   void trigger() {
