@@ -6,14 +6,11 @@ import 'package:w_flux/w_flux.dart';
 import 'package:rate_limit/rate_limit.dart';
 import 'package:test/test.dart';
 
-
 class ExtendingStore extends Store {
   String name = 'Max Peterson';
 }
 
-
 void main() {
-
   group('Store', () {
     Store store;
 
@@ -87,7 +84,8 @@ void main() {
       _action.dispatch();
     });
 
-    test('should execute a given method and then trigger in response to an action with payload', () {
+    test('should execute a given method and then trigger in response to an action with payload',
+        () {
       Action<num> _action = new Action<num>();
       num counter = 0;
       store.triggerOnAction(_action, (payload) => counter = payload);

@@ -6,9 +6,7 @@ import 'package:react/react.dart' as react;
 
 import './store.dart';
 
-
 abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
-
   ActionsT get actions => this.props['actions'];
   StoresT get stores => this.props['stores'];
 
