@@ -2,9 +2,7 @@ library w_flux.store;
 
 import 'dart:async';
 
-
 class Store extends Stream<Store> {
-
   StreamController<Store> _streamController;
   Stream<Store> _stream;
 
@@ -13,9 +11,7 @@ class Store extends Stream<Store> {
 
     // apply a transform to the stream if supplied
     if (transformer != null) {
-      _stream = _streamController.stream
-      .transform(transformer)
-      .asBroadcastStream();
+      _stream = _streamController.stream.transform(transformer).asBroadcastStream();
     } else {
       _stream = _streamController.stream.asBroadcastStream();
     }
@@ -38,8 +34,8 @@ class Store extends Stream<Store> {
     }
   }
 
-  StreamSubscription<Store> listen(void onData(Store event), { Function onError, void onDone(), bool cancelOnError}) {
+  StreamSubscription<Store> listen(void onData(Store event),
+      {Function onError, void onDone(), bool cancelOnError}) {
     return _stream.listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
-
 }

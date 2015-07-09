@@ -5,9 +5,7 @@ import 'dart:async';
 import 'package:w_flux/w_flux.dart';
 import 'package:test/test.dart';
 
-
 void main() {
-
   group('Action', () {
     Action<String> action;
 
@@ -59,6 +57,5 @@ void main() {
 
       action('990 guerrero');
     });
-
   });
 }
