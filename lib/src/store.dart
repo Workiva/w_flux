@@ -27,8 +27,8 @@ class Store extends Stream<Store> {
 
   triggerOnAction(Stream action, [void onAction(T payload)]) {
     if (onAction != null) {
-      action.listen((payload) {
-        onAction(payload);
+      action.listen((payload) async {
+        await onAction(payload);
         trigger();
       });
     } else {
