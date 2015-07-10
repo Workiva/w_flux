@@ -6,3 +6,4 @@ runner_image: docker.webfilings.org/devops/smithy-runner-dart1.11.0:3.2.0
 script:
   - xvfb-run -s '-screen 0 1024x768x24' ./tool/test.sh
   - ./tool/dartfmt.sh -e
+  - ./tool/analyze.sh
