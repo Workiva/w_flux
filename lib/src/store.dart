@@ -6,7 +6,7 @@ class Store extends Stream<Store> {
   StreamController<Store> _streamController;
   Stream<Store> _stream;
 
-  Store({StreamTransformer<T, dynamic> transformer}) {
+  Store({StreamTransformer transformer}) {
     _streamController = new StreamController<Store>();
 
     // apply a transform to the stream if supplied
@@ -21,7 +21,7 @@ class Store extends Stream<Store> {
     _streamController.add(this);
   }
 
-  triggerOnAction(Stream action, [void onAction(T payload)]) {
+  triggerOnAction(Stream action, [void onAction(payload)]) {
     if (onAction != null) {
       action.listen((payload) async {
         await onAction(payload);
