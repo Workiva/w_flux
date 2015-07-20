@@ -6,9 +6,9 @@ import 'dart:async';
 ///
 /// An [Action] manages a collection of listeners and the manner of
 /// their invocation. It *does not* rely on [Stream] for managing listeners. By
-/// managing it's own listeners, an [Action] can track a [Future] that
-/// completes when all registered listeners have completed. This allows
-/// consumers to use `await` to wait for an action to finish processing.
+/// managing its own listeners, an [Action] can track a [Future] that completes
+/// when all registered listeners have completed. This allows consumers to use
+/// `await` to wait for an action to finish processing.
 ///
 ///     var asyncListenerCompleted = false;
 ///     action.listen((_) async {
@@ -41,7 +41,7 @@ class Action<T> implements Function {
     // degradation when dispatching actions using this action implementation vs
     // a [Stream]-based action implementation. At smaller sample sizes this
     // implementation slows down in comparison, yielding average times of 0.1 ms
-    // for w_flux actions vs. 0.14 ms for awaitable actions.
+    // for stream-based actions vs. 0.14 ms for this action implementation.
     return Future.wait(_listeners.map((l) => new Future.microtask(() => l(payload))));
   }
 
