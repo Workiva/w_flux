@@ -18,26 +18,11 @@ void main() {
       store = new Store();
     });
 
-    test('should inherit from Stream', () {
-      expect(store is Stream, isTrue);
-    });
-
     test('should trigger with itself as the payload', () {
       store.listen(expectAsync((payload) {
         expect(payload, equals(store));
       }));
       store.trigger();
-    });
-
-    test('should support other stream methods', () {
-      // The point of this test is to exercise the `where` method which is made available
-      // on a store by extending stream and overriding `listen`
-      ExtendingStore _store = new ExtendingStore();
-      Stream<Store> filteredStream = _store.where((payload) => payload.name == 'Max Peterson');
-      filteredStream.listen(expectAsync((ExtendingStore payload) {
-        expect(payload.name, equals('Max Peterson'));
-      }));
-      _store.trigger();
     });
 
     test('should support stream transforms', () {
