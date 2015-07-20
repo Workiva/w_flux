@@ -141,7 +141,9 @@ void main() {
         Completer asyncCompleter;
         var action = new Action();
         action.listen((_) => syncCompleter.complete());
-        action.listen((_) async { asyncCompleter.complete(); });
+        action.listen((_) async {
+          asyncCompleter.complete();
+        });
         stopwatch.start();
         for (var i = 0; i < sampleSize; i++) {
           syncCompleter = new Completer();
@@ -152,7 +154,8 @@ void main() {
         stopwatch.stop();
         var averageStreamDispatchTime = stopwatch.elapsedMicroseconds / sampleSize / 1000.0;
 
-        print('awaitable action (ms): $averageActionDispatchTime; stream-based action (ms): $averageStreamDispatchTime');
+        print('awaitable action (ms): $averageActionDispatchTime; '
+            'stream-based action (ms): $averageStreamDispatchTime');
       }, skip: true);
     });
   });
