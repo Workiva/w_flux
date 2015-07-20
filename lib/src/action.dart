@@ -39,9 +39,9 @@ class Action<T> implements Function {
     //
     // Performance benchmarks over 10,000 samples show no performance
     // degradation when dispatching actions using this action implementation vs
-    // the [Stream]-based action implementation in w_flux. At smaller sample
-    // sizes this implementation slows down in comparison, yielding average
-    // times of 0.1 ms for w_flux actions vs. 0.14 ms for awaitable actions.
+    // a [Stream]-based action implementation. At smaller sample sizes this
+    // implementation slows down in comparison, yielding average times of 0.1 ms
+    // for w_flux actions vs. 0.14 ms for awaitable actions.
     return Future.wait(_listeners.map((l) => new Future.microtask(() => l(payload))));
   }
 
