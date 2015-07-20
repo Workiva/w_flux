@@ -63,16 +63,3 @@ class ActionSubscription {
     }
   }
 }
-
-/// An event that wraps payloads sent through a [Action].
-///
-/// This object facilitates the following:
-/// - actions can be identified when filtering the central [Stream].
-/// - a future can be resolved after an action is "complete".
-class ActionEvent<T> {
-  final Action action;
-  final Completer completer = new Completer();
-  final T originalPayload;
-
-  ActionEvent(this.action, this.originalPayload);
-}
