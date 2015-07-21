@@ -64,7 +64,7 @@ void main() {
       store.listen(expectAsync((payload) {
         expect(payload, equals(store));
       }));
-      _action.dispatch();
+      _action();
     });
 
     test('should execute a given method and then trigger in response to an action', () {
@@ -73,7 +73,7 @@ void main() {
       store.listen(expectAsync((payload) {
         expect(payload, equals(store));
       }));
-      _action.dispatch();
+      _action();
     });
 
     test('should execute a given async method and then trigger in response to an action', () {
@@ -88,7 +88,7 @@ void main() {
         expect(payload, equals(store));
         expect(afterTimer, equals(true));
       }));
-      _action.dispatch();
+      _action();
     });
 
     test('should execute a given method and then trigger in response to an action with payload',
@@ -100,7 +100,7 @@ void main() {
         expect(payload, equals(store));
         expect(counter, equals(17));
       }));
-      _action.dispatch(17);
+      _action(17);
     });
   });
 }

@@ -2,6 +2,8 @@ library w_flux.store;
 
 import 'dart:async';
 
+import 'package:w_flux/src/action.dart';
+
 class Store extends Stream<Store> {
   StreamController<Store> _streamController;
   Stream<Store> _stream;
@@ -21,7 +23,7 @@ class Store extends Stream<Store> {
     _streamController.add(this);
   }
 
-  triggerOnAction(Stream action, [void onAction(payload)]) {
+  triggerOnAction(Action action, [void onAction(payload)]) {
     if (onAction != null) {
       action.listen((payload) async {
         await onAction(payload);
