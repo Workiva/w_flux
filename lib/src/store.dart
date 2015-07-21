@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:w_flux/src/action.dart';
 
-class Store extends Stream<Store> {
+class Store {
   StreamController<Store> _streamController;
   Stream<Store> _stream;
 
