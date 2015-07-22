@@ -27,8 +27,17 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
     });
   }
 
+  List<Store> superImportantStores() {
+    if (stores is Store) {
+      return [stores];
+    } else {
+      return [];
+    }
+  }
+
   Map<Store, Function> getStoreHandlers() {
-    return {stores: (_) => redraw()};
+    Function defaultCallback = (_) => redraw();
+    return new Map.fromIterable(superImportantStores(), value: (_) => defaultCallback);
   }
 
   void addSubscription(StreamSubscription subscription) {
