@@ -13,7 +13,10 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
   List<StreamSubscription> _subscriptions = [];
 
   componentWillMount() {
-    getStoreHandlers().forEach((store, handler) {
+    Map<Store, Function> handlers =
+        new Map.fromIterable(redrawOn(), value: (_) => (_) => redraw())
+      ..addAll(getStoreHandlers());
+    handlers.forEach((store, handler) {
       StreamSubscription subscription = store.listen(handler);
       _subscriptions.add(subscription);
     });
@@ -27,7 +30,7 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
     });
   }
 
-  List<Store> getStores() {
+  List<Store> redrawOn() {
     if (stores is Store) {
       return [stores];
     } else {
@@ -36,8 +39,7 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
   }
 
   Map<Store, Function> getStoreHandlers() {
-    Function defaultCallback = (_) => redraw();
-    return new Map.fromIterable(getStores(), value: (_) => defaultCallback);
+    return {};
   }
 
   void addSubscription(StreamSubscription subscription) {
