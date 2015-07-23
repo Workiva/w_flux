@@ -13,8 +13,7 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
   List<StreamSubscription> _subscriptions = [];
 
   componentWillMount() {
-    Map<Store, Function> handlers =
-        new Map.fromIterable(redrawOn(), value: (_) => (_) => redraw())
+    Map<Store, Function> handlers = new Map.fromIterable(redrawOn(), value: (_) => (_) => redraw())
       ..addAll(getStoreHandlers());
     handlers.forEach((store, handler) {
       StreamSubscription subscription = store.listen(handler);
