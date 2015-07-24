@@ -8,7 +8,7 @@ import './store.dart';
 
 abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
   ActionsT get actions => this.props['actions'];
-  StoresT get stores => this.props['stores'];
+  StoresT get store => this.props['store'];
 
   List<StreamSubscription> _subscriptions = [];
 
@@ -30,8 +30,8 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
   }
 
   List<Store> redrawOn() {
-    if (stores is Store) {
-      return [stores];
+    if (store is Store) {
+      return [store];
     } else {
       return [];
     }
