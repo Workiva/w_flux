@@ -6,10 +6,6 @@ import 'package:w_flux/w_flux.dart';
 import 'package:rate_limit/rate_limit.dart';
 import 'package:test/test.dart';
 
-class ExtendingStore extends Store {
-  String name = 'Max Peterson';
-}
-
 void main() {
   group('Store', () {
     Store store;
@@ -54,9 +50,14 @@ void main() {
 
     test('should execute a given method and then trigger in response to an action', () {
       Action _action = new Action();
-      store.triggerOnAction(_action);
+      bool methodCalled = false;
+      syncCallback(_) {
+        methodCalled = true;
+      }
+      store.triggerOnAction(_action, syncCallback);
       store.listen(expectAsync((payload) {
         expect(payload, equals(store));
+        expect(methodCalled, equals(true));
       }));
       _action();
     });
