@@ -8,6 +8,7 @@ w_flux
   - [**Action**](#action)
   - [**Store**](#store)
   - [**FluxComponent**](#fluxcomponent)
+- [**Examples**](#examples)
 - [**External Consumption**](#external-consumption)
 
 ---
@@ -215,6 +216,14 @@ class _ComplexComponent extends FluxComponent<ComplexActions, ComplexStore> {
   }
 }
 ```
+
+---
+
+## Examples
+
+Simple examples of `w_flux` usage can be found in the `example` directory. The example [README](example/README.md)
+includes instructions for building / running them.
+
 
 ---
 
