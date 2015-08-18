@@ -9,6 +9,7 @@ import '../actions.dart';
 import '../store.dart';
 
 var ToDoAppComponent = react.registerComponent(() => new _ToDoAppComponent());
+
 class _ToDoAppComponent extends FluxComponent<ToDoActions, ToDoStore> {
   render() {
     List todoListItems = [];
@@ -17,9 +18,11 @@ class _ToDoAppComponent extends FluxComponent<ToDoActions, ToDoStore> {
     });
     var todoList = react.div({'className': 'list-group'}, todoListItems);
 
-    var pageHeader = react.div({'className': 'page-header'}, react.h1({}, 'My Todos'));
+    var pageHeader =
+        react.div({'className': 'page-header'}, react.h1({}, 'My Todos'));
     var clearButton = react.button(
-        {'onClick': _clearList, 'disabled': store.todos.length == 0}, 'Clear Todo List');
+        {'onClick': _clearList, 'disabled': store.todos.length == 0},
+        'Clear Todo List');
 
     return react.div({}, [
       pageHeader,

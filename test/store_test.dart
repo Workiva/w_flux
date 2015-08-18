@@ -22,12 +22,12 @@ void main() {
     });
 
     test('should support stream transforms', () {
-
       // ensure that multiple trigger executions emit
       // exactly 2 throttled triggers to external listeners
       // (1 for the initial trigger and 1 as the aggregate of
       // all others that occurred within the throttled duration)
-      store = new Store(transformer: new Throttler(const Duration(milliseconds: 30)));
+      store = new Store(
+          transformer: new Throttler(const Duration(milliseconds: 30)));
       store.listen(expectAsync((payload) {
         expect(payload, equals(store));
       }, count: 2));
@@ -48,7 +48,9 @@ void main() {
       _action();
     });
 
-    test('should execute a given method and then trigger in response to an action', () {
+    test(
+        'should execute a given method and then trigger in response to an action',
+        () {
       Action _action = new Action();
       bool methodCalled = false;
       syncCallback(_) {
@@ -62,7 +64,9 @@ void main() {
       _action();
     });
 
-    test('should execute a given async method and then trigger in response to an action', () {
+    test(
+        'should execute a given async method and then trigger in response to an action',
+        () {
       Action _action = new Action();
       bool afterTimer = false;
       asyncCallback(_) async {
@@ -77,7 +81,8 @@ void main() {
       _action();
     });
 
-    test('should execute a given method and then trigger in response to an action with payload',
+    test(
+        'should execute a given method and then trigger in response to an action with payload',
         () {
       Action<num> _action = new Action<num>();
       num counter = 0;

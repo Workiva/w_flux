@@ -42,7 +42,8 @@ class Action<T> implements Function {
     // a [Stream]-based action implementation. At smaller sample sizes this
     // implementation slows down in comparison, yielding average times of 0.1 ms
     // for stream-based actions vs. 0.14 ms for this action implementation.
-    return Future.wait(_listeners.map((l) => new Future.microtask(() => l(payload))));
+    return Future
+        .wait(_listeners.map((l) => new Future.microtask(() => l(payload))));
   }
 
   ActionSubscription listen(void onData(T event)) {
