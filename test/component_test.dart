@@ -70,7 +70,8 @@ void main() {
       expect(component.numberOfRedraws, 2);
     });
 
-    test('should prefer a handler specified in getStoreHandlers over redrawOn', () async {
+    test('should prefer a handler specified in getStoreHandlers over redrawOn',
+        () async {
       TestHandlerPrecedence component = new TestHandlerPrecedence();
       TestStores stores = new TestStores();
       component.props = {'store': stores};
@@ -87,7 +88,8 @@ void main() {
       expect(component.numberOfHandlerCalls, 1);
     });
 
-    test('should not attempt subscription if store is a composite of stores', () async {
+    test('should not attempt subscription if store is a composite of stores',
+        () async {
       TestDefaultComponent component = new TestDefaultComponent();
       TestStores stores = new TestStores();
       component.props = {'store': stores};
@@ -102,7 +104,9 @@ void main() {
       expect(component.numberOfRedraws, 0);
     });
 
-    test('should call handlers specified in getStoreHandlers when each store triggers', () async {
+    test(
+        'should call handlers specified in getStoreHandlers when each store triggers',
+        () async {
       // Setup the component
       TestStoreHandlersComponent component = new TestStoreHandlersComponent();
       TestStore store = new TestStore();
@@ -125,7 +129,8 @@ void main() {
       expect(component.numberOfHandlerCalls, 1);
     });
 
-    test('should cancel any subscriptions added with addSubscription', () async {
+    test('should cancel any subscriptions added with addSubscription',
+        () async {
       // Setup a new subscription on a component
       int numberOfCalls = 0;
       StreamController controller = new StreamController();

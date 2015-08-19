@@ -9,7 +9,6 @@ import 'package:react/react_client.dart' as react_client;
 import 'package:w_flux/w_flux.dart';
 
 main() async {
-
   // initialize action, stores, and components
   RandomColorActions actions = new RandomColorActions();
   RandomColorStore store = new RandomColorStore(actions);
@@ -25,7 +24,6 @@ class RandomColorActions {
 }
 
 class RandomColorStore extends Store {
-
   /// Public data
   String _backgroundColor = 'gray';
   String get backgroundColor => _backgroundColor;
@@ -39,15 +37,23 @@ class RandomColorStore extends Store {
 
   _changeBackgroundColor(_) {
     // generate a random hex color string
-    _backgroundColor = '#' + (new Random().nextDouble() * 16777215).floor().toRadixString(16);
+    _backgroundColor =
+        '#' + (new Random().nextDouble() * 16777215).floor().toRadixString(16);
   }
 }
 
-var RandomColorComponent = react.registerComponent(() => new _RandomColorComponent());
-class _RandomColorComponent extends FluxComponent<RandomColorActions, RandomColorStore> {
+var RandomColorComponent =
+    react.registerComponent(() => new _RandomColorComponent());
+
+class _RandomColorComponent
+    extends FluxComponent<RandomColorActions, RandomColorStore> {
   render() {
     return react.div({
-      'style': {'padding': '50px', 'backgroundColor': store.backgroundColor, 'color': 'white'}
+      'style': {
+        'padding': '50px',
+        'backgroundColor': store.backgroundColor,
+        'color': 'white'
+      }
     }, [
       'This module uses a flux pattern to change its background color.',
       react.button({

@@ -5,7 +5,6 @@ import 'package:w_flux/w_flux.dart';
 import 'actions.dart';
 
 class ToDoStore extends Store {
-
   /// Public data
   List<Todo> _todos;
   List<Todo> get todos => _todos;

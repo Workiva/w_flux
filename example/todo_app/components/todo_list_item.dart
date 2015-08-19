@@ -5,6 +5,7 @@ import 'package:react/react.dart' as react;
 import '../store.dart';
 
 var TodoListItem = react.registerComponent(() => new _TodoListItem());
+
 class _TodoListItem extends react.Component {
   Todo get todo => props['todo'];
   Function get onClick => props['onClick'];
@@ -12,8 +13,11 @@ class _TodoListItem extends react.Component {
   getDefaultProps() => {'todo': null};
 
   render() {
-    String className = todo.completed ? 'list-group-item completed' : 'list-group-item';
-    return react.span({'className': className}, [
+    String className =
+        todo.completed ? 'list-group-item completed' : 'list-group-item';
+    return react.span({
+      'className': className
+    }, [
       react.label({}, [
         react.input({
           'type': 'checkbox',

@@ -40,7 +40,8 @@ void main() {
     });
 
     group('dispatch', () {
-      test('should invoke and complete synchronous listeners in future event in '
+      test(
+          'should invoke and complete synchronous listeners in future event in '
           'event queue', () async {
         var action = new Action();
         var listenerCompleted = false;
@@ -57,7 +58,8 @@ void main() {
         expect(listenerCompleted, isTrue);
       });
 
-      test('should invoke asynchronous listeners in future event and complete '
+      test(
+          'should invoke asynchronous listeners in future event and complete '
           'in another future event', () async {
         var action = new Action();
         var listenerInvoked = false;
@@ -133,7 +135,8 @@ void main() {
           await awaitableAction();
         }
         stopwatch.stop();
-        var averageActionDispatchTime = stopwatch.elapsedMicroseconds / sampleSize / 1000.0;
+        var averageActionDispatchTime =
+            stopwatch.elapsedMicroseconds / sampleSize / 1000.0;
 
         stopwatch.reset();
 
@@ -152,7 +155,8 @@ void main() {
           await Future.wait([syncCompleter.future, asyncCompleter.future]);
         }
         stopwatch.stop();
-        var averageStreamDispatchTime = stopwatch.elapsedMicroseconds / sampleSize / 1000.0;
+        var averageStreamDispatchTime =
+            stopwatch.elapsedMicroseconds / sampleSize / 1000.0;
 
         print('awaitable action (ms): $averageActionDispatchTime; '
             'stream-based action (ms): $averageStreamDispatchTime');
