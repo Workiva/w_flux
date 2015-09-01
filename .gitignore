@@ -1,6 +1,7 @@
 .idea/
 
 # dart
+.packages
 .pub
 packages
 pubspec.lock
@@ -9,5 +10,4 @@ pubspec.lock
 dartdoc-viewer/
 
 # coverage
-lcov_coverage.lcov
-lcov_report/
+/coverage/
