@@ -18,10 +18,39 @@ import 'dart:async';
 
 import 'package:w_flux/src/action.dart';
 
+/// A `Store` is a repository and manager of app state. This class should be
+/// extended to fit the needs of your application and its data. The number and
+/// hierarchy of stores is dependent upon the state management needs of your
+/// application.
+///
+/// General guidelines with respect to a `Store`'s data:
+/// - A `Store`'s data should not be exposed for direct mutation.
+/// - A `Store`'s data should be mutated internally in response to [Action]s.
+/// - A `Store` should expose relevant data ONLY via public getters.
+///
+/// To receive notifications of a `Store`'s data mutations, `Store`s can be
+/// listened to. Whenever a `Store`'s data is mutated, the `trigger` method is
+/// used to tell all registered listeners that updated data is available.
+///
+/// In a typical application using `w_flux`, a [FluxComponent] listens to
+/// `Store`s, triggering re-rendering of the UI elements based on the updated
+/// `Store` data.
 class Store {
+  /// Stream controller for [_stream]. Used by [trigger].
   StreamController<Store> _streamController;
+
+  /// Broadcast stream of "data updated" events. Listened to in [listen].
   Stream<Store> _stream;
 
+  /// Construct a new [Store] instance.
+  ///
+  /// If a [transformer] is given, the standard behavior of the "trigger" stream
+  /// will be modified. The underlying stream will be transformed using
+  /// [transformer].
+  ///
+  /// As an example, [transformer] could be used to throttle the number of
+  /// triggers this [Store] emits for state that may update extremely frequently
+  /// (like scroll position).
   Store({StreamTransformer transformer}) {
     _streamController = new StreamController<Store>();
 
@@ -34,10 +63,22 @@ class Store {
     }
   }
 
+  /// Trigger a "data updated" event. All registered listeners of this `Store`
+  /// will receive the event, at which point they can use the latest data
+  /// from this `Store` as necessary.
+  ///
+  /// This should be called whenever this `Store`'s data has finished mutating in
+  /// response to an action.
   void trigger() {
     _streamController.add(this);
   }
 
+  /// A convenience method for listening to an [action] and triggering
+  /// automatically once the callback for said action has completed.
+  ///
+  /// If [onAction] is provided, it will be called every time [action] is
+  /// dispatched. If [onAction] returns a [Future], [trigger] will not be
+  /// called until that future has resolved.
   triggerOnAction(Action action, [void onAction(payload)]) {
     if (onAction != null) {
       action.listen((payload) async {
@@ -51,6 +92,10 @@ class Store {
     }
   }
 
+  /// Adds a subscription to this `Store`.
+  ///
+  /// Each time this `Store` triggers (by calling [trigger]), indicating that
+  /// data has been mutated, [onData] will be called.
   StreamSubscription<Store> listen(void onData(Store event),
       {Function onError, void onDone(), bool cancelOnError}) {
     return _stream.listen(onData,
