@@ -30,25 +30,25 @@ void main() {
     test('should support dispatch without a payload', () {
       Action _action = new Action();
 
-      expectAsync(_action.listen)((payload) {
+      _action.listen(expectAsync((payload) {
         expect(payload, equals(null));
-      });
+      }));
 
       _action();
     });
 
     test('should support dispatch with a payload', () {
-      expectAsync(action.listen)((payload) {
+      action.listen(expectAsync((payload) {
         expect(payload, equals('990 guerrero'));
-      });
+      }));
 
       action('990 guerrero');
     });
 
     test('should dispatch by default when called', () {
-      expectAsync(action.listen)((payload) {
+      action.listen(expectAsync((payload) {
         expect(payload, equals('990 guerrero'));
-      });
+      }));
 
       action('990 guerrero');
     });
