@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.1
+Check out the detailed [release notes](//github.com/Workiva/w_flux/releases/tag/1.0.1).
+
+- Relaxed react dependency range to include 0.8.x
+
+## 1.0.0
+Check out the detailed [release notes](//github.com/Workiva/w_flux/releases/tag/1.0.0).
+
+There are no breaking changes in this release. The bump to 1.0.0 occurred as this project was open-sourced.
+
+- Now using [dart_dev](//github.com/Workiva/dart_dev) for tooling
+- Documentation and examples have been updated
+- Reporting code coverage to Codecov.io
+
 ## 0.3.0
 Check out the detailed [release notes](//github.com/Workiva/w_flux/releases/tag/0.3.0).
 
