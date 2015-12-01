@@ -44,6 +44,8 @@ import 'dart:async';
 class Action<T> implements Function {
   List _listeners = [];
 
+  /// Dispatch this [Action] to all listeners. If a payload is supplied, it will
+  /// be passed to each listener's callback, otherwise null will be passed.
   Future call([T payload]) {
     // Invoke all listeners in a microtask to enable waiting on futures. The
     // microtask queue is emptied before the event loop continues. This ensures
@@ -60,6 +62,17 @@ class Action<T> implements Function {
         .wait(_listeners.map((l) => new Future.microtask(() => l(payload))));
   }
 
+  /// Cancel all subscriptions that exist on this [Action] as a result of
+  /// [listen] being called. Useful when tearing down a flux cycle in some
+  /// module or unit test.
+  void clearListeners() {
+    _listeners.clear();
+  }
+
+  /// Supply a callback that will be called any time this [Action] is
+  /// dispatched. A payload of type [T] will be passed to the callback if
+  /// supplied at dispatch time, otherwise null will be passed. Returns an
+  /// [ActionSubscription] which provides means to cancel the subscription.
   ActionSubscription listen(void onData(T event)) {
     _listeners.add(onData);
     return new ActionSubscription(() => _listeners.remove(onData));
@@ -72,6 +85,7 @@ class ActionSubscription {
 
   ActionSubscription(this._onCancel);
 
+  /// Cancel this subscription to an [Action]
   void cancel() {
     if (_onCancel != null) {
       _onCancel();

@@ -134,6 +134,20 @@ void main() {
         await action();
         expect(listened, isFalse);
       });
+
+      test('should stop listening when listeners are cleared', () async {
+        var action = new Action();
+        var listened = false;
+        action.listen((_) => listened = true);
+
+        await action();
+        expect(listened, isTrue);
+
+        listened = false;
+        action.clearListeners();
+        await action();
+        expect(listened, isFalse);
+      });
     });
 
     group('benchmarks', () {
