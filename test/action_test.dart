@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+@TestOn('vm')
 library w_flux.test.action_test;
 
 import 'dart:async';
 
-import 'package:w_flux/w_flux.dart';
+import 'package:w_flux/src/action.dart';
 import 'package:test/test.dart';
 
 void main() {

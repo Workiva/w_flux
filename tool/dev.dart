@@ -24,6 +24,7 @@ main(List<String> args) async {
   config.analyze.entryPoints = dirs;
   config.copyLicense.directories = dirs;
   config.format.directories = dirs;
+  config.test.platforms = ['vm', 'content-shell'];
 
   await dev(args);
 }
