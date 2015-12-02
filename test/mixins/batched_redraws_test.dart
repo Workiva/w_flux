@@ -52,8 +52,8 @@ void main() {
       expect(component.renderCount, equals(1));
     });
 
-    test('should not redraw the component more than once per animation'
-        'frame', () async {
+    test('should not redraw the component more than once per animation frame',
+        () async {
       component.redraw();
       component.redraw();
       await nextTick();
