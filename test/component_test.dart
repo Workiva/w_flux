@@ -84,6 +84,19 @@ void main() {
       expect(component.numberOfRedraws, 2);
     });
 
+    test('should avoid null errors when a store returned from redrawOn is null', () async {
+      TestRedrawOnComponent component = new TestRedrawOnComponent();
+      TestStores stores = new TestStores();
+      stores.store1 = null;
+      component.props = {'store': stores};
+      // This should not through even though store1 is null
+      component.componentWillMount();
+
+      stores.store2.trigger();
+      await nextTick();
+      expect(component.numberOfRedraws, 1);
+    });
+
     test('should prefer a handler specified in getStoreHandlers over redrawOn',
         () async {
       TestHandlerPrecedence component = new TestHandlerPrecedence();
