@@ -1,4 +1,4 @@
-library w_flux.mixins.scheduled_redraws;
+library w_flux.mixins.batched_redraws;
 
 import 'dart:async';
 import 'dart:html';
@@ -33,7 +33,7 @@ _RedrawScheduler _scheduleRedraw = new _RedrawScheduler();
 ///
 /// Example:
 ///
-///     class MyComponent extends FluxComponent<Actions, Store>
+///     class MyComponent extends react.Component
 ///         with BatchedRedraws {
 ///       render() {...}
 ///     }
