@@ -51,13 +51,14 @@ class Store {
   /// As an example, [transformer] could be used to throttle the number of
   /// triggers this [Store] emits for state that may update extremely frequently
   /// (like scroll position).
-  Store({StreamTransformer transformer}) {
+  Store({StreamTransformer<dynamic, dynamic> transformer}) {
     _streamController = new StreamController<Store>();
 
     // apply a transform to the stream if supplied
     if (transformer != null) {
-      _stream =
-          _streamController.stream.transform(transformer).asBroadcastStream();
+      _stream = _streamController.stream
+          .transform(transformer as StreamTransformer<Store, dynamic>)
+          .asBroadcastStream() as Stream<Store>;
     } else {
       _stream = _streamController.stream.asBroadcastStream();
     }
