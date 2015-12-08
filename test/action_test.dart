@@ -27,28 +27,35 @@ void main() {
       action = new Action<String>();
     });
 
+    test('should only be equivalent to itself', () {
+      Action _action = new Action();
+      Action _action2 = new Action();
+      expect(_action == _action, isTrue);
+      expect(_action == _action2, isFalse);
+    });
+
     test('should support dispatch without a payload', () {
       Action _action = new Action();
 
-      _action.listen(expectAsync((payload) {
-        expect(payload, equals(null));
-      }));
+      _action.listen((payload) => expectAsync((payload) {
+            expect(payload, equals(null));
+          }));
 
       _action();
     });
 
     test('should support dispatch with a payload', () {
-      action.listen(expectAsync((payload) {
-        expect(payload, equals('990 guerrero'));
-      }));
+      action.listen((String payload) => expectAsync((payload) {
+            expect(payload, equals('990 guerrero'));
+          }));
 
       action('990 guerrero');
     });
 
     test('should dispatch by default when called', () {
-      action.listen(expectAsync((payload) {
-        expect(payload, equals('990 guerrero'));
-      }));
+      action.listen((String payload) => expectAsync((payload) {
+            expect(payload, equals('990 guerrero'));
+          }));
 
       action('990 guerrero');
     });

@@ -29,9 +29,9 @@ void main() {
     });
 
     test('should trigger with itself as the payload', () {
-      store.listen(expectAsync((payload) {
-        expect(payload, equals(store));
-      }));
+      store.listen((Store payload) => expectAsync((payload) {
+            expect(payload, equals(store));
+          }));
       store.trigger();
     });
 
@@ -42,9 +42,9 @@ void main() {
       // all others that occurred within the throttled duration)
       store = new Store(
           transformer: new Throttler(const Duration(milliseconds: 30)));
-      store.listen(expectAsync((payload) {
-        expect(payload, equals(store));
-      }, count: 2));
+      store.listen((Store payload) => expectAsync((payload) {
+            expect(payload, equals(store));
+          }, count: 2));
 
       store.trigger();
       store.trigger();
@@ -56,9 +56,9 @@ void main() {
     test('should trigger in response to an action', () {
       Action _action = new Action();
       store.triggerOnAction(_action);
-      store.listen(expectAsync((payload) {
-        expect(payload, equals(store));
-      }));
+      store.listen((Store payload) => expectAsync((payload) {
+            expect(payload, equals(store));
+          }));
       _action();
     });
 
@@ -71,10 +71,10 @@ void main() {
         methodCalled = true;
       }
       store.triggerOnAction(_action, syncCallback);
-      store.listen(expectAsync((payload) {
-        expect(payload, equals(store));
-        expect(methodCalled, equals(true));
-      }));
+      store.listen((Store payload) => expectAsync((payload) {
+            expect(payload, equals(store));
+            expect(methodCalled, equals(true));
+          }));
       _action();
     });
 
@@ -88,10 +88,10 @@ void main() {
         afterTimer = true;
       }
       store.triggerOnAction(_action, asyncCallback);
-      store.listen(expectAsync((payload) {
-        expect(payload, equals(store));
-        expect(afterTimer, equals(true));
-      }));
+      store.listen((Store payload) => expectAsync((payload) {
+            expect(payload, equals(store));
+            expect(afterTimer, equals(true));
+          }));
       _action();
     });
 
@@ -101,10 +101,10 @@ void main() {
       Action<num> _action = new Action<num>();
       num counter = 0;
       store.triggerOnAction(_action, (payload) => counter = payload);
-      store.listen(expectAsync((payload) {
-        expect(payload, equals(store));
-        expect(counter, equals(17));
-      }));
+      store.listen((Store payload) => expectAsync((payload) {
+            expect(payload, equals(store));
+            expect(counter, equals(17));
+          }));
       _action(17);
     });
   });

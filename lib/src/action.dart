@@ -77,6 +77,11 @@ class Action<T> implements Function {
     _listeners.add(onData);
     return new ActionSubscription(() => _listeners.remove(onData));
   }
+
+  /// Actions are only deemed equivalent if they are the exact same Object
+  bool operator ==(Object other) {
+    return identical(this, other);
+  }
 }
 
 /// A subscription used to cancel registered listeners to an [Action].

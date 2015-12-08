@@ -30,7 +30,7 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
   /// There is no strict rule on the [ActionsT] type. Depending on application
   /// structure, there may be [Action]s available directly on this object, or
   /// this object may represent a hierarchy of actions.
-  ActionsT get actions => this.props['actions'];
+  ActionsT get actions => this.props['actions'] as ActionsT;
 
   /// The class instance defined by [StoresT]. This object should either be an
   /// instance of [Store] or should provide access to one or more [Store]s.
@@ -48,7 +48,7 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
   /// [StoresT] should be a class that provides access to these multiple stores.
   /// Then, you can explicitly select the [Store] instances that should be
   /// listened to by overriding [redrawOn].
-  StoresT get store => this.props['store'];
+  StoresT get store => this.props['store'] as StoresT;
 
   /// List of store subscriptions created when the component mounts. These
   /// subscriptions are canceled when the component is unmounted.
@@ -59,8 +59,9 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
     // have their triggers mapped directly to this components redraw function.
     // Stores included in the `getStoreHandlers()` result will be listened to
     // and wired up to their respective handlers.
-    Map<Store, Function> handlers = new Map.fromIterable(redrawOn(),
-        value: (_) => (_) => redraw())..addAll(getStoreHandlers());
+    Map<Store, Function> handlers =
+        (new Map.fromIterable(redrawOn(), value: (_) => (_) => redraw())
+            as Map<Store, Function>)..addAll(getStoreHandlers());
     handlers.forEach((store, handler) {
       StreamSubscription subscription = store.listen(handler);
       _subscriptions.add(subscription);
@@ -92,7 +93,7 @@ abstract class FluxComponent<ActionsT, StoresT> extends react.Component {
   ///     redrawOn() => [store.tasks, store.users];
   List<Store> redrawOn() {
     if (store is Store) {
-      return [store];
+      return [store as Store];
     } else {
       return [];
     }
