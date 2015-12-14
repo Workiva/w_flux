@@ -113,7 +113,7 @@ import 'package:w_flux/w_flux.dart';
 class ThrottledStore extends Store {
   ...
 
-  ThrottledStore(this._actions) : super(transformer: new Throttler(const Duration(milliseconds: 30))) {
+  ThrottledStore(this._actions) : super.withTransformer(new Throttler(const Duration(milliseconds: 30))) {
     ...
   }
 }

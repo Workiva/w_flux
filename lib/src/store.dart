@@ -43,25 +43,26 @@ class Store {
   Stream<Store> _stream;
 
   /// Construct a new [Store] instance.
+  Store() {
+    _streamController = new StreamController<Store>();
+    _stream = _streamController.stream.asBroadcastStream();
+  }
+
+  /// Construct a new [Store] instance with a transformer.
   ///
-  /// If a [transformer] is given, the standard behavior of the "trigger" stream
-  /// will be modified. The underlying stream will be transformed using
-  /// [transformer].
+  /// The standard behavior of the "trigger" stream will be modified. The
+  /// underlying stream will be transformed using [transformer].
   ///
   /// As an example, [transformer] could be used to throttle the number of
   /// triggers this [Store] emits for state that may update extremely frequently
   /// (like scroll position).
-  Store({StreamTransformer<dynamic, dynamic> transformer}) {
+  Store.withTransformer(StreamTransformer<dynamic, dynamic> transformer) {
     _streamController = new StreamController<Store>();
 
     // apply a transform to the stream if supplied
-    if (transformer != null) {
-      _stream = _streamController.stream
-          .transform(transformer as StreamTransformer<Store, dynamic>)
-          .asBroadcastStream() as Stream<Store>;
-    } else {
-      _stream = _streamController.stream.asBroadcastStream();
-    }
+    _stream = _streamController.stream
+        .transform(transformer as StreamTransformer<Store, dynamic>)
+        .asBroadcastStream() as Stream<Store>;
   }
 
   /// Trigger a "data updated" event. All registered listeners of this `Store`

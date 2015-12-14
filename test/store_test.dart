@@ -42,8 +42,8 @@ void main() {
       // exactly 2 throttled triggers to external listeners
       // (1 for the initial trigger and 1 as the aggregate of
       // all others that occurred within the throttled duration)
-      store = new Store(
-          transformer: new Throttler(const Duration(milliseconds: 30)));
+      store = new Store.withTransformer(
+          new Throttler(const Duration(milliseconds: 30)));
       store.listen((Store payload) => expectAsync((payload) {
             expect(payload, equals(store));
           }, count: 2));
