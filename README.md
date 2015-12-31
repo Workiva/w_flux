@@ -1,6 +1,8 @@
-w_flux
-------
-[![Pub](https://img.shields.io/pub/v/w_flux.svg)](https://pub.dartlang.org/packages/w_flux) [![Build Status](https://travis-ci.org/Workiva/w_flux.svg?branch=master)](https://travis-ci.org/Workiva/w_flux) [![codecov.io](http://codecov.io/github/Workiva/w_flux/coverage.svg?branch=master)](http://codecov.io/github/Workiva/w_flux?branch=master)
+# w_flux
+[![Pub](https://img.shields.io/pub/v/w_flux.svg)](https://pub.dartlang.org/packages/w_flux)
+[![Build Status](https://travis-ci.org/Workiva/w_flux.svg?branch=master)](https://travis-ci.org/Workiva/w_flux)
+[![codecov.io](http://codecov.io/github/Workiva/w_flux/coverage.svg?branch=master)](http://codecov.io/github/Workiva/w_flux?branch=master)
+[![documentation](https://img.shields.io/badge/Documentation-w_flux-blue.svg)](https://www.dartdocs.org/documentation/w_flux/latest/)
 
 > A Dart app architecture library with uni-directional data flow inspired by [RefluxJS](https://github.com/reflux/refluxjs) and Facebook's [Flux](https://facebook.github.io/flux/).
 
