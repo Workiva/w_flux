@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.1.0
+Support for react-dart 0.9.x (which moves to ReactJS 0.14)
+
+## 2.0.0
+Check out the detailed [release notes](//github.com/Workiva/w_flux/releases/tag/2.0.0).
+
+- Store now uses a named constructor when specifying a transformer instead of an optional
+constructor parameter
+
+## 1.1.0
+Check out the detailed [release notes](//github.com/Workiva/w_flux/releases/tag/1.1.0).
+
+- Added batched redraws
+
 ## 1.0.1
 Check out the detailed [release notes](//github.com/Workiva/w_flux/releases/tag/1.0.1).
 
