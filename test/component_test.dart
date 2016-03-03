@@ -21,11 +21,9 @@ import 'package:react/react.dart' as react;
 import 'package:test/test.dart';
 import 'package:w_flux/w_flux.dart';
 
-void main() {
-  Future nextTick() {
-    return new Future.delayed(new Duration(milliseconds: 1));
-  }
+import 'utils.dart';
 
+void main() {
   group('FluxComponent', () {
     test('should expose an actions getter', () {
       TestDefaultComponent component = new TestDefaultComponent();

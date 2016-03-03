@@ -22,6 +22,8 @@ import 'package:w_flux/src/store.dart';
 import 'package:rate_limit/rate_limit.dart';
 import 'package:test/test.dart';
 
+import 'utils.dart';
+
 void main() {
   group('Store', () {
     Store store;
@@ -30,29 +32,36 @@ void main() {
       store = new Store();
     });
 
-    test('should trigger with itself as the payload', () {
-      store.listen((Store payload) => expectAsync((payload) {
-            expect(payload, equals(store));
-          }));
+    test('should trigger with itself as the payload', () async {
+      Completer c = new Completer();
+      store.listen((Store payload) {
+        expect(payload, equals(store));
+        c.complete();
+      });
+
       store.trigger();
+      return c.future;
     });
 
-    test('should support stream transforms', () {
+    test('should support stream transforms', () async {
       // ensure that multiple trigger executions emit
       // exactly 2 throttled triggers to external listeners
       // (1 for the initial trigger and 1 as the aggregate of
       // all others that occurred within the throttled duration)
+      int count = 0;
       store = new Store.withTransformer(
           new Throttler(const Duration(milliseconds: 30)));
-      store.listen((Store payload) => expectAsync((payload) {
-            expect(payload, equals(store));
-          }, count: 2));
+      store.listen((Store payload) {
+        count += 1;
+      });
 
       store.trigger();
       store.trigger();
       store.trigger();
       store.trigger();
       store.trigger();
+      await nextTick(60);
+      expect(count, equals(2));
     });
 
     test('should trigger in response to an action', () {

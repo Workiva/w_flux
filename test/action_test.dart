@@ -35,30 +35,39 @@ void main() {
       expect(_action == _action2, isFalse);
     });
 
-    test('should support dispatch without a payload', () {
+    test('should support dispatch without a payload', () async {
+      Completer c = new Completer();
       Action _action = new Action();
 
-      _action.listen((payload) => expectAsync((payload) {
-            expect(payload, equals(null));
-          }));
+      _action.listen((String payload) {
+        expect(payload, equals(null));
+        c.complete();
+      });
 
       _action();
+      return c.future;
     });
 
-    test('should support dispatch with a payload', () {
-      action.listen((String payload) => expectAsync((payload) {
-            expect(payload, equals('990 guerrero'));
-          }));
+    test('should support dispatch with a payload', () async {
+      Completer c = new Completer();
+      action.listen((String payload) {
+        expect(payload, equals('990 guerrero'));
+        c.complete();
+      });
 
       action('990 guerrero');
+      return c.future;
     });
 
-    test('should dispatch by default when called', () {
-      action.listen((String payload) => expectAsync((payload) {
-            expect(payload, equals('990 guerrero'));
-          }));
+    test('should dispatch by default when called', () async {
+      Completer c = new Completer();
+      action.listen((String payload) {
+        expect(payload, equals('990 guerrero'));
+        c.complete();
+      });
 
       action('990 guerrero');
+      return c.future;
     });
 
     group('dispatch', () {
