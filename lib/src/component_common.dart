@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-library w_flux.component;
+library w_flux.src.component_common;
 
 import 'dart:async';
 
 import 'package:react/react.dart' as react;
 
-import './mixins/batched_redraws.dart';
-import './store.dart';
+import 'package:w_flux/src/store.dart';
 
 /// FluxComponents are responsible for rendering application views and turning
 /// user interactions and events into [Action]s. FluxComponents can use data
 /// from one or many [Store] instances to define the resulting component.
-abstract class FluxComponent<ActionsT, StoresT> extends react.Component
-    with BatchedRedraws {
+abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component {
   /// The class instance defined by [ActionsT] that holds all [Action]s that
   /// this component needs access to.
   ///

@@ -1,4 +1,4 @@
-// Copyright 2015 Workiva Inc.
+// Copyright 2016 Workiva Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,16 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/// The w_flux library implements a uni-directional data flow pattern comprised
-/// of [Action]s, [Store]s, and [FluxComponent]s.
-///
-/// - [Action]s initiate mutation of app data that resides in [Store]s.
-/// - Data mutations within [Store]s trigger re-rendering of app view (defined
-///   in [FluxComponent]s).
-/// - [FluxComponent]s dispatch [Action]s in response to user interaction.
-library w_flux;
+/// This provides the same functionality as the w_flux library, but without
+/// a dependency on dart:html. This allows it to be used on the server.
+library w_flux_server;
 
 export 'src/action.dart';
-export 'src/component_client.dart';
+export 'src/component_server.dart';
 export 'src/store.dart';
-export 'src/mixins/batched_redraws.dart';
