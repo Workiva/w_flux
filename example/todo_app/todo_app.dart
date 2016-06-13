@@ -16,7 +16,7 @@ library w_flux.example.todo_app;
 
 import 'dart:html';
 
-import 'package:react/react.dart' as react;
+import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart' as react_client;
 
 import 'actions.dart';
@@ -30,6 +30,6 @@ main() async {
 
   // render the component
   react_client.setClientConfiguration();
-  react.render(ToDoAppComponent({'actions': actions, 'store': store}),
+  react_dom.render(ToDoAppComponent({'actions': actions, 'store': store}),
       querySelector('#content-container'));
 }
