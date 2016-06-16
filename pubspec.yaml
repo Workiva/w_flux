@@ -10,7 +10,7 @@ authors:
   - Trent Grover <trent.grover@workiva.com>
 homepage: https://github.com/Workiva/w_flux
 dependencies:
-  react: ">=0.5.0 <2.0.0"
+  react: ">=0.9.0 <3.0.0"
 dev_dependencies:
   coverage: "^0.7.2"
   dart_dev: "^1.0.0"
