@@ -33,7 +33,7 @@ void main() {
     });
 
     test('should trigger with itself as the payload', () async {
-      Completer c = new Completer();
+      var c = new Completer();
       store.listen((Store payload) {
         expect(payload, equals(store));
         c.complete();
@@ -48,7 +48,7 @@ void main() {
       // exactly 2 throttled triggers to external listeners
       // (1 for the initial trigger and 1 as the aggregate of
       // all others that occurred within the throttled duration)
-      int count = 0;
+      var count = 0;
       store = new Store.withTransformer(
           new Throttler(const Duration(milliseconds: 30)));
       store.listen((Store payload) {
@@ -65,58 +65,70 @@ void main() {
     });
 
     test('should trigger in response to an action', () {
-      Action _action = new Action();
-      store.triggerOnAction(_action);
-      store.listen((Store payload) => expectAsync((payload) {
-            expect(payload, equals(store));
-          }));
-      _action();
+      var c = new Completer();
+      var action = new Action();
+      store.triggerOnAction(action);
+      store.listen(expectAsync((payload) {
+        c.complete();
+        expect(payload, equals(store));
+      }));
+      action();
+      return c.future;
     });
 
     test(
         'should execute a given method and then trigger in response to an action',
         () {
-      Action _action = new Action();
-      bool methodCalled = false;
+      var c = new Completer();
+      var action = new Action();
+      var methodCalled = false;
       syncCallback(_) {
         methodCalled = true;
       }
-      store.triggerOnAction(_action, syncCallback);
-      store.listen((Store payload) => expectAsync((payload) {
-            expect(payload, equals(store));
-            expect(methodCalled, equals(true));
-          }));
-      _action();
+      store.triggerOnAction(action, syncCallback);
+      store.listen(expectAsync((payload) {
+        c.complete();
+        expect(payload, equals(store));
+        expect(methodCalled, isTrue);
+      }));
+      action();
+      return c.future;
     });
 
     test(
         'should execute a given async method and then trigger in response to an action',
         () {
-      Action _action = new Action();
-      bool afterTimer = false;
+      var c = new Completer();
+      var action = new Action();
+      var afterTimer = false;
       asyncCallback(_) async {
         await new Future.delayed(new Duration(milliseconds: 30));
         afterTimer = true;
       }
-      store.triggerOnAction(_action, asyncCallback);
-      store.listen((Store payload) => expectAsync((payload) {
-            expect(payload, equals(store));
-            expect(afterTimer, equals(true));
-          }));
-      _action();
+      store.triggerOnAction(action, asyncCallback);
+      store.listen(expectAsync((payload) {
+        c.complete();
+        expect(payload, equals(store));
+        expect(afterTimer, equals(true));
+      }));
+      action();
+      return c.future;
     });
 
     test(
         'should execute a given method and then trigger in response to an action with payload',
         () {
-      Action<num> _action = new Action<num>();
-      num counter = 0;
-      store.triggerOnAction(_action, (payload) => counter = payload);
-      store.listen((Store payload) => expectAsync((payload) {
-            expect(payload, equals(store));
-            expect(counter, equals(17));
-          }));
-      _action(17);
+      var c = new Completer();
+      var action = new Action<num>();
+      var counter = 0;
+      store.triggerOnAction(action, (payload) => counter = payload);
+      store.listen(expectAsync((payload) {
+        c.complete();
+        expect(payload, equals(store));
+        expect(counter, equals(17));
+      }));
+      action(17);
+      return c.future;
     });
   });
 }
