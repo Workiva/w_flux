@@ -6,22 +6,41 @@ import 'dart:html';
 import 'package:react/react.dart' as react;
 
 class _RedrawScheduler implements Function {
-  Set<react.Component> _components = new Set();
+  Map<react.Component, List<Function>> _components =
+      <react.Component, List<Function>>{};
 
-  void call(react.Component component) {
+  void call(react.Component component, [callback()]) {
     if (_components.isEmpty) {
       _tick();
     }
-    _components.add(component);
+
+    _components[component] ??= [];
+
+    _components[component].add(callback);
   }
 
   Future _tick() async {
     await window.animationFrame;
     _components
-      ..forEach((c) {
-        c.setState({});
+      ..forEach((component, callbacks) {
+        var chainedCallbacks = callbacks.fold(null, _chain) ?? _noop;
+
+        component.setState({}, chainedCallbacks);
       })
       ..clear();
+  }
+
+  void _noop() {}
+
+  Function _chain(a(), b()) {
+    if (a == null && b == null) return _noop;
+    if (a == null) return b;
+    if (b == null) return a;
+
+    return () {
+      a();
+      b();
+    };
   }
 }
 
@@ -39,5 +58,6 @@ _RedrawScheduler _scheduleRedraw = new _RedrawScheduler();
 ///     }
 ///
 class BatchedRedraws {
-  void redraw() => _scheduleRedraw(this as react.Component);
+  void redraw([callback()]) =>
+      _scheduleRedraw(this as react.Component, callback);
 }
