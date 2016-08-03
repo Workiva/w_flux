@@ -81,6 +81,7 @@ void main() {
       syncCallback(_) {
         methodCalled = true;
       }
+
       store.triggerOnAction(_action, syncCallback);
       store.listen((Store payload) => expectAsync((payload) {
             expect(payload, equals(store));
@@ -98,6 +99,7 @@ void main() {
         await new Future.delayed(new Duration(milliseconds: 30));
         afterTimer = true;
       }
+
       store.triggerOnAction(_action, asyncCallback);
       store.listen((Store payload) => expectAsync((payload) {
             expect(payload, equals(store));

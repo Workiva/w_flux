@@ -28,8 +28,9 @@ class _TestComponent extends react.Component with BatchedRedraws {
 
   dynamic render() => '';
 
-  void setState(_) {
+  void setState(_, [callback()]) {
     renderCount++;
+    if (callback != null) callback();
   }
 }
 
@@ -41,9 +42,11 @@ void main() {
 
   group('ScheduledRedraws', () {
     _TestComponent component;
+    List calls;
 
     setUp(() {
       component = new _TestComponent();
+      calls = [];
     });
 
     test('should redraw the component when redraw() is called', () async {
@@ -58,6 +61,43 @@ void main() {
       component.redraw();
       await nextTick();
       expect(component.renderCount, equals(1));
+    });
+
+    test(
+        'should redraw the component when redraw() is called, when using the callback',
+        () async {
+      component.redraw(() {
+        calls.add('redraw');
+      });
+      await nextTick();
+      expect(component.renderCount, equals(1));
+      expect(calls, orderedEquals(['redraw']));
+    });
+
+    test(
+        'should not redraw the component more than once per animation frame, when using the callback',
+        () async {
+      component.redraw(() {
+        calls.add('redraw 1');
+      });
+      component.redraw(() {
+        calls.add('redraw 2');
+      });
+      await nextTick();
+      expect(component.renderCount, equals(1));
+      expect(calls, orderedEquals(['redraw 1', 'redraw 2']));
+    });
+
+    test(
+        'should not redraw the component more than once per animation frame, when sometimes using the callback',
+        () async {
+      component.redraw();
+      component.redraw(() {
+        calls.add('redraw 2');
+      });
+      await nextTick();
+      expect(component.renderCount, equals(1));
+      expect(calls, orderedEquals(['redraw 2']));
     });
   });
 }
