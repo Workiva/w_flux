@@ -25,6 +25,10 @@ import 'package:test/test.dart';
 
 class _TestComponent extends react.Component with BatchedRedraws {
   int renderCount = 0;
+  bool shouldRedrawValue = true;
+
+  @override
+  bool get shouldRedraw => shouldRedrawValue;
 
   dynamic render() => '';
 
@@ -61,6 +65,13 @@ void main() {
       component.redraw();
       await nextTick();
       expect(component.renderCount, equals(1));
+    });
+
+    test('should not redraw when shouldRedraw returns false', () async {
+      component.shouldRedrawValue = false;
+      component.redraw();
+      await nextTick();
+      expect(component.renderCount, equals(0));
     });
 
     test(
