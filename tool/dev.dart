@@ -22,6 +22,7 @@ main(List<String> args) async {
   // Perform task configuration here as necessary.
   List<String> dirs = ['example/', 'lib/', 'test/', 'tool/'];
   config.analyze.entryPoints = dirs;
+  config.analyze.strong = true;
   config.copyLicense.directories = dirs;
   config.format.directories = dirs;
   config.test.platforms = ['vm', 'content-shell'];
