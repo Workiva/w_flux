@@ -193,7 +193,7 @@ class TestStoreHandlersComponent extends FluxComponent<TestActions, TestStore> {
 
   getStoreHandlers() => {store: increment};
 
-  increment(_) {
+  increment(Store _) {
     numberOfHandlerCalls += 1;
   }
 }
@@ -220,7 +220,7 @@ class TestHandlerPrecedence extends FluxComponent<TestActions, TestStores> {
 
   getStoreHandlers() => {store.store1: increment};
 
-  increment(_) {
+  increment(Store _) {
     numberOfHandlerCalls += 1;
   }
 

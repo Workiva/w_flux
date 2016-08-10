@@ -59,9 +59,9 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component {
     // have their triggers mapped directly to this components redraw function.
     // Stores included in the `getStoreHandlers()` result will be listened to
     // and wired up to their respective handlers.
-    Map<Store, Function> handlers =
-        (new Map.fromIterable(redrawOn(), value: (_) => (_) => redraw())
-            as Map<Store, Function>)..addAll(getStoreHandlers());
+    Map<Store, StoreHandler> handlers =
+        new Map<Store, StoreHandler>.fromIterable(redrawOn(),
+            value: (_) => (_) => redraw())..addAll(getStoreHandlers());
     handlers.forEach((store, handler) {
       StreamSubscription subscription = store.listen(handler);
       _subscriptions.add(subscription);
@@ -107,7 +107,7 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component {
   /// If possible, however, [redrawOn] should be used instead of this in order
   /// to avoid keeping additional state within this component and manually
   /// managing redraws.
-  Map<Store, Function> getStoreHandlers() {
+  Map<Store, StoreHandler> getStoreHandlers() {
     return {};
   }
 

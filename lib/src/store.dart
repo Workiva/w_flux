@@ -18,6 +18,8 @@ import 'dart:async';
 
 import 'package:w_flux/src/action.dart';
 
+typedef StoreHandler(Store event);
+
 /// A `Store` is a repository and manager of app state. This class should be
 /// extended to fit the needs of your application and its data. The number and
 /// hierarchy of stores is dependent upon the state management needs of your
@@ -98,7 +100,7 @@ class Store {
   ///
   /// Each time this `Store` triggers (by calling [trigger]), indicating that
   /// data has been mutated, [onData] will be called.
-  StreamSubscription<Store> listen(void onData(Store event),
+  StreamSubscription<Store> listen(StoreHandler onData,
       {Function onError, void onDone(), bool cancelOnError}) {
     return _stream.listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
