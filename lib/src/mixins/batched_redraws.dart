@@ -23,7 +23,7 @@ class _RedrawScheduler implements Function {
     await window.animationFrame;
     _components
       ..forEach((component, callbacks) {
-        if (!component.shouldRedraw) {
+        if (!component.shouldBatchRedraw) {
           return;
         }
 
@@ -57,6 +57,7 @@ _RedrawScheduler _scheduleRedraw = new _RedrawScheduler();
 ///     }
 ///
 class BatchedRedraws {
-  bool get shouldRedraw => true;
+  bool shouldBatchRedraw = true;
+
   void redraw([callback()]) => _scheduleRedraw(this, callback);
 }
