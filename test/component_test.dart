@@ -163,6 +163,14 @@ void main() {
       await nextTick();
       expect(numberOfCalls, 1);
     });
+
+    test('should not redraw after being unmounted', () async {
+      TestDefaultComponent component = new TestDefaultComponent();
+      component.componentWillUnmount();
+      component.redraw();
+      await nextTick();
+      expect(component.numberOfRedraws, equals(0));
+    });
   });
 }
 
@@ -181,8 +189,9 @@ class TestDefaultComponent extends FluxComponent {
 
   render() => react.div({});
 
-  redraw([callback()]) {
-    numberOfRedraws += 1;
+  void setState(_, [callback()]) {
+    numberOfRedraws++;
+    if (callback != null) callback();
   }
 }
 
@@ -205,8 +214,9 @@ class TestRedrawOnComponent extends FluxComponent<TestActions, TestStores> {
 
   redrawOn() => [store.store1, store.store2];
 
-  redraw([callback()]) {
-    numberOfRedraws += 1;
+  void setState(_, [callback()]) {
+    numberOfRedraws++;
+    if (callback != null) callback();
   }
 }
 
@@ -224,7 +234,8 @@ class TestHandlerPrecedence extends FluxComponent<TestActions, TestStores> {
     numberOfHandlerCalls += 1;
   }
 
-  redraw([callback()]) {
-    numberOfRedraws += 1;
+  void setState(_, [callback()]) {
+    numberOfRedraws++;
+    if (callback != null) callback();
   }
 }

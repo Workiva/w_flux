@@ -25,4 +25,11 @@ import 'package:w_flux/src/store.dart';
 /// This FluxComponent, intended for use on the client, utilizes the
 /// [BatchedRedraws] mixin to throttle redraws down to one per animation frame.
 abstract class FluxComponent<ActionsT, StoresT>
-    extends FluxComponentCommon<ActionsT, StoresT> with BatchedRedraws {}
+    extends FluxComponentCommon<ActionsT, StoresT> with BatchedRedraws {
+  @override
+  void componentWillUnmount() {
+    // ensure that unmounted components don't batch render
+    shouldBatchRedraw = false;
+    super.componentWillUnmount();
+  }
+}

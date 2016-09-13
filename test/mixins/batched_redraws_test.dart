@@ -63,6 +63,13 @@ void main() {
       expect(component.renderCount, equals(1));
     });
 
+    test('should not redraw when shouldBatchRedraw returns false', () async {
+      component.shouldBatchRedraw = false;
+      component.redraw();
+      await nextTick();
+      expect(component.renderCount, equals(0));
+    });
+
     test(
         'should redraw the component when redraw() is called, when using the callback',
         () async {

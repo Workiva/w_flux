@@ -6,10 +6,10 @@ import 'dart:html';
 import 'package:react/react.dart' as react;
 
 class _RedrawScheduler implements Function {
-  Map<react.Component, List<Function>> _components =
-      <react.Component, List<Function>>{};
+  Map<BatchedRedraws, List<Function>> _components =
+      <BatchedRedraws, List<Function>>{};
 
-  void call(react.Component component, [callback()]) {
+  void call(BatchedRedraws component, [callback()]) {
     if (_components.isEmpty) {
       _tick();
     }
@@ -23,6 +23,10 @@ class _RedrawScheduler implements Function {
     await window.animationFrame;
     _components
       ..forEach((component, callbacks) {
+        if (!component.shouldBatchRedraw) {
+          return;
+        }
+
         var chainedCallbacks;
 
         if (callbacks.isNotEmpty) {
@@ -33,7 +37,7 @@ class _RedrawScheduler implements Function {
           };
         }
 
-        component.setState({}, chainedCallbacks);
+        (component as react.Component)?.setState({}, chainedCallbacks);
       })
       ..clear();
   }
@@ -53,6 +57,7 @@ _RedrawScheduler _scheduleRedraw = new _RedrawScheduler();
 ///     }
 ///
 class BatchedRedraws {
-  void redraw([callback()]) =>
-      _scheduleRedraw(this as react.Component, callback);
+  bool shouldBatchRedraw = true;
+
+  void redraw([callback()]) => _scheduleRedraw(this, callback);
 }
