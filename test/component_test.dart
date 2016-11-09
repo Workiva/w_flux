@@ -16,12 +16,11 @@
 library w_flux.test.component_test;
 
 import 'dart:async';
+import 'dart:html' show window;
 
 import 'package:react/react.dart' as react;
 import 'package:test/test.dart';
 import 'package:w_flux/w_flux.dart';
-
-import 'utils.dart';
 
 void main() {
   group('FluxComponent', () {
@@ -50,7 +49,7 @@ void main() {
 
       // Cause store to trigger, wait for it to propagate
       store.trigger();
-      await nextTick();
+      await animationFrames(2);
       expect(component.numberOfRedraws, 1);
 
       // Simulate un-mounting the component
@@ -58,7 +57,7 @@ void main() {
 
       // Component should no longer be listening
       store.trigger();
-      await nextTick();
+      await animationFrames(2);
 
       // Redraw should not have been called again
       expect(component.numberOfRedraws, 1);
@@ -71,15 +70,15 @@ void main() {
       component.componentWillMount();
 
       stores.store1.trigger();
-      await nextTick();
+      await animationFrames(2);
       expect(component.numberOfRedraws, 1);
 
       stores.store2.trigger();
-      await nextTick();
+      await animationFrames(2);
       expect(component.numberOfRedraws, 2);
 
       stores.store3.trigger();
-      await nextTick();
+      await animationFrames(2);
       expect(component.numberOfRedraws, 2);
     });
 
@@ -91,12 +90,12 @@ void main() {
       component.componentWillMount();
 
       stores.store1.trigger();
-      await nextTick();
+      await animationFrames(2);
       expect(component.numberOfRedraws, 0);
       expect(component.numberOfHandlerCalls, 1);
 
       stores.store2.trigger();
-      await nextTick();
+      await animationFrames(2);
       expect(component.numberOfRedraws, 1);
       expect(component.numberOfHandlerCalls, 1);
     });
@@ -109,11 +108,11 @@ void main() {
       component.componentWillMount();
 
       stores.store1.trigger();
-      await nextTick();
+      await animationFrames(2);
       expect(component.numberOfRedraws, 0);
 
       stores.store2.trigger();
-      await nextTick();
+      await animationFrames(2);
       expect(component.numberOfRedraws, 0);
     });
 
@@ -128,7 +127,7 @@ void main() {
 
       // Cause store to trigger, wait for it to propagate
       store.trigger();
-      await nextTick();
+      await animationFrames(2);
       expect(component.numberOfHandlerCalls, 1);
 
       // Simulate un-mounting the component
@@ -136,7 +135,7 @@ void main() {
 
       // Component should no longer be listening
       store.trigger();
-      await nextTick();
+      await animationFrames(2);
 
       // Handler should not have been called again
       expect(component.numberOfHandlerCalls, 1);
@@ -154,13 +153,13 @@ void main() {
 
       // Add something to the stream and expect the handler to have been called
       controller.add('something');
-      await nextTick();
+      await animationFrames(2);
       expect(numberOfCalls, 1);
 
       // Unmount the component, expect the subscription to have been canceled
       component.componentWillUnmount();
       controller.add('something else');
-      await nextTick();
+      await animationFrames(2);
       expect(numberOfCalls, 1);
     });
 
@@ -168,10 +167,16 @@ void main() {
       TestDefaultComponent component = new TestDefaultComponent();
       component.componentWillUnmount();
       component.redraw();
-      await nextTick();
+      await animationFrames(2);
       expect(component.numberOfRedraws, equals(0));
     });
   });
+}
+
+Future animationFrames([int numFrames = 1]) async {
+  for (int i = 0; i < numFrames; i++) {
+    await window.animationFrame;
+  }
 }
 
 class TestActions {}
