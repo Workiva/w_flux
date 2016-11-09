@@ -24,6 +24,7 @@ main(List<String> args) async {
   config.analyze.entryPoints = dirs;
   config.analyze.strong = true;
   config.copyLicense.directories = dirs;
+  config.coverage.pubServe = true;
   config.format.directories = dirs;
   config.test.platforms = ['vm', 'content-shell'];
 
