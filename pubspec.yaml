@@ -1,6 +1,7 @@
 name: w_flux
 version: 2.5.0
 description: Flux library for uni-directional dataflow inspired by reflux and Facebook's flux architecture.
+
 authors:
   - Workiva Client Platform Team <team-clientplatform@workiva.com>
   - Dustin Lessard <dustin.lessard@workiva.com>
@@ -8,15 +9,19 @@ authors:
   - Jay Udey <jay.udey@workiva.com>
   - Max Peterson <maxwell.peterson@workiva.com>
   - Trent Grover <trent.grover@workiva.com>
+
 homepage: https://github.com/Workiva/w_flux
-dependencies:
-  react: "^3.0.0"
-dev_dependencies:
-  coverage: "^0.7.2"
-  dart_dev: "^1.0.0"
-  dart_style: "^0.2.0"
-  dartdoc: "^0.8.0"
-  test: "^0.12.3+5"
-  rate_limit: 0.1.0
+
 environment:
   sdk: ">=1.9.0 <2.0.0"
+
+dependencies:
+  react: ^3.0.0
+
+dev_dependencies:
+  coverage: ^0.7.9
+  dart_dev: ^1.5.1
+  dart_style: ^0.2.11+1
+  dartdoc: ^0.9.7+6
+  test: ^0.12.15+12
+  rate_limit: ^0.1.0
