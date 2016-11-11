@@ -165,6 +165,20 @@ void main() {
         await action();
         expect(listened, isFalse);
       });
+
+      test('should stop listening when actions are disposed', () async {
+        var action = new Action();
+        var listened = false;
+        action.listen((_) => listened = true);
+
+        await action();
+        expect(listened, isTrue);
+
+        listened = false;
+        await action.dispose();
+        await action();
+        expect(listened, isFalse);
+      });
     });
 
     group('benchmarks', () {
