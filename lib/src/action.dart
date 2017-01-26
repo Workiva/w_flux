@@ -78,7 +78,7 @@ class Action<T> extends Object with Disposable implements Function {
   /// dispatched. A payload of type [T] will be passed to the callback if
   /// supplied at dispatch time, otherwise null will be passed. Returns an
   /// [ActionSubscription] which provides means to cancel the subscription.
-  ActionSubscription listen(void onData(T event)) {
+  ActionSubscription listen(dynamic onData(T event)) {
     _listeners.add(onData);
     return new ActionSubscription(() => _listeners.remove(onData));
   }
