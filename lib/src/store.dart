@@ -85,8 +85,10 @@ class Store extends Disposable {
       throw new StateError('Store has been disposed');
     }
 
-    return _stream.listen(onData,
+    StreamSubscription<Store> streamSubscription = _stream.listen(onData,
         onError: onError, onDone: onDone, cancelOnError: cancelOnError);
+    manageStreamSubscription(streamSubscription);
+    return streamSubscription;
   }
 
   /// Registers an [ActionSubscription] to be canceled when the store is disposed.
