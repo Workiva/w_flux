@@ -71,6 +71,7 @@ class Store extends Disposable {
   }
 
   /// The stream underlying [trigger] events and [listen].
+  @visibleForTesting
   Stream<Store> get stream => _stream;
 
   /// Adds a subscription to this `Store`.
