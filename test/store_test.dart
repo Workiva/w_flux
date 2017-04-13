@@ -58,13 +58,14 @@ void main() {
       store.trigger();
     });
 
-    test('should trigger in response to an action', () {
+    test('should trigger in response to an action', () async {
       Action _action = new Action();
       store.triggerOnAction(_action);
-      store.listen(expectAsync((Store payload) {
-        expect(payload, store);
-      }) as StoreHandler);
+
       _action();
+      Store payload = await store.stream.first;
+
+      expect(payload, store);
     });
 
     test(

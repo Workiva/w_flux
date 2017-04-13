@@ -70,6 +70,10 @@ class Store extends Disposable {
         .asBroadcastStream() as Stream<Store>;
   }
 
+  /// The stream underlying [trigger] events and [listen].
+  @visibleForTesting
+  Stream<Store> get stream => _stream;
+
   /// Adds a subscription to this `Store`.
   ///
   /// Each time this `Store` triggers (by calling [trigger]), indicating that
