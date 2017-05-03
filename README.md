@@ -20,7 +20,7 @@
 
 ## Overview
 
-![flux-diagram](https://github.com/Workiva/w_flux/blob/images/images/flux_diagram.png)
+![flux-diagram](https://raw.githubusercontent.com/Workiva/w_flux/images/images/flux_diagram.png)
 
 `w_flux` implements a uni-directional data flow pattern comprised of `Actions`, `Stores`, and `FluxComponents`.
 
