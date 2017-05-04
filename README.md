@@ -11,6 +11,7 @@
   - [**Action**](#action)
   - [**Store**](#store)
   - [**FluxComponent**](#fluxcomponent)
+  - [**`over_react` FluxUiComponent**](#over_react-fluxuicomponent)
 - [**Examples**](#examples)
 - [**External Consumption**](#external-consumption)
 - [**Development**](#development)
@@ -19,7 +20,7 @@
 
 ## Overview
 
-![flux-diagram](https://github.com/Workiva/w_flux/blob/images/images/flux_diagram.png)
+![flux-diagram](https://raw.githubusercontent.com/Workiva/w_flux/images/images/flux_diagram.png)
 
 `w_flux` implements a uni-directional data flow pattern comprised of `Actions`, `Stores`, and `FluxComponents`.
 
@@ -220,6 +221,16 @@ class _ComplexComponent extends FluxComponent<ComplexActions, ComplexStore> {
   }
 }
 ```
+
+### `over_react` FluxUiComponent
+
+If you are using the [`over_react` package](https://github.com/Workiva/over_react)
+to build UI components, they offer a strongly-typed version of the "flux
+component" pattern shown above.
+
+https://github.com/workiva/over_react#flux-component-boilerplate
+
+
 
 ---
 
