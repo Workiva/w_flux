@@ -162,6 +162,8 @@ void main() {
       controller.add('something else');
       await nextTick();
       expect(numberOfCalls, 1);
+
+      await controller.close();
     });
   });
 }

@@ -161,6 +161,8 @@ void main() {
       controller.add('something else');
       await animationFrames(2);
       expect(numberOfCalls, 1);
+
+      await controller.close();
     });
 
     test('should not redraw after being unmounted', () async {
