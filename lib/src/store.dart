@@ -112,9 +112,9 @@ class Store extends Disposable {
   /// This should be called whenever this `Store`'s data has finished mutating in
   /// response to an action.
   ///
-  /// If the `Store` has been disposed, this method has no effect.
+  /// If the `Store` is disposing or has been disposed, this method has no effect.
   void trigger() {
-    if (isDisposed) return;
+    if (isDisposedOrDisposing) return;
 
     _streamController.add(this);
   }
