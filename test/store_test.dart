@@ -35,7 +35,7 @@ void main() {
     });
 
     test('should trigger with itself as the payload', () {
-      store.listen(expectAsync((Store payload) {
+      store.listen(expectAsync1((payload) {
         expect(payload, store);
       }) as StoreHandler);
 
@@ -49,7 +49,7 @@ void main() {
       // all others that occurred within the throttled duration)
       store = new Store.withTransformer(
           new Throttler(const Duration(milliseconds: 30)));
-      store.listen(expectAsync((Store payload) {}, count: 2) as StoreHandler);
+      store.listen(expectAsync1((payload) {}, count: 2) as StoreHandler);
 
       store.trigger();
       store.trigger();
@@ -78,7 +78,7 @@ void main() {
       }
 
       store.triggerOnAction(_action, syncCallback);
-      store.listen(expectAsync((Store payload) {
+      store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(methodCalled, isTrue);
       }) as StoreHandler);
@@ -96,7 +96,7 @@ void main() {
       }
 
       store.triggerOnAction(_action, asyncCallback);
-      store.listen(expectAsync((Store payload) {
+      store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(afterTimer, isTrue);
       }) as StoreHandler);
@@ -109,7 +109,7 @@ void main() {
       Action<num> _action = new Action<num>();
       num counter = 0;
       store.triggerOnAction(_action, (payload) => counter = payload);
-      store.listen(expectAsync((Store payload) {
+      store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(counter, 17);
       }) as StoreHandler);
@@ -119,7 +119,7 @@ void main() {
     test('cleans up its StreamController on dispose', () {
       bool afterDispose = false;
 
-      store.listen(expectAsync((Store payload) async {
+      store.listen(expectAsync1((payload) async {
         // Safety check to avoid infinite trigger loop
         expect(afterDispose, isFalse);
 
@@ -139,7 +139,7 @@ void main() {
 
       Action _action = new Action();
       store.triggerOnAction(_action);
-      store.listen(expectAsync((Store payload) async {
+      store.listen(expectAsync1((payload) async {
         // Safety check to avoid infinite trigger loop
         expect(afterDispose, isFalse);
 

@@ -161,7 +161,7 @@ void main() {
         expect(listened, isTrue);
 
         listened = false;
-        action.clearListeners();
+        await action.dispose();
         await action();
         expect(listened, isFalse);
       });

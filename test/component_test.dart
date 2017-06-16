@@ -147,7 +147,7 @@ void main() {
       int numberOfCalls = 0;
       StreamController controller = new StreamController();
       TestDefaultComponent component = new TestDefaultComponent();
-      component.addSubscription(controller.stream.listen((_) {
+      component.manageStreamSubscription(controller.stream.listen((_) {
         numberOfCalls += 1;
       }));
 

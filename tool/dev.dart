@@ -25,7 +25,7 @@ main(List<String> args) async {
   config.analyze.strong = true;
   config.copyLicense.directories = dirs;
   config.coverage.pubServe = true;
-  config.format.directories = dirs;
+  config.format.paths = dirs;
   config.test.platforms = ['vm', 'content-shell'];
 
   await dev(args);
