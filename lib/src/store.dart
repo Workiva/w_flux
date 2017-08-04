@@ -102,7 +102,7 @@ class Store extends Disposable {
   @mustCallSuper
   @protected
   void manageActionSubscription(ActionSubscription subscription) {
-    manageDisposer(() async => subscription.cancel());
+    getManagedDisposer(() async => subscription.cancel());
   }
 
   /// Trigger a "data updated" event. All registered listeners of this `Store`

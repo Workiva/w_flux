@@ -66,7 +66,8 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
             value: (_) => (_) => redraw())
           ..addAll(getStoreHandlers());
     handlers.forEach((store, handler) {
-      manageStreamSubscription(store.listen(handler));
+      var subscription = store.listen(handler);
+      getManagedDisposer(() async => subscription.cancel());
     });
   }
 
