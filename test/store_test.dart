@@ -17,7 +17,7 @@ library w_flux.test.store_test;
 
 import 'dart:async';
 
-import 'package:rate_limit/rate_limit.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 import 'package:w_flux/src/action.dart';
 import 'package:w_flux/src/store.dart';
@@ -42,16 +42,13 @@ void main() {
       store.trigger();
     });
 
-    test('should support stream transforms', () {
+    test('should support stream transforms', () async {
       // ensure that multiple trigger executions emit
       // exactly 2 throttled triggers to external listeners
-      // (1 for the initial trigger and 1 as the aggregate of
-      // all others that occurred within the throttled duration)
-      store = new Store.withTransformer(
-          new Throttler(const Duration(milliseconds: 30)));
+      store =
+          new Store.withTransformer(new BufferWithCountStreamTransformer(2));
       store.listen(expectAsync1((payload) {}, count: 2) as StoreHandler);
 
-      store.trigger();
       store.trigger();
       store.trigger();
       store.trigger();

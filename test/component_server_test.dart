@@ -55,6 +55,7 @@ void main() {
 
       // Simulate un-mounting the component
       component.componentWillUnmount();
+      await component.didDispose;
 
       // Component should no longer be listening
       store.trigger();
@@ -133,6 +134,7 @@ void main() {
 
       // Simulate un-mounting the component
       component.componentWillUnmount();
+      await component.didDispose;
 
       // Component should no longer be listening
       store.trigger();
@@ -148,9 +150,11 @@ void main() {
       int numberOfCalls = 0;
       StreamController controller = new StreamController();
       TestDefaultComponent component = new TestDefaultComponent();
-      component.manageStreamSubscription(controller.stream.listen((_) {
+
+      var subscription = controller.stream.listen((_) {
         numberOfCalls += 1;
-      }));
+      });
+      component.getManagedDisposer(() async => subscription.cancel());
 
       // Add something to the stream and expect the handler to have been called
       controller.add('something');
@@ -159,6 +163,7 @@ void main() {
 
       // Unmount the component, expect the subscription to have been canceled
       component.componentWillUnmount();
+      await component.didDispose;
       controller.add('something else');
       await nextTick();
       expect(numberOfCalls, 1);
