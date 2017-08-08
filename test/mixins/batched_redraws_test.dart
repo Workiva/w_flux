@@ -70,10 +70,13 @@ void main() {
       expect(component.renderCount, equals(0));
     });
 
-    test('should not redraw when didBatchRedraw is true, and should reset it to false afterwards', () async {
+    test(
+        'should not redraw when didBatchRedraw is true,'
+        ' and should reset it to false afterwards', () async {
       component.didBatchRedraw = true;
       component.redraw();
-      expect(component.didBatchRedraw, isTrue, reason: 'should not have been reset yet');
+      expect(component.didBatchRedraw, isTrue,
+          reason: 'should not have been reset yet');
       await nextTick();
       expect(component.renderCount, equals(0));
       expect(component.didBatchRedraw, isFalse);

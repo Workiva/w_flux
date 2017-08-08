@@ -183,7 +183,9 @@ void main() {
       expect(component.numberOfRedraws, equals(0));
     });
 
-    test('only redraws once in response to a store trigger combined with an ancestor rerendering', () async {
+    test(
+        'only redraws once in response to a store trigger'
+        ' combined with an ancestor rerendering', () async {
       var store = new Store();
 
       TestNestedComponent nested0;
@@ -191,20 +193,28 @@ void main() {
       TestNestedComponent nested2;
 
       react_test_utils.renderIntoDocument(
-          TestNested({
+        TestNested(
+          {
             'store': store,
-            'ref': (ref) { nested0 = ref; },
+            'ref': (ref) {
+              nested0 = ref;
+            },
           },
+          TestNested(
+            {
+              'store': store,
+              'ref': (ref) {
+                nested1 = ref;
+              },
+            },
             TestNested({
               'store': store,
-              'ref': (ref) { nested1 = ref; },
-            },
-              TestNested({
-                'store': store,
-                'ref': (ref) { nested2 = ref; },
-              }),
-            )
-          )
+              'ref': (ref) {
+                nested2 = ref;
+              },
+            }),
+          ),
+        ),
       );
       expect(nested0.renderCount, 1, reason: 'setup check: initial render');
       expect(nested1.renderCount, 1, reason: 'setup check: initial render');
@@ -213,9 +223,12 @@ void main() {
       nested0.redraw();
       await animationFrames(2);
 
-      expect(nested0.renderCount, 2, reason: 'setup check: components should rerender their children');
-      expect(nested1.renderCount, 2, reason: 'setup check: components should rerender their children');
-      expect(nested2.renderCount, 2, reason: 'setup check: components should rerender their children');
+      expect(nested0.renderCount, 2,
+          reason: 'setup check: components should rerender their children');
+      expect(nested1.renderCount, 2,
+          reason: 'setup check: components should rerender their children');
+      expect(nested2.renderCount, 2,
+          reason: 'setup check: components should rerender their children');
 
       store.trigger();
       // Two async gaps just to be safe, since we're
@@ -223,9 +236,15 @@ void main() {
       await animationFrames(2);
       await animationFrames(2);
 
-      expect(nested0.renderCount, 3, reason: 'should have rerendered once in response to the store triggering');
-      expect(nested1.renderCount, 3, reason: 'should have rerendered once in response to the store triggering');
-      expect(nested2.renderCount, 3, reason: 'should have rerendered once in response to the store triggering');
+      expect(nested0.renderCount, 3,
+          reason: 'should have rerendered once in response to'
+              ' the store triggering');
+      expect(nested1.renderCount, 3,
+          reason: 'should have rerendered once in response to'
+              ' the store triggering');
+      expect(nested2.renderCount, 3,
+          reason: 'should have rerendered once in response to'
+              ' the store triggering');
     });
   });
 }
@@ -303,6 +322,7 @@ class TestHandlerPrecedence extends FluxComponent<TestActions, TestStores> {
 }
 
 final TestNested = react.registerComponent(() => new TestNestedComponent());
+
 class TestNestedComponent extends FluxComponent {
   int renderCount = 0;
 
