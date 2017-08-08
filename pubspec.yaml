@@ -27,3 +27,7 @@ dev_dependencies:
 
 environment:
   sdk: ">=1.21.0 <2.0.0"
+
+transformers:
+  - test/pub_serve:
+      $include: test/**_test{.*,}.dart
