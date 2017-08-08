@@ -34,6 +34,10 @@ void main() {
       store.dispose();
     });
 
+    test('should extend Stream', () {
+      expect(store, new isInstanceOf<Stream>());
+    });
+
     test('should trigger with itself as the payload', () {
       store.listen(expectAsync1((payload) {
         expect(payload, store);

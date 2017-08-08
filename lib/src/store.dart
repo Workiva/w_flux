@@ -39,7 +39,7 @@ typedef StoreHandler(Store event);
 /// In a typical application using `w_flux`, a [FluxComponent] listens to
 /// `Store`s, triggering re-rendering of the UI elements based on the updated
 /// `Store` data.
-class Store extends Disposable {
+class Store extends Stream<Store> with Disposable {
   /// Stream controller for [_stream]. Used by [trigger].
   final StreamController<Store> _streamController;
 
@@ -70,7 +70,14 @@ class Store extends Disposable {
         .asBroadcastStream() as Stream<Store>;
   }
 
+  @override
+  bool get isBroadcast => _stream.isBroadcast;
+
   /// The stream underlying [trigger] events and [listen].
+  ///
+  /// Deprecated: [Store] now extends [Stream]. Since the store itself
+  /// can be treated as a stream this is no longer required.
+  @Deprecated('3.0.0')
   @visibleForTesting
   Stream<Store> get stream => _stream;
 
@@ -83,6 +90,7 @@ class Store extends Disposable {
   ///
   /// It is the caller's responsibility to cancel the subscription when
   /// needed.
+  @override
   StreamSubscription<Store> listen(StoreHandler onData,
       {Function onError, void onDone(), bool cancelOnError}) {
     if (isDisposed) {
