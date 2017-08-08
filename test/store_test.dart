@@ -34,6 +34,23 @@ void main() {
       store.dispose();
     });
 
+    test('should extend Stream', () {
+      expect(store, new isInstanceOf<Stream>());
+    });
+
+    group('isBroadcast', () {
+      test('should be true when the default constructor is used', () {
+        store = new Store();
+        expect(store.isBroadcast, isTrue);
+      });
+
+      test('should be true when the withTransformer constructor is used', () {
+        store =
+            new Store.withTransformer(new BufferWithCountStreamTransformer(2));
+        expect(store.isBroadcast, isTrue);
+      });
+    });
+
     test('should trigger with itself as the payload', () {
       store.listen(expectAsync1((payload) {
         expect(payload, store);
