@@ -27,6 +27,7 @@ main(List<String> args) async {
   config.coverage.pubServe = true;
   config.format.paths = dirs;
   config.test.platforms = ['vm', 'content-shell'];
+  config.test.pubServe = true;
 
   await dev(args);
 }
