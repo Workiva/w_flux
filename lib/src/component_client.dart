@@ -14,6 +14,8 @@
 
 library w_flux.src.component_client;
 
+import 'package:meta/meta.dart';
+
 import 'package:w_flux/src/component_common.dart';
 import 'package:w_flux/src/mixins/batched_redraws.dart';
 import 'package:w_flux/src/store.dart';
@@ -26,10 +28,19 @@ import 'package:w_flux/src/store.dart';
 /// [BatchedRedraws] mixin to throttle redraws down to one per animation frame.
 abstract class FluxComponent<ActionsT, StoresT>
     extends FluxComponentCommon<ActionsT, StoresT> with BatchedRedraws {
+  @mustCallSuper
   @override
   void componentWillUnmount() {
     // ensure that unmounted components don't batch render
     shouldBatchRedraw = false;
     super.componentWillUnmount();
+  }
+
+  @mustCallSuper
+  @override
+  void componentDidUpdate(Map prevProps, Map prevState) {
+    // Let BatchedRedraws know that this component has redrawn in the current batch
+    didBatchRedraw = true;
+    super.componentDidUpdate(prevProps, prevState);
   }
 }

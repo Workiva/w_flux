@@ -23,7 +23,9 @@ class _RedrawScheduler implements Function {
     await window.animationFrame;
     _components
       ..forEach((component, callbacks) {
-        if (!component.shouldBatchRedraw) {
+        // Skip if the component doesn't want to batch redraw, or if it has
+        // redrawn already in this batch.
+        if (!component.shouldBatchRedraw || component.didBatchRedraw) {
           return;
         }
 
@@ -38,6 +40,9 @@ class _RedrawScheduler implements Function {
         }
 
         (component as react.Component)?.setState({}, chainedCallbacks);
+      })
+      ..forEach((component, callbacks) {
+        component.didBatchRedraw = false;
       })
       ..clear();
   }
@@ -58,6 +63,10 @@ _RedrawScheduler _scheduleRedraw = new _RedrawScheduler();
 ///
 class BatchedRedraws {
   bool shouldBatchRedraw = true;
+
+  /// A flag marking components that did update as the result of a batch redraw,
+  /// and used to prevent excessive redraws in hierarchies of nested flux components.
+  bool didBatchRedraw = false;
 
   void redraw([callback()]) => _scheduleRedraw(this, callback);
 }

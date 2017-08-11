@@ -18,11 +18,16 @@ library w_flux.test.component_test;
 import 'dart:async';
 import 'dart:html' show window;
 
+import 'package:over_react/over_react.dart' show cloneElement;
 import 'package:react/react.dart' as react;
+import 'package:react/react_client.dart';
+import 'package:react/react_test_utils.dart' as react_test_utils;
 import 'package:test/test.dart';
 import 'package:w_flux/w_flux.dart';
 
 void main() {
+  setClientConfiguration();
+
   group('FluxComponent', () {
     test('should expose an actions getter', () {
       TestDefaultComponent component = new TestDefaultComponent();
@@ -177,6 +182,70 @@ void main() {
       await animationFrames(2);
       expect(component.numberOfRedraws, equals(0));
     });
+
+    test(
+        'only redraws once in response to a store trigger'
+        ' combined with an ancestor rerendering', () async {
+      var store = new Store();
+
+      TestNestedComponent nested0;
+      TestNestedComponent nested1;
+      TestNestedComponent nested2;
+
+      react_test_utils.renderIntoDocument(
+        TestNested(
+          {
+            'store': store,
+            'ref': (ref) {
+              nested0 = ref;
+            },
+          },
+          TestNested(
+            {
+              'store': store,
+              'ref': (ref) {
+                nested1 = ref;
+              },
+            },
+            TestNested({
+              'store': store,
+              'ref': (ref) {
+                nested2 = ref;
+              },
+            }),
+          ),
+        ),
+      );
+      expect(nested0.renderCount, 1, reason: 'setup check: initial render');
+      expect(nested1.renderCount, 1, reason: 'setup check: initial render');
+      expect(nested2.renderCount, 1, reason: 'setup check: initial render');
+
+      nested0.redraw();
+      await animationFrames(2);
+
+      expect(nested0.renderCount, 2,
+          reason: 'setup check: components should rerender their children');
+      expect(nested1.renderCount, 2,
+          reason: 'setup check: components should rerender their children');
+      expect(nested2.renderCount, 2,
+          reason: 'setup check: components should rerender their children');
+
+      store.trigger();
+      // Two async gaps just to be safe, since we're
+      // asserting that additional redraws don't happen.
+      await animationFrames(2);
+      await animationFrames(2);
+
+      expect(nested0.renderCount, 3,
+          reason: 'should have rerendered once in response to'
+              ' the store triggering');
+      expect(nested1.renderCount, 3,
+          reason: 'should have rerendered once in response to'
+              ' the store triggering');
+      expect(nested2.renderCount, 3,
+          reason: 'should have rerendered once in response to'
+              ' the store triggering');
+    });
   });
 }
 
@@ -249,5 +318,26 @@ class TestHandlerPrecedence extends FluxComponent<TestActions, TestStores> {
   void setState(_, [callback()]) {
     numberOfRedraws++;
     if (callback != null) callback();
+  }
+}
+
+final TestNested = react.registerComponent(() => new TestNestedComponent());
+
+class TestNestedComponent extends FluxComponent {
+  int renderCount = 0;
+
+  @override
+  render() {
+    renderCount++;
+
+    var keyCounter = 0;
+    var newChildren = props['children'].map((child) {
+      // The keys are consistent across rerenders, so they aren't remounted,
+      // but cloning the element is necessary for react to consider it changed,
+      // since it returns new ReactElement instances.
+      return cloneElement(child, {'key': keyCounter++});
+    }).toList();
+
+    return react.div({}, newChildren);
   }
 }
