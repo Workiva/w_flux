@@ -38,9 +38,9 @@ abstract class FluxComponent<ActionsT, StoresT>
 
   @mustCallSuper
   @override
-  void componentDidUpdate(Map prevProps, Map prevState) {
-    // Let BatchedRedraws know that this component has redrawn in the current batch
+  void componentWillReceiveProps(Map prevProps) {
+    // Let BatchedRedraws know that this component is redrawing in the current batch
     didBatchRedraw = true;
-    super.componentDidUpdate(prevProps, prevState);
+    super.componentWillReceiveProps(prevProps);
   }
 }
