@@ -2,11 +2,10 @@ project: dart
 language: dart
 
 # This image is created using https://github.com/Workiva/smithy-runner-generator
-#runner_image: drydock-prod.workiva.net/workiva/smithy-runner-generator:179735 # Dart 1.24.2
-runner_image: drydock.workiva.net/workiva/smithy-runner-generator:202759 # Dart 1.24.2 w/ stable chrome
+runner_image: drydock-prod.workiva.net/workiva/smithy-runner-generator:203768 # Dart 1.24.2
 
 script:
-  - pub get
+  - pub get --packages-dir
   - xvfb-run -s '-screen 0 1024x768x24' pub run dart_dev test --web-compiler=dartdevc -p chrome -p vm
 
 artifacts:
