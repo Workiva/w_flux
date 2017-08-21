@@ -35,12 +35,4 @@ abstract class FluxComponent<ActionsT, StoresT>
     shouldBatchRedraw = false;
     super.componentWillUnmount();
   }
-
-  @mustCallSuper
-  @override
-  void componentWillReceiveProps(Map prevProps) {
-    // Let BatchedRedraws know that this component is redrawing in the current batch
-    didBatchRedraw = true;
-    super.componentWillReceiveProps(prevProps);
-  }
 }

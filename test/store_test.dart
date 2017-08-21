@@ -77,7 +77,7 @@ void main() {
       store.triggerOnAction(_action);
 
       _action();
-      Store payload = await store.stream.first;
+      Store payload = await store.first;
 
       expect(payload, store);
     });
