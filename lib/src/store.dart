@@ -94,7 +94,7 @@ class Store extends Stream<Store> with Disposable {
   StreamSubscription<Store> listen(StoreHandler onData,
       {Function onError, void onDone(), bool cancelOnError}) {
     if (isDisposed) {
-      throw new StateError('Store has been disposed');
+      throw new StateError('Store of type $runtimeType has been disposed');
     }
 
     return _stream.listen(onData,
@@ -137,7 +137,7 @@ class Store extends Stream<Store> with Disposable {
   /// If the `Store` has been disposed, this method throws a [StateError].
   triggerOnAction(Action action, [void onAction(payload)]) {
     if (isDisposed) {
-      throw new StateError('Store has been disposed');
+      throw new StateError('Store of type $runtimeType has been disposed');
     }
     manageActionSubscription(action.listen((payload) async {
       if (onAction != null) {
