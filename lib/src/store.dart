@@ -156,7 +156,8 @@ class Store extends Stream<Store> with Disposable {
   /// called until that future has resolved.
   ///
   /// If the `Store` has been disposed, this method throws a [StateError].
-  void onActionTrigger<T>(Action<T> action, [FutureOr<dynamic> onAction(T payload)]) {
+  void onActionTrigger<T>(Action<T> action,
+      [FutureOr<dynamic> onAction(T payload)]) {
     if (isOrWillBeDisposed) {
       throw new StateError('Store of type $runtimeType has been disposed');
     }
