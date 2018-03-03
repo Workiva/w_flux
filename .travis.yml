@@ -1,4 +1,10 @@
 language: dart
+dart:
+  - stable
+  - dev
+sudo: required
+addons:
+  chrome: stable
 dart_task:
   - test: --platform vm
   - test: --platform chrome
