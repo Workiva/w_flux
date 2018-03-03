@@ -5,8 +5,12 @@ dart:
 sudo: required
 addons:
   chrome: stable
+with_content_shell: true
 dart_task:
   - test: --platform vm
   - test: --platform chrome
   - dartfmt: true
   - dartanalyzer: example lib test tool
+script:
+  - pub run dart_dev coverage --no-html	
+  - bash <(curl -s https://codecov.io/bash) -f coverage/coverage.lcov
