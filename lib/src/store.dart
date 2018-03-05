@@ -139,15 +139,7 @@ class Store extends Stream<Store> with Disposable {
   /// To be removed: 3.0.0
   @deprecated
   triggerOnAction(Action action, [void onAction(payload)]) {
-    if (isDisposed) {
-      throw new StateError('Store of type $runtimeType has been disposed');
-    }
-    manageActionSubscription(action.listen((payload) async {
-      if (onAction != null) {
-        await onAction(payload);
-      }
-      trigger();
-    }));
+    triggerOnActionV2(action, onAction);
   }
 
   /// A convenience method for listening to an [action] and triggering
