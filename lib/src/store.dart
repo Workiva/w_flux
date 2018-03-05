@@ -135,7 +135,9 @@ class Store extends Stream<Store> with Disposable {
   /// called until that future has resolved.
   ///
   /// If the `Store` has been disposed, this method throws a [StateError].
-  @Deprecated('4.0.0')
+  /// Deprecated: 2.9.5
+  /// To be removed: 3.0.0
+  @deprecated
   triggerOnAction(Action action, [void onAction(payload)]) {
     if (isDisposed) {
       throw new StateError('Store of type $runtimeType has been disposed');
