@@ -47,7 +47,7 @@ class RandomColorStore extends Store {
   RandomColorActions _actions;
 
   RandomColorStore(RandomColorActions this._actions) {
-    triggerOnAction(_actions.changeBackgroundColor, _changeBackgroundColor);
+    triggerOnActionV2(_actions.changeBackgroundColor, _changeBackgroundColor);
   }
 
   _changeBackgroundColor(_) {
