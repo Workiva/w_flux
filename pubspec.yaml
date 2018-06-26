@@ -17,11 +17,22 @@ dependencies:
   react: '>=3.0.0 <5.0.0'
   w_common: ^1.9.0
 dev_dependencies:
+  abide:
+    hosted:
+      name: abide
+      url: https://pub.workiva.org
+    version: ^1.4.1
   coverage: ^0.7.9
   dart_dev: ^1.8.0
   dart_style: '>=0.2.4 <2.0.0'
   dartdoc: '>=0.9.0 <0.13.0'
+  dependency_validator: ^1.1.1
   rxdart: ^0.12.0
+  semver_audit:
+    hosted:
+      name: semver_audit
+      url: https://pub.workiva.org
+    version: ^1.4.2
   test: ^0.12.15+12
 
 environment:

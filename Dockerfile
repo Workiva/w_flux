@@ -15,6 +15,9 @@ WORKDIR /build/
 ADD . /build/
 RUN echo "Starting the script sections" && \
 		pub get --packages-dir && \
+		pub run abide && \
+		pub run dependency_validator -i abide,coverage,dart_style,dartdoc,semver_audit && \
+		pub run semver_audit report --repo Workiva/w_flux && \
 		xvfb-run -s '-screen 0 1024x768x24' pub run dart_dev test --web-compiler=dartdevc -p chrome -p vm && \
 		echo "Script sections completed"
 ARG BUILD_ARTIFACTS_BUILD=/build/pubspec.lock

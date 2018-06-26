@@ -63,8 +63,7 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
     // and wired up to their respective handlers.
     Map<Store, StoreHandler> handlers =
         new Map<Store, StoreHandler>.fromIterable(redrawOn(),
-            value: (_) => (_) => redraw())
-          ..addAll(getStoreHandlers());
+            value: (_) => (_) => redraw())..addAll(getStoreHandlers());
     handlers.forEach((store, handler) {
       listenToStream(store, handler);
     });
