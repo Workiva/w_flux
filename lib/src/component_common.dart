@@ -61,17 +61,22 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
     // have their triggers mapped directly to this components redraw function.
     // Stores included in the `getStoreHandlers()` result will be listened to
     // and wired up to their respective handlers.
-    final handlers = new Map<Store, StoreHandler>.fromIterable(redrawOn(),
-        value: (_) => handleRedrawOn)
-      ..addAll(getStoreHandlers());
-    handlers.forEach((store, handler) {
-      listenToStream(store, handler);
-    });
+    for (var store in redrawOn()) {
+      listenToStream(store.streamWithPayload, handleRedrawOnWithPayload);
+    }
+    // todo storeHandlers with payload?
+    // todo wrap in lifecycle methods so they can get traced?
+    getStoreHandlers().forEach(listenToStream);
   }
 
   @mustCallSuper
   void handleRedrawOn(Store store) {
     redraw();
+  }
+
+  @mustCallSuper
+  void handleRedrawOnWithPayload(StoreTriggerPayload payload) {
+    handleRedrawOn(payload.store);
   }
 
   @mustCallSuper

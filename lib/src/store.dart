@@ -41,15 +41,21 @@ typedef StoreHandler(Store event);
 /// `Store` data.
 class Store extends Stream<Store> with Disposable {
   /// Stream controller for [_stream]. Used by [trigger].
-  final StreamController<Store> _streamController;
+  final StreamController<StoreTriggerPayload> _streamControllerWithPayload;
 
   /// Broadcast stream of "data updated" events. Listened to in [listen].
   Stream<Store> _stream;
 
+  /// Broadcast stream of "data updated" events. Exposed via [streamWithPayload].
+  Stream<StoreTriggerPayload> _streamWithPayload;
+
   /// Construct a new [Store] instance.
-  Store() : _streamController = new StreamController<Store>.broadcast() {
-    manageStreamController(_streamController);
-    _stream = _streamController.stream;
+  Store()
+      : _streamControllerWithPayload =
+            new StreamController<StoreTriggerPayload>.broadcast() {
+    manageStreamController(_streamControllerWithPayload);
+    _streamWithPayload = _streamControllerWithPayload.stream;
+    _stream = _streamWithPayload.map((_) => this);
   }
 
   /// Construct a new [Store] instance with a transformer.
@@ -61,11 +67,14 @@ class Store extends Stream<Store> with Disposable {
   /// triggers this [Store] emits for state that may update extremely frequently
   /// (like scroll position).
   Store.withTransformer(StreamTransformer<dynamic, dynamic> transformer)
-      : _streamController = new StreamController<Store>() {
-    manageStreamController(_streamController);
+      : _streamControllerWithPayload =
+            new StreamController<StoreTriggerPayload>.broadcast() {
+    manageStreamController(_streamControllerWithPayload);
+    _streamWithPayload = _streamControllerWithPayload.stream;
 
     // apply a transform to the stream if supplied
-    _stream = _streamController.stream
+    _stream = _streamWithPayload
+        .map((_) => this)
         .transform(transformer as StreamTransformer<Store, dynamic>)
         .asBroadcastStream() as Stream<Store>;
   }
@@ -80,6 +89,14 @@ class Store extends Stream<Store> with Disposable {
   @Deprecated('3.0.0')
   @visibleForTesting
   Stream<Store> get stream => _stream;
+
+  /// The stream underlying [triggerWithPayload] events.
+  ///
+  /// Using [Expando], the caller to [triggerWithPayload] can attach metadata to
+  /// the [StoreTriggerPayload] event, allowing implementations to associate
+  /// these events with specific triggers.
+  /// See `example/payload` for an example.
+  Stream<StoreTriggerPayload> get streamWithPayload => _streamWithPayload;
 
   /// Adds a subscription to this `Store`.
   ///
@@ -121,10 +138,29 @@ class Store extends Stream<Store> with Disposable {
   /// response to an action.
   ///
   /// If the `Store` is disposing or has been disposed, this method has no effect.
-  void trigger() {
+  void trigger() => triggerWithPayload();
+
+  /// Trigger a "data updated" event. All registered listeners of this `Store`
+  /// will receive the event, at which point they can use the latest data
+  /// from this `Store` as necessary.
+  ///
+  /// This should be called whenever this `Store`'s data has finished mutating in
+  /// response to an action.
+  ///
+  /// If the `Store` is disposing or has been disposed, this method has no effect.
+  ///
+  /// [addMeta] will be called with the [StoreTriggerPayload] that will be added
+  /// to [streamWithPayload], during which callers can use [Expando] to attach metadata.
+  /// This allows implementations to associate these events with specific triggers.
+  /// See `example/payload` for an example.
+  void triggerWithPayload([void addMeta(StoreTriggerPayload payload)]) {
     if (isOrWillBeDisposed) return;
 
-    _streamController.add(this);
+    var payload = new StoreTriggerPayload(this);
+    if (addMeta != null) addMeta(payload);
+
+    // Send events to both so that legacy listeners are gucci
+    _streamControllerWithPayload.add(payload);
   }
 
   /// A convenience method for listening to an [action] and triggering
@@ -162,4 +198,41 @@ class Store extends Stream<Store> with Disposable {
       trigger();
     }));
   }
+
+  /// A convenience method for listening to an [action] and triggering
+  /// automatically once the callback for said action has completed.
+  ///
+  /// If [onAction] is provided, it will be called every time [action] is
+  /// dispatched. If [onAction] returns a [Future], [trigger] will not be
+  /// called until that future has resolved.
+  ///
+  /// [addMeta] will be called with the [StoreTriggerPayload] that will be added
+  /// to [streamWithPayload], during which callers can use [Expando] to attach metadata.
+  /// This allows implementations to associate these events with specific triggers.
+  /// See `example/payload` for an example.
+  ///
+  /// If the `Store` has been disposed, this method throws a [StateError].
+  void triggerOnActionWithPayload<T>(Action<T> action,
+      [FutureOr<dynamic> onAction(T payload), _AddMeta addMeta]) {
+    if (isOrWillBeDisposed) {
+      throw new StateError('Store of type $runtimeType has been disposed');
+    }
+    manageActionSubscription(action.listen((payload) async {
+      if (onAction != null) {
+        await onAction(payload);
+      }
+      triggerWithPayload(addMeta);
+    }));
+  }
 }
+
+/// A "box" data structure for a [Store] used to store dispatch-specific
+/// metadata using [Expando].
+///
+/// See `example/payload` for an example.
+class StoreTriggerPayload {
+  final Store store;
+  StoreTriggerPayload(this.store);
+}
+
+typedef void _AddMeta(StoreTriggerPayload payload);
