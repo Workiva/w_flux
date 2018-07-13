@@ -64,14 +64,22 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
     for (var store in redrawOn()) {
       listenToStream(store.streamWithPayload, handleRedrawOnWithPayload);
     }
-    // todo storeHandlers with payload?
-    // todo wrap in lifecycle methods so they can get traced?
-    getStoreHandlers().forEach(listenToStream);
+    getStoreHandlers().forEach((store, handler) {
+      listenToStream(store.streamWithPayload, (StoreTriggerPayload payload) {
+        handleStoreHandlerWithPayload(payload, handler);
+      });
+    });
   }
 
   @mustCallSuper
   void handleRedrawOn(Store store) {
     redraw();
+  }
+
+  @mustCallSuper
+  void handleStoreHandlerWithPayload(
+      StoreTriggerPayload payload, StoreHandler handler) {
+    handler(payload.store);
   }
 
   @mustCallSuper
