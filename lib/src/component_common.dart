@@ -65,30 +65,21 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
     for (var store in redrawOn()) {
       // If the store is handled by storeHandlers, don't subscribe to it here.
       if (!storeHandlers.containsKey(store)) {
-        listenToStream(store.streamWithPayload, handleRedrawOnWithPayload);
+        listenToStoreForRedraw(store);
       }
     }
-    storeHandlers.forEach((store, handler) {
-      listenToStream(store.streamWithPayload, (StoreTriggerPayload payload) {
-        handleStoreHandlerWithPayload(payload, handler);
-      });
-    });
+    storeHandlers.forEach(listenToStream);
+  }
+
+  @protected
+  void listenToStoreForRedraw(Store store) {
+    listenToStream(store, handleRedrawOn);
   }
 
   @mustCallSuper
+  @protected
   void handleRedrawOn(Store store) {
     redraw();
-  }
-
-  @mustCallSuper
-  void handleStoreHandlerWithPayload(
-      StoreTriggerPayload payload, StoreHandler handler) {
-    handler(payload.store);
-  }
-
-  @mustCallSuper
-  void handleRedrawOnWithPayload(StoreTriggerPayload payload) {
-    handleRedrawOn(payload.store);
   }
 
   @mustCallSuper
