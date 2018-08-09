@@ -20,7 +20,16 @@ class _RedrawScheduler implements Function {
   }
 
   Future _tick() async {
-    await window.animationFrame;
+    // `requestAnimationFrame()` (called by [window.animationFrame]) does not
+    // fire (or fires with a significant delay depending on the browser) when
+    // the current tab/window is not focused.
+    // [source: https://stackoverflow.com/questions/15871942/how-do-browsers-pause-change-javascript-when-tab-or-window-is-not-active]
+    //
+    // To prevent creating huge batches that all fire when the window is
+    // focused again, do not batch updates if the document is hidden.
+    if (!document.hidden) {
+      await window.animationFrame;
+    }
     _components
       ..forEach((component, callbacks) {
         // Skip if the component doesn't want to batch redraw
