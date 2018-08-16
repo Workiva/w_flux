@@ -22,15 +22,15 @@ class _RedrawScheduler implements Function {
   }
 
   Future _tick() async {
-    if (_documentVisibilitySubscription == null) {
-      _documentVisibilitySubscription = document.onVisibilityChange.listen((_) {
-        if (document.hidden && _completer != null && !_completer.isCompleted) {
-          print('    end waiting because document is no longer visible.');
-          _completer.complete();
-          _documentVisibilitySubscription.cancel();
-        }
-      });
-    }
+//    if (_documentVisibilitySubscription == null) {
+//      _documentVisibilitySubscription = document.onVisibilityChange.listen((_) {
+//        if (document.hidden && _completer != null && !_completer.isCompleted) {
+//          print('    end waiting because document is no longer visible.');
+//          _completer.complete();
+//          _documentVisibilitySubscription.cancel();
+//        }
+//      });
+//    }
     // `requestAnimationFrame()` (called by [window.animationFrame]) does not
     // fire (or fires with a significant delay depending on the browser) when
     // the current tab/window is not focused.
@@ -38,20 +38,20 @@ class _RedrawScheduler implements Function {
     //
     // To prevent creating huge batches that all fire when the window is
     // focused again, do not batch updates if the document is hidden.
-    if (!document.hidden) {
-      print('waiting for animationFrame...');
-      _completer = new Completer<Null>();
-      window.animationFrame.then((_) {
-        if (!_completer.isCompleted) {
-          _completer.complete();
-        }
-      });
-
-      await _completer.future;
-      print('   done waiting.');
-    } else {
-      print('Skipping awiat animationFrame, document is hidden!');
-    }
+//    if (!document.hidden) {
+//      print('waiting for animationFrame...');
+//      _completer = new Completer<Null>();
+//      window.animationFrame.then((_) {
+//        if (!_completer.isCompleted) {
+//          _completer.complete();
+//        }
+//      });
+//
+//      await _completer.future;
+//      print('   done waiting.');
+//    } else {
+//      print('Skipping awiat animationFrame, document is hidden!');
+//    }
     _components
       ..forEach((component, callbacks) {
         // Skip if the component doesn't want to batch redraw
