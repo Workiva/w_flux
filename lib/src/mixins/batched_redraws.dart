@@ -28,7 +28,11 @@ class _RedrawScheduler implements Function {
     // To prevent creating huge batches that all fire when the window is
     // focused again, do not batch updates if the document is hidden.
     if (!document.hidden) {
+      print('waiting for animationFrame...');
       await window.animationFrame;
+      print('   done waiting.');
+    } else {
+      print('Skipping awiat animationFrame, document is hidden!');
     }
     _components
       ..forEach((component, callbacks) {
