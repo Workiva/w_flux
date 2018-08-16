@@ -1,7 +1,8 @@
 language: dart
 dart:
-  - stable
-  - dev
+  - 1.24.3
+# Uncomment stable (dart 2) until dependencies support it.
+#  - stable
 sudo: required
 addons:
   chrome: stable
