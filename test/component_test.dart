@@ -143,6 +143,26 @@ void main() {
       expect(component.numberOfHandlerCalls, 1);
     });
 
+    test('should call lifecycle methods related to store handlers', () async {
+      final component = new TestHandlerLifecycle();
+      final store = new TestStore();
+      component.props = {'store': store};
+      component.componentWillMount();
+
+      expect(component.lifecycleCalls, [
+        ['listenToStoreForRedraw', store],
+      ]);
+      component.lifecycleCalls.clear();
+
+      // Cause store to trigger, wait for it to propagate
+      store.trigger();
+      await animationFrames(2);
+
+      expect(component.lifecycleCalls, [
+        ['handleRedrawOn', store],
+      ]);
+    });
+
     test('should cancel any subscriptions added with addSubscription',
         () async {
       // Setup a new subscription on a component
@@ -249,5 +269,29 @@ class TestHandlerPrecedence extends FluxComponent<TestActions, TestStores> {
   void setState(_, [callback()]) {
     numberOfRedraws++;
     if (callback != null) callback();
+  }
+}
+
+class TestHandlerLifecycle extends FluxComponent<TestActions, TestStore> {
+  int numberOfRedraws = 0;
+  List<List<dynamic>> lifecycleCalls = [];
+
+  render() => react.div({});
+
+  void setState(_, [callback()]) {
+    numberOfRedraws++;
+    if (callback != null) callback();
+  }
+
+  @override
+  void handleRedrawOn(Store store) {
+    lifecycleCalls.add(['handleRedrawOn', store]);
+    super.handleRedrawOn(store);
+  }
+
+  @override
+  void listenToStoreForRedraw(Store store) {
+    lifecycleCalls.add(['listenToStoreForRedraw', store]);
+    super.listenToStoreForRedraw(store);
   }
 }
