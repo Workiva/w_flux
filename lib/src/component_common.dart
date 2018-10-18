@@ -57,17 +57,41 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
   @mustCallSuper
   @override
   void componentWillMount() {
-    // Subscribe to all applicable stores. Stores returned by `redrawOn()` will
-    // have their triggers mapped directly to this components redraw function.
+    // Subscribe to all applicable stores.
+    // Stores returned by `redrawOn()` will have their triggers mapped directly
+    // to `handleRedrawOn`, which invokes this component's redraw function.
     // Stores included in the `getStoreHandlers()` result will be listened to
     // and wired up to their respective handlers.
-    Map<Store, StoreHandler> handlers =
-        new Map<Store, StoreHandler>.fromIterable(redrawOn(),
-            value: (_) => (_) => redraw())
-          ..addAll(getStoreHandlers());
-    handlers.forEach((store, handler) {
-      listenToStream(store, handler);
-    });
+    final customStoreHandlers = getStoreHandlers();
+    final storesWithoutCustomHandlers =
+        redrawOn().where((store) => !customStoreHandlers.containsKey(store));
+
+    customStoreHandlers.forEach(listenToStream);
+    storesWithoutCustomHandlers.forEach(listenToStoreForRedraw);
+  }
+
+  /// Used to register [handleRedrawOn] as a listeners for the given [store].
+  ///
+  /// Called for each the stores returned by [redrawOn] that don't have custom
+  /// store handlers (defined in [getStoreHandlers]).
+  ///
+  /// Override to set up custom listener behavior.
+  @protected
+  void listenToStoreForRedraw(Store store) {
+    listenToStream(store, handleRedrawOn);
+  }
+
+  /// Redraws the component for a given [store].
+  ///
+  /// Called whenever an event is emitted by one of the stores returned by
+  /// [redrawOn] that don't have custom store handlers (defined in
+  /// [getStoreHandlers]).
+  ///
+  /// Override and call super to add custom behavior.
+  @mustCallSuper
+  @protected
+  void handleRedrawOn(Store store) {
+    redraw();
   }
 
   @mustCallSuper
