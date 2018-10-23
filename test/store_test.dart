@@ -24,6 +24,12 @@ import 'package:w_flux/src/store.dart';
 class MockTransformer implements StreamTransformer<Store, Store> {
   MockTransformer();
 
+  /// added NSM to handle the requirement to override cast() under Dart 2
+  @override
+  noSuchMethod(Invocation invocation) {
+    // do nothing on purpose to handle missing methods
+  }
+
   @override
   Stream<Store> bind(Stream<Store> stream) => _buildTransformer().bind(stream);
 
