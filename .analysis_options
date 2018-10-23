@@ -1,6 +1,0 @@
-analyzer:
-  strong-mode: true
-linter:
-  rules:
-    - cancel_subscriptions
-    - close_sinks
