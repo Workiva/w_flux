@@ -122,7 +122,7 @@ class Store extends Stream<Store> with Disposable {
   ///
   /// If the `Store` is disposing or has been disposed, this method has no effect.
   void trigger() {
-    if (isDisposedOrDisposing) return;
+    if (isOrWillBeDisposed) return;
 
     _streamController.add(this);
   }
@@ -135,8 +135,24 @@ class Store extends Stream<Store> with Disposable {
   /// called until that future has resolved.
   ///
   /// If the `Store` has been disposed, this method throws a [StateError].
+  /// Deprecated: 2.9.5
+  /// To be removed: 3.0.0
+  @deprecated
   triggerOnAction(Action action, [void onAction(payload)]) {
-    if (isDisposed) {
+    triggerOnActionV2(action, onAction);
+  }
+
+  /// A convenience method for listening to an [action] and triggering
+  /// automatically once the callback for said action has completed.
+  ///
+  /// If [onAction] is provided, it will be called every time [action] is
+  /// dispatched. If [onAction] returns a [Future], [trigger] will not be
+  /// called until that future has resolved.
+  ///
+  /// If the `Store` has been disposed, this method throws a [StateError].
+  void triggerOnActionV2<T>(Action<T> action,
+      [FutureOr<dynamic> onAction(T payload)]) {
+    if (isOrWillBeDisposed) {
       throw new StateError('Store of type $runtimeType has been disposed');
     }
     manageActionSubscription(action.listen((payload) async {

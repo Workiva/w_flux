@@ -37,7 +37,7 @@ void main() {
 
     test('should support dispatch without a payload', () async {
       Completer c = new Completer();
-      final _action = new Action<String>();
+      Action<String> _action = new Action<String>();
 
       _action.listen((String payload) {
         expect(payload, equals(null));

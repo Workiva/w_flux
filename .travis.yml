@@ -1,12 +1,11 @@
 language: dart
-sudo: required
 dart:
   - 1.24.3
-  - stable
+sudo: required
 addons:
   chrome: stable
-script:
-  - pub run dart_dev format --check
-  - pub run dart_dev analyze
-  - pub run dart_dev test
-  - pub run dart_dev dart1-only coverage --no-html && bash <(curl -s https://codecov.io/bash) -f coverage/coverage.lcov
+dart_task:
+  - test: --platform vm
+  - test: --platform chrome
+  - dartfmt: true
+  - dartanalyzer: example lib test tool
