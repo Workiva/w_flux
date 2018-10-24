@@ -28,7 +28,6 @@ main(List<String> args) async {
   config.format.paths = dirs;
   config.test
     ..platforms = ['vm', 'chrome']
-    ..concurrency = 1
     ..pubServe = true;
 
   await dev(args);
