@@ -5,6 +5,10 @@ dart:
 sudo: required
 addons:
   chrome: stable
+# Re-use downloaded pub packages everywhere.
+cache:
+  directories:
+    - $HOME/.pub-cache
 dart_task:
   - test: --platform vm
   - test: --platform chrome
