@@ -26,8 +26,9 @@ main(List<String> args) async {
   config.copyLicense.directories = dirs;
   config.coverage.pubServe = true;
   config.format.paths = dirs;
-  config.test.platforms = ['vm', 'chrome'];
-  config.test.pubServe = true;
+  config.test
+    ..platforms = ['vm', 'chrome']
+    ..pubServe = true;
 
   await dev(args);
 }

@@ -16,11 +16,34 @@
 library w_flux.test.store_test;
 
 import 'dart:async';
-
-import 'package:rxdart/rxdart.dart';
 import 'package:test/test.dart';
 import 'package:w_flux/src/action.dart';
 import 'package:w_flux/src/store.dart';
+
+/// A mock transformer for tests that only ever outputs the first 2 times
+class MockTransformer implements StreamTransformer<Store, Store> {
+  MockTransformer();
+
+  /// added NSM to handle the requirement to override cast() under Dart 2
+  @override
+  noSuchMethod(Invocation invocation) {
+    // do nothing on purpose to handle missing methods
+  }
+
+  @override
+  Stream<Store> bind(Stream<Store> stream) => _buildTransformer().bind(stream);
+
+  static StreamTransformer<Store, Store> _buildTransformer() {
+    int count = 0;
+    return new StreamTransformer<Store, Store>.fromHandlers(
+        handleData: (Store data, EventSink<Store> sink) {
+      if (count < 2) {
+        count++;
+        sink.add(data);
+      }
+    });
+  }
+}
 
 void main() {
   group('Store', () {
@@ -45,8 +68,7 @@ void main() {
       });
 
       test('should be true when the withTransformer constructor is used', () {
-        store =
-            new Store.withTransformer(new BufferWithCountStreamTransformer(2));
+        store = new Store.withTransformer(new MockTransformer());
         expect(store.isBroadcast, isTrue);
       });
     });
@@ -62,8 +84,7 @@ void main() {
     test('should support stream transforms', () async {
       // ensure that multiple trigger executions emit
       // exactly 2 throttled triggers to external listeners
-      store =
-          new Store.withTransformer(new BufferWithCountStreamTransformer(2));
+      store = new Store.withTransformer(new MockTransformer());
       store.listen(expectAsync1((payload) {}, count: 2) as StoreHandler);
 
       store.trigger();
