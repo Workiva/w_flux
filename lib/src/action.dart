@@ -46,6 +46,9 @@ import 'package:w_flux/src/constants.dart' show v3Deprecation;
 /// action.
 ///
 class Action<T> extends Object with Disposable implements Function {
+  @override
+  String get disposableTypeName => 'Action';
+
   List _listeners = [];
 
   /// Dispatch this [Action] to all listeners. If a payload is supplied, it will
