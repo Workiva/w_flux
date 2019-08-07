@@ -40,6 +40,9 @@ typedef StoreHandler(Store event);
 /// `Store`s, triggering re-rendering of the UI elements based on the updated
 /// `Store` data.
 class Store extends Stream<Store> with Disposable {
+  @override
+  String get disposableTypeName => 'Store';
+
   /// Stream controller for [_stream]. Used by [trigger].
   final StreamController<Store> _streamController;
 
