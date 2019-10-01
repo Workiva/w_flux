@@ -31,3 +31,6 @@ dev_dependencies:
 transformers:
   - test/pub_serve:
       $include: test/**_test{.*,}.dart
+
+dependency_overrides:
+  react: ^5.0.0-alpha.0
