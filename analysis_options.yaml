@@ -421,12 +421,6 @@ linter:
     # 0 issues
     - prefer_asserts_in_initializer_lists
 
-    # Prefer using a boolean as the assert condition.
-    # http://dart-lang.github.io/linter/lints/prefer_bool_in_asserts.html
-    # recommendation: optional
-    # 0 issues
-    - prefer_bool_in_asserts
-
     # Use collection literals when possible.
     # http://dart-lang.github.io/linter/lints/prefer_collection_literals.html
     # recommendation: recommended
@@ -591,12 +585,6 @@ linter:
     # recommendation: optional
     # 0 issues
     - sort_unnamed_constructors_first
-
-    # Place the `super` call last in a constructor initialization list.
-    # http://dart-lang.github.io/linter/lints/super_goes_last.html
-    # recommendation: optional
-    # 0 issues
-    - super_goes_last
 
     # Test type arguments in operator ==(Object other).
     # http://dart-lang.github.io/linter/lints/test_types_in_equals.html
