@@ -20,7 +20,7 @@ import 'package:meta/meta.dart';
 import 'package:w_common/disposable.dart' show Disposable;
 import 'package:w_flux/src/action.dart';
 
-typedef StoreHandler(Store event);
+typedef StoreHandler = Function(Store event);
 
 /// A `Store` is a repository and manager of app state. This class should be
 /// extended to fit the needs of your application and its data. The number and
