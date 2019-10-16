@@ -65,7 +65,7 @@ class Action<T> extends Object with Disposable implements Function {
     // a [Stream]-based action implementation. At smaller sample sizes this
     // implementation slows down in comparison, yielding average times of 0.1 ms
     // for stream-based actions vs. 0.14 ms for this action implementation.
-    Future callListenerInMicrotask(l) => new Future.microtask(() => l(payload));
+    Future callListenerInMicrotask(l) => Future.microtask(() => l(payload));
     return Future.wait(_listeners.map(callListenerInMicrotask));
   }
 
@@ -83,7 +83,7 @@ class Action<T> extends Object with Disposable implements Function {
   /// [ActionSubscription] which provides means to cancel the subscription.
   ActionSubscription listen(dynamic onData(T event)) {
     _listeners.add(onData);
-    return new ActionSubscription(() => _listeners.remove(onData));
+    return ActionSubscription(() => _listeners.remove(onData));
   }
 
   @override

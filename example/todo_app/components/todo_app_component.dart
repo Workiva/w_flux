@@ -22,7 +22,7 @@ import 'todo_list_item.dart';
 import '../actions.dart';
 import '../store.dart';
 
-var ToDoAppComponent = react.registerComponent(() => new _ToDoAppComponent());
+var ToDoAppComponent = react.registerComponent(() => _ToDoAppComponent());
 
 class _ToDoAppComponent extends FluxComponent<ToDoActions, ToDoStore> {
   render() {
@@ -52,7 +52,7 @@ class _ToDoAppComponent extends FluxComponent<ToDoActions, ToDoStore> {
   }
 
   _createTodo(String value) {
-    this.actions.createTodo(new Todo(value));
+    this.actions.createTodo(Todo(value));
   }
 
   _completeTodo(todo) {

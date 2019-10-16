@@ -16,7 +16,7 @@ library w_flux.example.todo_app.components.new_todo_input;
 
 import 'package:react/react.dart' as react;
 
-var NewTodoInput = react.registerComponent(() => new _NewTodoInput());
+var NewTodoInput = react.registerComponent(() => _NewTodoInput());
 
 class _NewTodoInput extends react.Component {
   String get value => state['value'];

@@ -35,7 +35,7 @@ class MockTransformer implements StreamTransformer<Store, Store> {
 
   static StreamTransformer<Store, Store> _buildTransformer() {
     int count = 0;
-    return new StreamTransformer<Store, Store>.fromHandlers(
+    return StreamTransformer<Store, Store>.fromHandlers(
         handleData: (Store data, EventSink<Store> sink) {
       if (count < 2) {
         count++;
@@ -50,7 +50,7 @@ void main() {
     Store store;
 
     setUp(() {
-      store = new Store();
+      store = Store();
     });
 
     tearDown(() {
@@ -58,17 +58,17 @@ void main() {
     });
 
     test('should extend Stream', () {
-      expect(store, new isInstanceOf<Stream>());
+      expect(store, isInstanceOf<Stream>());
     });
 
     group('isBroadcast', () {
       test('should be true when the default constructor is used', () {
-        store = new Store();
+        store = Store();
         expect(store.isBroadcast, isTrue);
       });
 
       test('should be true when the withTransformer constructor is used', () {
-        store = new Store.withTransformer(new MockTransformer());
+        store = Store.withTransformer(MockTransformer());
         expect(store.isBroadcast, isTrue);
       });
     });
@@ -84,7 +84,7 @@ void main() {
     test('should support stream transforms', () async {
       // ensure that multiple trigger executions emit
       // exactly 2 throttled triggers to external listeners
-      store = new Store.withTransformer(new MockTransformer());
+      store = Store.withTransformer(MockTransformer());
       store.listen(expectAsync1((payload) {}, count: 2) as StoreHandler);
 
       store.trigger();
@@ -94,7 +94,7 @@ void main() {
     });
 
     test('should trigger in response to an action', () async {
-      Action _action = new Action();
+      Action _action = Action();
       store.triggerOnActionV2(_action);
 
       _action();
@@ -106,7 +106,7 @@ void main() {
     test(
         'should execute a given method and then trigger in response to an action',
         () {
-      Action _action = new Action();
+      Action _action = Action();
       bool methodCalled = false;
       syncCallback(_) {
         methodCalled = true;
@@ -123,10 +123,10 @@ void main() {
     test(
         'should execute a given async method and then trigger in response to an action',
         () {
-      Action _action = new Action();
+      Action _action = Action();
       bool afterTimer = false;
       asyncCallback(_) async {
-        await new Future.delayed(new Duration(milliseconds: 30));
+        await Future.delayed(Duration(milliseconds: 30));
         afterTimer = true;
       }
 
@@ -141,7 +141,7 @@ void main() {
     test(
         'should execute a given method and then trigger in response to an action with payload',
         () {
-      Action<num> _action = new Action<num>();
+      Action<num> _action = Action<num>();
       num counter = 0;
       store.triggerOnActionV2(_action, (payload) => counter = payload);
       store.listen(expectAsync1((payload) {
@@ -172,7 +172,7 @@ void main() {
     test('cleans up its ActionSubscriptions on dispose', () {
       bool afterDispose = false;
 
-      Action _action = new Action();
+      Action _action = Action();
       store.triggerOnActionV2(_action);
       store.listen(expectAsync1((payload) async {
         // Safety check to avoid infinite trigger loop
@@ -191,7 +191,7 @@ void main() {
 
     test('does not allow adding action subscriptions after dispose', () async {
       await store.dispose();
-      expect(() => store.triggerOnActionV2(new Action()), throwsStateError);
+      expect(() => store.triggerOnActionV2(Action()), throwsStateError);
     });
 
     test('does not allow listening after dispose', () async {

@@ -45,7 +45,7 @@ void main() {
     List calls;
 
     setUp(() {
-      component = new _TestComponent();
+      component = _TestComponent();
       calls = [];
     });
 

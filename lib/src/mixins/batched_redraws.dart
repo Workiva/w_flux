@@ -44,7 +44,7 @@ class _RedrawScheduler implements Function {
   }
 }
 
-_RedrawScheduler _scheduleRedraw = new _RedrawScheduler();
+_RedrawScheduler _scheduleRedraw = _RedrawScheduler();
 
 /// A mixin that overrides the [Component.redraw] method of a React
 /// [Component] (including a [FluxComponent]) and prevents the component
