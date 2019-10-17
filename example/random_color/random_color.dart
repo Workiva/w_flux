@@ -76,7 +76,7 @@ class _RandomColorComponent
       'This module uses a flux pattern to change its background color.',
       react.button({
         'style': {'padding': '10px', 'margin': '10px'},
-        'onClick': actions.changeBackgroundColor
+        'onClick': (_) => actions.changeBackgroundColor()
       }, 'Change Background Color')
     ]);
   }
