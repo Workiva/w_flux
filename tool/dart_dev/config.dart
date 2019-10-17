@@ -18,5 +18,5 @@ final config = {
   'analyze': AnalyzeTool(),
   'format': FormatTool(),
   'test': TestTool(),
-  'serve': WebdevServeTool()
+  'serve': WebdevServeTool()..webdevArgs = ['example:8080']
 };
