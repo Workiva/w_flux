@@ -1,6 +1,8 @@
 language: dart
 dart:
+  - 2.4.1
   - stable
+  - dev
 sudo: required
 addons:
   chrome: stable
