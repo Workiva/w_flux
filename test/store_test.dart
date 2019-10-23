@@ -58,7 +58,7 @@ void main() {
     });
 
     test('should extend Stream', () {
-      expect(store, isInstanceOf<Stream>());
+      expect(store, isA<Stream>());
     });
 
     group('isBroadcast', () {

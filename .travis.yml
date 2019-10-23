@@ -1,15 +1,14 @@
 language: dart
-dart:
-  - 2.4.1
-  - stable
-  - dev
+
 sudo: required
 addons:
   chrome: stable
+
 # Re-use downloaded pub packages everywhere.
 cache:
   directories:
     - $HOME/.pub-cache
+
 jobs:
   include:
     - dart: 2.4.1
