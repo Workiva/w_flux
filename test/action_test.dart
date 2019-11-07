@@ -25,19 +25,19 @@ void main() {
     Action<String> action;
 
     setUp(() {
-      action = new Action<String>();
+      action = Action<String>();
     });
 
     test('should only be equivalent to itself', () {
-      Action _action = new Action();
-      Action _action2 = new Action();
+      Action _action = Action();
+      Action _action2 = Action();
       expect(_action == _action, isTrue);
       expect(_action == _action2, isFalse);
     });
 
     test('should support dispatch without a payload', () async {
-      Completer c = new Completer();
-      Action<String> _action = new Action<String>();
+      Completer c = Completer();
+      Action<String> _action = Action<String>();
 
       _action.listen((String payload) {
         expect(payload, equals(null));
@@ -49,7 +49,7 @@ void main() {
     });
 
     test('should support dispatch with a payload', () async {
-      Completer c = new Completer();
+      Completer c = Completer();
       action.listen((String payload) {
         expect(payload, equals('990 guerrero'));
         c.complete();
@@ -60,7 +60,7 @@ void main() {
     });
 
     test('should dispatch by default when called', () async {
-      Completer c = new Completer();
+      Completer c = Completer();
       action.listen((String payload) {
         expect(payload, equals('990 guerrero'));
         c.complete();
@@ -74,7 +74,7 @@ void main() {
       test(
           'should invoke and complete synchronous listeners in future event in '
           'event queue', () async {
-        var action = new Action();
+        var action = Action();
         var listenerCompleted = false;
         action.listen((_) {
           listenerCompleted = true;
@@ -85,19 +85,19 @@ void main() {
         expect(listenerCompleted, isFalse);
 
         // Invoked during the next scheduled event in the queue.
-        await new Future(() => {});
+        await Future(() => {});
         expect(listenerCompleted, isTrue);
       });
 
       test(
           'should invoke asynchronous listeners in future event and complete '
           'in another future event', () async {
-        var action = new Action();
+        var action = Action();
         var listenerInvoked = false;
         var listenerCompleted = false;
         action.listen((_) async {
           listenerInvoked = true;
-          await new Future(() => listenerCompleted = true);
+          await Future(() => listenerCompleted = true);
         });
 
         // No immediate invocation.
@@ -105,20 +105,20 @@ void main() {
         expect(listenerInvoked, isFalse);
 
         // Invoked during next scheduled event in the queue.
-        await new Future(() => {});
+        await Future(() => {});
         expect(listenerInvoked, isTrue);
         expect(listenerCompleted, isFalse);
 
         // Completed in next next scheduled event.
-        await new Future(() => {});
+        await Future(() => {});
         expect(listenerCompleted, isTrue);
       });
 
       test('should complete future after listeners complete', () async {
-        var action = new Action();
+        var action = Action();
         var asyncListenerCompleted = false;
         action.listen((_) async {
-          await new Future.delayed(new Duration(milliseconds: 100), () {
+          await Future.delayed(Duration(milliseconds: 100), () {
             asyncListenerCompleted = true;
           });
         });
@@ -131,15 +131,15 @@ void main() {
       });
 
       test('should surface errors in listeners', () {
-        var action = new Action();
-        action.listen((_) => throw new UnimplementedError());
+        var action = Action();
+        action.listen((_) => throw UnimplementedError());
         expect(action(0), throwsUnimplementedError);
       });
     });
 
     group('listen', () {
       test('should stop listening when subscription is canceled', () async {
-        var action = new Action();
+        var action = Action();
         var listened = false;
         var subscription = action.listen((_) => listened = true);
 
@@ -153,7 +153,7 @@ void main() {
       });
 
       test('should stop listening when listeners are cleared', () async {
-        var action = new Action();
+        var action = Action();
         var listened = false;
         action.listen((_) => listened = true);
 
@@ -167,7 +167,7 @@ void main() {
       });
 
       test('should stop listening when actions are disposed', () async {
-        var action = new Action();
+        var action = Action();
         var listened = false;
         action.listen((_) => listened = true);
 
@@ -184,9 +184,9 @@ void main() {
     group('benchmarks', () {
       test('should dispatch actions faster than streams :(', () async {
         const int sampleSize = 1000;
-        var stopwatch = new Stopwatch();
+        var stopwatch = Stopwatch();
 
-        var awaitableAction = new Action();
+        var awaitableAction = Action();
         awaitableAction.listen((_) => {});
         awaitableAction.listen((_) async {});
         stopwatch.start();
@@ -201,15 +201,15 @@ void main() {
 
         Completer syncCompleter;
         Completer asyncCompleter;
-        var action = new Action();
+        var action = Action();
         action.listen((_) => syncCompleter.complete());
         action.listen((_) async {
           asyncCompleter.complete();
         });
         stopwatch.start();
         for (var i = 0; i < sampleSize; i++) {
-          syncCompleter = new Completer();
-          asyncCompleter = new Completer();
+          syncCompleter = Completer();
+          asyncCompleter = Completer();
           action();
           await Future.wait([syncCompleter.future, asyncCompleter.future]);
         }

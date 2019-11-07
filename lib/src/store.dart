@@ -20,7 +20,7 @@ import 'package:meta/meta.dart';
 import 'package:w_common/disposable.dart' show Disposable;
 import 'package:w_flux/src/action.dart';
 
-typedef StoreHandler(Store event);
+typedef StoreHandler = Function(Store event);
 
 /// A `Store` is a repository and manager of app state. This class should be
 /// extended to fit the needs of your application and its data. The number and
@@ -50,7 +50,7 @@ class Store extends Stream<Store> with Disposable {
   Stream<Store> _stream;
 
   /// Construct a new [Store] instance.
-  Store() : _streamController = new StreamController<Store>.broadcast() {
+  Store() : _streamController = StreamController<Store>.broadcast() {
     manageStreamController(_streamController);
     _stream = _streamController.stream;
   }
@@ -64,7 +64,7 @@ class Store extends Stream<Store> with Disposable {
   /// triggers this [Store] emits for state that may update extremely frequently
   /// (like scroll position).
   Store.withTransformer(StreamTransformer<dynamic, dynamic> transformer)
-      : _streamController = new StreamController<Store>() {
+      : _streamController = StreamController<Store>() {
     manageStreamController(_streamController);
 
     // apply a transform to the stream if supplied
@@ -97,7 +97,7 @@ class Store extends Stream<Store> with Disposable {
   StreamSubscription<Store> listen(StoreHandler onData,
       {Function onError, void onDone(), bool cancelOnError}) {
     if (isDisposed) {
-      throw new StateError('Store of type $runtimeType has been disposed');
+      throw StateError('Store of type $runtimeType has been disposed');
     }
 
     return _stream.listen(onData,
@@ -156,7 +156,7 @@ class Store extends Stream<Store> with Disposable {
   void triggerOnActionV2<T>(Action<T> action,
       [FutureOr<dynamic> onAction(T payload)]) {
     if (isOrWillBeDisposed) {
-      throw new StateError('Store of type $runtimeType has been disposed');
+      throw StateError('Store of type $runtimeType has been disposed');
     }
     manageActionSubscription(action.listen((payload) async {
       if (onAction != null) {

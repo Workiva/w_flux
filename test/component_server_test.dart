@@ -26,16 +26,16 @@ import 'utils.dart';
 void main() {
   group('FluxComponent', () {
     test('should expose an actions getter', () {
-      TestDefaultComponent component = new TestDefaultComponent();
-      TestActions testActions = new TestActions();
+      TestDefaultComponent component = TestDefaultComponent();
+      TestActions testActions = TestActions();
       component.props = {'actions': testActions};
 
       expect(component.actions, equals(testActions));
     });
 
     test('should expose a store getter', () {
-      TestDefaultComponent component = new TestDefaultComponent();
-      TestStore testStore = new TestStore();
+      TestDefaultComponent component = TestDefaultComponent();
+      TestStore testStore = TestStore();
       component.props = {'store': testStore};
 
       expect(component.store, equals(testStore));
@@ -43,8 +43,8 @@ void main() {
 
     test('should subscribe to a single store by default', () async {
       // Setup the component
-      TestDefaultComponent component = new TestDefaultComponent();
-      TestStore store = new TestStore();
+      TestDefaultComponent component = TestDefaultComponent();
+      TestStore store = TestStore();
       component.props = {'store': store};
       component.componentWillMount();
 
@@ -66,8 +66,8 @@ void main() {
     });
 
     test('should subscribe to any stores returned in redrawOn', () async {
-      TestRedrawOnComponent component = new TestRedrawOnComponent();
-      TestStores stores = new TestStores();
+      TestRedrawOnComponent component = TestRedrawOnComponent();
+      TestStores stores = TestStores();
       component.props = {'store': stores};
       component.componentWillMount();
 
@@ -86,8 +86,8 @@ void main() {
 
     test('should prefer a handler specified in getStoreHandlers over redrawOn',
         () async {
-      TestHandlerPrecedence component = new TestHandlerPrecedence();
-      TestStores stores = new TestStores();
+      TestHandlerPrecedence component = TestHandlerPrecedence();
+      TestStores stores = TestStores();
       component.props = {'store': stores};
       component.componentWillMount();
 
@@ -104,8 +104,8 @@ void main() {
 
     test('should not attempt subscription if store is a composite of stores',
         () async {
-      TestDefaultComponent component = new TestDefaultComponent();
-      TestStores stores = new TestStores();
+      TestDefaultComponent component = TestDefaultComponent();
+      TestStores stores = TestStores();
       component.props = {'store': stores};
       component.componentWillMount();
 
@@ -122,8 +122,8 @@ void main() {
         'should call handlers specified in getStoreHandlers when each store triggers',
         () async {
       // Setup the component
-      TestStoreHandlersComponent component = new TestStoreHandlersComponent();
-      TestStore store = new TestStore();
+      TestStoreHandlersComponent component = TestStoreHandlersComponent();
+      TestStore store = TestStore();
       component.props = {'store': store};
       component.componentWillMount();
 
@@ -148,8 +148,8 @@ void main() {
         () async {
       // Setup a new subscription on a component
       int numberOfCalls = 0;
-      StreamController controller = new StreamController();
-      TestDefaultComponent component = new TestDefaultComponent();
+      StreamController controller = StreamController();
+      TestDefaultComponent component = TestDefaultComponent();
 
       var subscription = controller.stream.listen((_) {
         numberOfCalls += 1;
@@ -178,9 +178,9 @@ class TestActions {}
 class TestStore extends Store {}
 
 class TestStores {
-  TestStore store1 = new TestStore();
-  TestStore store2 = new TestStore();
-  TestStore store3 = new TestStore();
+  TestStore store1 = TestStore();
+  TestStore store2 = TestStore();
+  TestStore store3 = TestStore();
 }
 
 class TestDefaultComponent extends FluxComponent {

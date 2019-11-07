@@ -26,8 +26,8 @@ import 'components/todo_app_component.dart';
 
 main() async {
   // initialize action, stores, and components
-  ToDoActions actions = new ToDoActions();
-  ToDoStore store = new ToDoStore(actions);
+  ToDoActions actions = ToDoActions();
+  ToDoStore store = ToDoStore(actions);
 
   // render the component
   react_client.setClientConfiguration();
