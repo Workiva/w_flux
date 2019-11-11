@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-@TestOn('vm')
+@TestOn('browser')
 library w_flux.test.store_test;
 
 import 'dart:async';
