@@ -18,11 +18,11 @@ import 'package:react/react.dart' as react;
 
 var NewTodoInput = react.registerComponent(() => _NewTodoInput());
 
-class _NewTodoInput extends react.Component {
+class _NewTodoInput extends react.Component2 {
   String get value => state['value'];
   Function get onSubmit => props['onSubmit'];
 
-  getInitialState() => {'value': ''};
+  get initialState => {'value': ''};
 
   render() {
     return react.form(
