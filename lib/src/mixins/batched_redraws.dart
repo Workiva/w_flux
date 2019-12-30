@@ -34,7 +34,6 @@ class _RedrawScheduler implements Function {
       }
 
       Function() chainedCallbacks;
-      await Future.delayed(const Duration(milliseconds: 0));
       if (callbacks.isNotEmpty) {
         chainedCallbacks = () {
           callbacks.forEach((callback) {
@@ -44,6 +43,8 @@ class _RedrawScheduler implements Function {
       }
 
       (component as react.Component)?.setState({}, chainedCallbacks);
+
+      await Future.delayed(const Duration(milliseconds: 0));
     }
   }
 }
