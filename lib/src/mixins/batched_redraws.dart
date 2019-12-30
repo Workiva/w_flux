@@ -33,7 +33,7 @@ class _RedrawScheduler implements Function {
             continue;
           }
 
-          var chainedCallbacks;
+          Function() chainedCallbacks;
           await Future.delayed(const Duration(milliseconds: 0));
           if (callbacks.isNotEmpty) {
             chainedCallbacks = () {
