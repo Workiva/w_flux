@@ -2,13 +2,11 @@ library w_flux.mixins.batched_redraws;
 
 import 'dart:async';
 import 'dart:html';
-import 'dart:js' as js;
 
 import 'package:react/react.dart' as react;
 
 class _RedrawScheduler implements Function {
-  Map<BatchedRedraws, List<Function>> _components =
-      <BatchedRedraws, List<Function>>{};
+  Map<BatchedRedraws, List<Function>> _components = <BatchedRedraws, List<Function>>{};
 
   void call(BatchedRedraws component, [callback()]) {
     if (_components.isEmpty) {
@@ -34,6 +32,7 @@ class _RedrawScheduler implements Function {
       }
 
       Function() chainedCallbacks;
+
       if (callbacks.isNotEmpty) {
         chainedCallbacks = () {
           callbacks.forEach((callback) {
@@ -43,7 +42,6 @@ class _RedrawScheduler implements Function {
       }
 
       (component as react.Component)?.setState({}, chainedCallbacks);
-
       await Future.delayed(const Duration(milliseconds: 0));
     }
   }
