@@ -21,31 +21,31 @@ class _RedrawScheduler implements Function {
   }
 
   Future _tick() async {
-      await window.animationFrame;
+    await window.animationFrame;
 
-      var entries = _components.entries.toList();
-      _components.clear();
-      for (var entry in entries) {
-        var component = entry.key;
-        var callbacks = entry.value;
-          // Skip if the component doesn't want to batch redraw
-          if (!component.shouldBatchRedraw) {
-            continue;
-          }
-
-          Function() chainedCallbacks;
-          await Future.delayed(const Duration(milliseconds: 0));
-          if (callbacks.isNotEmpty) {
-            chainedCallbacks = () {
-              callbacks.forEach((callback) {
-                callback();
-              });
-            };
-          }
-
-          (component as react.Component)?.setState({}, chainedCallbacks);
+    var entries = _components.entries.toList();
+    _components.clear();
+    for (var entry in entries) {
+      var component = entry.key;
+      var callbacks = entry.value;
+      // Skip if the component doesn't want to batch redraw
+      if (!component.shouldBatchRedraw) {
+        continue;
       }
+
+      Function() chainedCallbacks;
+      await Future.delayed(const Duration(milliseconds: 0));
+      if (callbacks.isNotEmpty) {
+        chainedCallbacks = () {
+          callbacks.forEach((callback) {
+            callback();
+          });
+        };
+      }
+
+      (component as react.Component)?.setState({}, chainedCallbacks);
     }
+  }
 }
 
 _RedrawScheduler _scheduleRedraw = _RedrawScheduler();
