@@ -6,7 +6,8 @@ import 'dart:html';
 import 'package:react/react.dart' as react;
 
 class _RedrawScheduler implements Function {
-  Map<BatchedRedraws, List<Function>> _components = <BatchedRedraws, List<Function>>{};
+  Map<BatchedRedraws, List<Function>> _components =
+      <BatchedRedraws, List<Function>>{};
 
   void call(BatchedRedraws component, [callback()]) {
     if (_components.isEmpty) {
