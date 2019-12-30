@@ -2,6 +2,7 @@ library w_flux.mixins.batched_redraws;
 
 import 'dart:async';
 import 'dart:html';
+import 'dart:js' as js;
 
 import 'package:react/react.dart' as react;
 
@@ -20,28 +21,31 @@ class _RedrawScheduler implements Function {
   }
 
   Future _tick() async {
-    await window.animationFrame;
-    _components
-      ..forEach((component, callbacks) {
-        // Skip if the component doesn't want to batch redraw
-        if (!component.shouldBatchRedraw) {
-          return;
-        }
+      await window.animationFrame;
 
-        var chainedCallbacks;
+      var entries = _components.entries.toList();
+      _components.clear();
+      for (var entry in entries) {
+        var component = entry.key;
+        var callbacks = entry.value;
+          // Skip if the component doesn't want to batch redraw
+          if (!component.shouldBatchRedraw) {
+            continue;
+          }
 
-        if (callbacks.isNotEmpty) {
-          chainedCallbacks = () {
-            callbacks.forEach((callback) {
-              callback();
-            });
-          };
-        }
+          var chainedCallbacks;
+          await Future.delayed(const Duration(milliseconds: 0));
+          if (callbacks.isNotEmpty) {
+            chainedCallbacks = () {
+              callbacks.forEach((callback) {
+                callback();
+              });
+            };
+          }
 
-        (component as react.Component)?.setState({}, chainedCallbacks);
-      })
-      ..clear();
-  }
+          (component as react.Component)?.setState({}, chainedCallbacks);
+      }
+    }
 }
 
 _RedrawScheduler _scheduleRedraw = _RedrawScheduler();
