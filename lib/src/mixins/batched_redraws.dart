@@ -22,6 +22,7 @@ class _RedrawScheduler implements Function {
   Future _tick() async {
     await window.animationFrame;
 
+    // Making a copy of `_components` so we don't iterate over the map while it's potentially being mutated.
     var entries = _components.entries.toList();
     _components.clear();
     for (var entry in entries) {
@@ -43,7 +44,9 @@ class _RedrawScheduler implements Function {
       }
 
       (component as react.Component)?.setState({}, chainedCallbacks);
-      await Future.delayed(const Duration(milliseconds: 0));
+
+      // Waits a tick to prevent holding up the thread, allowing other scripts to execute in between each component.
+      await Future(() {});
     }
   }
 }
