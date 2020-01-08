@@ -21,26 +21,33 @@ class _RedrawScheduler implements Function {
 
   Future _tick() async {
     await window.animationFrame;
-    _components
-      ..forEach((component, callbacks) {
-        // Skip if the component doesn't want to batch redraw
-        if (!component.shouldBatchRedraw) {
-          return;
-        }
 
-        var chainedCallbacks;
+    // Making a copy of `_components` so we don't iterate over the map while it's potentially being mutated.
+    var entries = _components.entries.toList();
+    _components.clear();
+    for (var entry in entries) {
+      var component = entry.key;
+      var callbacks = entry.value;
+      // Skip if the component doesn't want to batch redraw
+      if (!component.shouldBatchRedraw) {
+        continue;
+      }
 
-        if (callbacks.isNotEmpty) {
-          chainedCallbacks = () {
-            callbacks.forEach((callback) {
-              callback();
-            });
-          };
-        }
+      Function() chainedCallbacks;
 
-        (component as react.Component)?.setState({}, chainedCallbacks);
-      })
-      ..clear();
+      if (callbacks.isNotEmpty) {
+        chainedCallbacks = () {
+          callbacks.forEach((callback) {
+            callback();
+          });
+        };
+      }
+
+      (component as react.Component)?.setState({}, chainedCallbacks);
+
+      // Waits a tick to prevent holding up the thread, allowing other scripts to execute in between each component.
+      await Future(() {});
+    }
   }
 }
 
