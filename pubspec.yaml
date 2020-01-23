@@ -1,5 +1,5 @@
 name: w_flux
-version: 2.10.9
+version: 2.11.0
 description: Flux library for uni-directional dataflow inspired by reflux and Facebook's
     flux architecture.
 authors:
