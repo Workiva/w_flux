@@ -32,8 +32,8 @@ dependency_overrides:
   over_react:
     git:
       url: https://github.com/Workiva/over_react.git
-      ref: react-17-synthetic-event-updates
+      ref: 4.0.0-wip
   react:
     git:
       url: https://github.com/cleandart/react-dart.git
-      ref: 6.0.0-wip
+      ref: test-proptypes-in-getDerivedStateFromProps
