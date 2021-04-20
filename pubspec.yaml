@@ -2,13 +2,6 @@ name: w_flux
 version: 2.10.12
 description: Flux library for uni-directional dataflow inspired by reflux and Facebook's
     flux architecture.
-authors:
-  - Workiva Client Platform Team <team-clientplatform@workiva.com>
-  - Dustin Lessard <dustin.lessard@workiva.com>
-  - Evan Weible <evan.weible@workiva.com>
-  - Jay Udey <jay.udey@workiva.com>
-  - Max Peterson <maxwell.peterson@workiva.com>
-  - Trent Grover <trent.grover@workiva.com>
 homepage: https://github.com/Workiva/w_flux
 
 environment:
