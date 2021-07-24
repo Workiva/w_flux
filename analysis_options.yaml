@@ -5,7 +5,7 @@ analyzer:
     # When compiling to JS, both implicit options apply to the current 
     # project and all dependencies. They are useful to find possible 
     # Type fixes or areas for explicit typing.
-    implicit-casts: true
+    implicit-casts: false
     implicit-dynamic: true
 
 # ALL lint rules are included. Unused lints should be commented
