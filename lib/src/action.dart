@@ -49,7 +49,7 @@ class Action<T> extends Object with Disposable implements Function {
   @override
   String get disposableTypeName => 'Action';
 
-  List _listeners = [];
+  List<_ActionListener<T>> _listeners = [];
 
   /// Dispatch this [Action] to all listeners. If a payload is supplied, it will
   /// be passed to each listener's callback, otherwise null will be passed.
@@ -65,7 +65,8 @@ class Action<T> extends Object with Disposable implements Function {
     // a [Stream]-based action implementation. At smaller sample sizes this
     // implementation slows down in comparison, yielding average times of 0.1 ms
     // for stream-based actions vs. 0.14 ms for this action implementation.
-    Future callListenerInMicrotask(l) => Future.microtask(() => l(payload));
+    Future callListenerInMicrotask(_ActionListener<T> l) =>
+        Future.microtask(() => l(payload));
     return Future.wait(_listeners.map(callListenerInMicrotask));
   }
 
@@ -81,7 +82,7 @@ class Action<T> extends Object with Disposable implements Function {
   /// dispatched. A payload of type [T] will be passed to the callback if
   /// supplied at dispatch time, otherwise null will be passed. Returns an
   /// [ActionSubscription] which provides means to cancel the subscription.
-  ActionSubscription listen(dynamic onData(T event)) {
+  ActionSubscription listen(dynamic Function(T event) onData) {
     _listeners.add(onData);
     return ActionSubscription(() => _listeners.remove(onData));
   }
@@ -96,6 +97,8 @@ class Action<T> extends Object with Disposable implements Function {
     return identical(this, other);
   }
 }
+
+typedef _ActionListener<T> = dynamic Function(T event);
 
 /// A subscription used to cancel registered listeners to an [Action].
 class ActionSubscription {

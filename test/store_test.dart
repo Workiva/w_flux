@@ -143,7 +143,7 @@ void main() {
         () {
       Action<num> _action = Action<num>();
       num counter = 0;
-      store.triggerOnActionV2(_action, (payload) => counter = payload);
+      store.triggerOnActionV2(_action, (num payload) => counter = payload);
       store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(counter, 17);
