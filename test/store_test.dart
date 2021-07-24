@@ -94,7 +94,7 @@ void main() {
     });
 
     test('should trigger in response to an action', () async {
-      Action _action = Action();
+      final _action = Action.noPayload();
       store.triggerOnActionV2(_action);
 
       _action();
@@ -106,7 +106,7 @@ void main() {
     test(
         'should execute a given method and then trigger in response to an action',
         () {
-      Action _action = Action();
+      final _action = Action.noPayload();
       bool methodCalled = false;
       syncCallback(_) {
         methodCalled = true;
@@ -123,7 +123,7 @@ void main() {
     test(
         'should execute a given async method and then trigger in response to an action',
         () {
-      Action _action = Action();
+      final _action = Action.noPayload();
       bool afterTimer = false;
       asyncCallback(_) async {
         await Future.delayed(Duration(milliseconds: 30));
@@ -172,7 +172,7 @@ void main() {
     test('cleans up its ActionSubscriptions on dispose', () {
       bool afterDispose = false;
 
-      Action _action = Action();
+      final _action = Action.noPayload();
       store.triggerOnActionV2(_action);
       store.listen(expectAsync1((payload) async {
         // Safety check to avoid infinite trigger loop

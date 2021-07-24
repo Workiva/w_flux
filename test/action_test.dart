@@ -37,7 +37,7 @@ void main() {
 
     test('should support dispatch without a payload', () async {
       Completer c = Completer();
-      Action<String> _action = Action<String>();
+      final _action = Action.optionalPayload<String>();
 
       _action.listen((String? payload) {
         expect(payload, equals(null));
@@ -74,7 +74,7 @@ void main() {
       test(
           'should invoke and complete synchronous listeners in future event in '
           'event queue', () async {
-        var action = Action();
+        var action = Action.noPayload();
         var listenerCompleted = false;
         action.listen((_) {
           listenerCompleted = true;
@@ -92,7 +92,7 @@ void main() {
       test(
           'should invoke asynchronous listeners in future event and complete '
           'in another future event', () async {
-        var action = Action();
+        var action = Action.noPayload();
         var listenerInvoked = false;
         var listenerCompleted = false;
         action.listen((_) async {
@@ -115,7 +115,7 @@ void main() {
       });
 
       test('should complete future after listeners complete', () async {
-        var action = Action();
+        var action = Action.noPayload();
         var asyncListenerCompleted = false;
         action.listen((_) async {
           await Future.delayed(Duration(milliseconds: 100), () {
@@ -131,7 +131,7 @@ void main() {
       });
 
       test('should surface errors in listeners', () {
-        var action = Action();
+        var action = Action.noPayload();
         action.listen((_) => throw UnimplementedError());
         expect(action(0), throwsUnimplementedError);
       });
@@ -139,7 +139,7 @@ void main() {
 
     group('listen', () {
       test('should stop listening when subscription is canceled', () async {
-        var action = Action();
+        var action = Action.noPayload();
         var listened = false;
         var subscription = action.listen((_) => listened = true);
 
@@ -153,7 +153,7 @@ void main() {
       });
 
       test('should stop listening when listeners are cleared', () async {
-        var action = Action();
+        var action = Action.noPayload();
         var listened = false;
         action.listen((_) => listened = true);
 
@@ -167,7 +167,7 @@ void main() {
       });
 
       test('should stop listening when actions are disposed', () async {
-        var action = Action();
+        var action = Action.noPayload();
         var listened = false;
         action.listen((_) => listened = true);
 
@@ -186,7 +186,7 @@ void main() {
         const int sampleSize = 1000;
         var stopwatch = Stopwatch();
 
-        var awaitableAction = Action();
+        var awaitableAction = Action.noPayload();
         awaitableAction.listen((_) => {});
         awaitableAction.listen((_) async {});
         stopwatch.start();
@@ -201,7 +201,7 @@ void main() {
 
         late Completer syncCompleter;
         late Completer asyncCompleter;
-        var action = Action();
+        var action = Action.noPayload();
         action.listen((_) => syncCompleter.complete());
         action.listen((_) async {
           asyncCompleter.complete();

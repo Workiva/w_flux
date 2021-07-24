@@ -38,7 +38,7 @@ main() async {
 }
 
 class RandomColorActions {
-  final Action changeBackgroundColor = Action();
+  final changeBackgroundColor = Action.noPayload();
 }
 
 class RandomColorStore extends Store {
