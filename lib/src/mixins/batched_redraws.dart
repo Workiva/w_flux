@@ -43,7 +43,7 @@ class _RedrawScheduler implements Function {
         };
       }
 
-      (component as react.Component)?.setState({}, chainedCallbacks);
+      (component as react.Component).setState({}, chainedCallbacks);
 
       // Waits a tick to prevent holding up the thread, allowing other scripts to execute in between each component.
       await Future(() {});
