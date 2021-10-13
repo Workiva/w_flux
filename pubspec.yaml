@@ -17,6 +17,11 @@ environment:
 dependencies:
     meta: ^1.2.2
     react: ">=5.7.0 <7.0.0"
+    react_material_ui:
+        hosted:
+          name: react_material_ui
+          url: https://pub.workiva.org
+        version: ^1.1.1
     w_common: ^1.20.1
 
 dev_dependencies:
