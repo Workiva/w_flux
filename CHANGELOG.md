@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.10.15
+
+- Dependency upgrades
+
 ## 2.1.0
 Support for react-dart 0.9.x (which moves to ReactJS 0.14)
 
@@ -40,7 +44,7 @@ Check out the detailed [release notes](//github.com/Workiva/w_flux/releases/tag/
 
 ## 0.2.0
 - Shorter action dispatch
-- Add triggerOnAction to store 
+- Add triggerOnAction to store
 - Support throttling of store triggers
 - Allow react-dart 0.7.x releases
 
