@@ -31,11 +31,15 @@ jobs:
         if: always() && steps.install.outcome == 'success'
 
       - name: Analyze project source
-        run: dart analyze
+        run: dart run dart_dev analyze
         if: always() && steps.install.outcome == 'success'
 
-      - name: Run tests
-        run: dart test
+      - name: Run tests with ddc
+        run: dart run dart_dev test
+        if: always() && steps.install.outcome == 'success'
+
+      - name: Run tests with dart2js
+        run: dart run dart_dev test --release
         if: always() && steps.install.outcome == 'success'
 
   format:
@@ -51,5 +55,5 @@ jobs:
         run: dart pub get
 
       - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart run dart_dev format --check
         if: always() && steps.install.outcome == 'success'

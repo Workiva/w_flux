@@ -2,12 +2,12 @@ name: w_flux-unit-tests
 description: Unit tests
 contact: 'Frontend Frameworks Architecture / #support-frontend-architecture'
 image: drydock.workiva.net/workiva/dart_unit_test_image:1
-size: large
-timeout: 600
+size: small
+timeout: short
 
-artifacts: /testing/w_flux/test-reports
-test-reports: /testing/w_flux/test-reports
+run:
+  on-tag: true
+  on-pull-request: true
 
 scripts:
-  - cd /testing/w_flux/
-  - ./run_tests.sh
+  - echo "Tests run in github workflows"
