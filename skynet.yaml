@@ -1,13 +1,14 @@
-name: w_flux-unit-tests
-description: Unit tests
+name: verify-github-actions
+description: Verify that the github actions run passed, this is needed to make pipelines pass without manual intervention
 contact: 'Frontend Frameworks Architecture / #support-frontend-architecture'
-image: drydock.workiva.net/workiva/dart_unit_test_image:1
+image: drydock.workiva.net/workiva/skynet-images:pr-127
 size: small
-timeout: short
+timeout: 600
 
-run:
-  on-tag: true
-  on-pull-request: true
+env:
+# encrypted github token used for requests to api.github.com
+ - secure: DndqTHp2eL5UlnC6kxDgKZsXGO1qUCIfcGErhm4IVOQtX/OxNax31XMlgJusfpD0XbQih5zo7H3XwiFPafc4In/Zi0E=
+
 
 scripts:
-  - echo "Tests run in github workflows"
+  - python3 /actions/verify_github_actions.py
