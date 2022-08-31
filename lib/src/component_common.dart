@@ -140,6 +140,6 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
   @Deprecated(
       'Subscriptions are now managed by the Disposable mixin. $v3Deprecation')
   void addSubscription(StreamSubscription subscription) {
-    manageStreamSubscription(subscription);
+    listenToStream(subscription);
   }
 }
