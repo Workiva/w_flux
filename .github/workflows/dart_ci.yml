@@ -39,7 +39,7 @@ jobs:
         if: always() && steps.install.outcome == 'success'
 
       - name: Run tests with dart2js
-        run: dart run builder_runner test --release
+        run: dart run build_runner test --release
         if: always() && steps.install.outcome == 'success'
 
   format:
