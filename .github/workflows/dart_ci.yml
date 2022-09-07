@@ -31,15 +31,15 @@ jobs:
         if: always() && steps.install.outcome == 'success'
 
       - name: Analyze project source
-        run: dart run dart_dev analyze
+        run: dart analyze
         if: always() && steps.install.outcome == 'success'
 
       - name: Run tests with ddc
-        run: dart run dart_dev test
+        run: dart test
         if: always() && steps.install.outcome == 'success'
 
       - name: Run tests with dart2js
-        run: dart run dart_dev test --release
+        run: dart run builder_runner test --release
         if: always() && steps.install.outcome == 'success'
 
   format:
