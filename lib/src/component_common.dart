@@ -133,4 +133,13 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
   Map<Store, StoreHandler> getStoreHandlers() {
     return {};
   }
+
+  /// Register a [subscription] that should be canceled when the component
+  /// unmounts. Cancellation will be handled automatically by
+  /// [componentWillUnmount].
+  @Deprecated(
+      'Subscriptions are now managed by the Disposable mixin. $v3Deprecation')
+  void addSubscription(StreamSubscription subscription) {
+    getManagedDisposer(subscription.cancel);
+  }
 }

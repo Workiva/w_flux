@@ -69,6 +69,14 @@ class Action<T> extends Object with Disposable implements Function {
     return Future.wait(_listeners.map(callListenerInMicrotask));
   }
 
+  /// Cancel all subscriptions that exist on this [Action] as a result of
+  /// [listen] being called. Useful when tearing down a flux cycle in some
+  /// module or unit test.
+  @Deprecated('Use (and await) dispose() instead. $v3Deprecation')
+  void clearListeners() {
+    _listeners.clear();
+  }
+
   /// Supply a callback that will be called any time this [Action] is
   /// dispatched. A payload of type [T] will be passed to the callback if
   /// supplied at dispatch time, otherwise null will be passed. Returns an

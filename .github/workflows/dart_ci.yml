@@ -35,11 +35,11 @@ jobs:
         if: always() && steps.install.outcome == 'success'
 
       - name: Run tests with ddc
-        run: dart test
+        run: dart run dart_dev test
         if: always() && steps.install.outcome == 'success'
 
       - name: Run tests with dart2js
-        run: dart run build_runner test --release
+        run: dart run dart_dev test --release
         if: always() && steps.install.outcome == 'success'
 
   format:

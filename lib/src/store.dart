@@ -76,6 +76,14 @@ class Store extends Stream<Store> with Disposable {
   @override
   bool get isBroadcast => _stream.isBroadcast;
 
+  /// The stream underlying [trigger] events and [listen].
+  ///
+  /// Deprecated: [Store] now extends [Stream]. Since the store itself
+  /// can be treated as a stream this is no longer required.
+  @Deprecated('3.0.0')
+  @visibleForTesting
+  Stream<Store> get stream => _stream;
+
   /// Adds a subscription to this `Store`.
   ///
   /// Each time this `Store` triggers (by calling [trigger]), indicating that
@@ -120,6 +128,21 @@ class Store extends Stream<Store> with Disposable {
     if (isOrWillBeDisposed) return;
 
     _streamController.add(this);
+  }
+
+  /// A convenience method for listening to an [action] and triggering
+  /// automatically once the callback for said action has completed.
+  ///
+  /// If [onAction] is provided, it will be called every time [action] is
+  /// dispatched. If [onAction] returns a [Future], [trigger] will not be
+  /// called until that future has resolved.
+  ///
+  /// If the `Store` has been disposed, this method throws a [StateError].
+  /// Deprecated: 2.9.5
+  /// To be removed: 3.0.0
+  @deprecated
+  triggerOnAction(Action action, [void onAction(payload)]) {
+    triggerOnActionV2(action, onAction);
   }
 
   /// A convenience method for listening to an [action] and triggering
