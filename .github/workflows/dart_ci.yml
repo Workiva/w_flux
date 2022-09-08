@@ -31,7 +31,7 @@ jobs:
         if: always() && steps.install.outcome == 'success'
 
       - name: Analyze project source
-        run: dart analyze
+        run: dart run dart_dev analyze
         if: always() && steps.install.outcome == 'success'
 
       - name: Run tests with ddc
