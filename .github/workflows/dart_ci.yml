@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [ 2.13.4, stable, beta, dev ]
+        sdk: [ 2.13.4, stable, beta ]
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.2
@@ -31,7 +31,7 @@ jobs:
         if: always() && steps.install.outcome == 'success'
 
       - name: Analyze project source
-        run: dart run dart_dev analyze
+        run: dart analyze
         if: always() && steps.install.outcome == 'success'
 
       - name: Run tests with ddc
