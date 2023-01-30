@@ -1,0 +1,3 @@
+ignore:
+  # Ignore the pin on the test package while we have to avoid a bad version of test 1.18.1 https://github.com/dart-lang/test/issues/1620
+  - test
