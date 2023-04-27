@@ -1,23 +1,23 @@
-name: w_flux
+name: w_flux_example
 version: 2.10.24
 description: Flux library for uni-directional dataflow inspired by reflux and Facebook's
     flux architecture.
 homepage: https://github.com/Workiva/w_flux
-
+publish_to: none
 environment:
-  sdk: ">=2.11.0 <3.0.0"
-
+    sdk: ">=2.11.0 <3.0.0"
 dependencies:
-  meta: ^1.6.0
-  react: ">=5.7.0 <7.0.0"
-  w_common: '>=2.0.0 <4.0.0'
+  w_flux: 
 
 dev_dependencies:
+  react: ">=5.7.0 <7.0.0"
   build_runner: '>=1.7.1 <3.0.0'
-  build_test: ^2.1.3
   build_web_compilers: ^3.0.0
   dart_dev: '>=3.8.5 <5.0.0'
   dart_style: ^2.1.1
   dependency_validator: ^3.0.0
-  # Avoid a bad version of test 1.18.1 https://github.com/dart-lang/test/issues/1620
-  test: ">=1.15.7 <1.18.1" 
+  over_react: ">=3.12.0 <5.0.0"
+
+dependency_overrides:
+  w_flux:
+    path: ../
