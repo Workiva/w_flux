@@ -13,11 +13,9 @@ dependencies:
   w_common: '>=2.0.0 <4.0.0'
 
 dev_dependencies:
-  build_runner: '>=1.7.1 <3.0.0'
+  build_runner: ^2.0.0
   build_test: ^2.1.3
   build_web_compilers: ^3.0.0
-  dart_dev: '>=3.8.5 <5.0.0'
-  dart_style: ^2.1.1
+  dart_dev: ^4.0.0
   dependency_validator: ^3.0.0
-  # Avoid a bad version of test 1.18.1 https://github.com/dart-lang/test/issues/1620
-  test: ">=1.15.7 <1.18.1" 
+  test: ^1.18.2 
