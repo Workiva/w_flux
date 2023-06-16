@@ -23,7 +23,7 @@ dev_dependencies:
 dependency_overrides:
   dart_dev:
     git:
-      ref: fix_up_null_safety
+      ref: fix_up_null_safety_hunter
       url: https://github.com/Workiva/dart_dev
   react:
     git:
