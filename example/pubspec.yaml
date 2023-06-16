@@ -20,6 +20,7 @@ dev_dependencies:
   
 
 dependency_overrides:
+  w_common: ^3.0.0
   w_flux:
     path: ../
   react:
