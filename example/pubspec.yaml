@@ -26,3 +26,7 @@ dependency_overrides:
     git:
       url: https://github.com/Workiva/react-dart
       ref: null-safety-manual
+  over_react:
+    git:
+      url: https://github.com/Workiva/over_react
+      ref: null-safety
