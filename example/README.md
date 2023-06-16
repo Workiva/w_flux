@@ -1,7 +1,7 @@
 w_flux Examples
 ================
 
-To run the examples, open the root of this repository in a command-line terminal.
+To run the examples, open the example directory of this repository in a command-line terminal.
 
-1. `pub run dart_dev examples`
-2. Open Chromium/Dartium to `http://localhost:8080`
+1. `dart run build_runner serve`
+2. Open `http://localhost:8080`

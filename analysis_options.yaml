@@ -1,5 +1,8 @@
 # analysis_options.yaml docs: https://www.dartlang.org/guides/language/analysis-options 
 analyzer:
+  exclude:
+    - "example/**"
+
   # Strong mode is required. Applies to the current project.
   strong-mode:
     # When compiling to JS, both implicit options apply to the current 
