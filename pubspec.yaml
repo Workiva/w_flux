@@ -30,15 +30,12 @@ dev_dependencies:
 
 
 dependency_overrides:
+  w_common: ^3.0.0
   react:
     git:
-      url: https://github.com/Workiva/react-dart.git
+      url: https://github.com/Workiva/react-dart
       ref: null-safety-manual
   over_react:
     git:
-      url: https://github.com/Workiva/over_react.git
-      ref: null-safety
-  transformer_utils:
-    git:
-      url: git@github.com:Workiva/dart_transformer_utils.git
+      url: https://github.com/Workiva/over_react
       ref: null-safety

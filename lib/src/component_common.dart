@@ -137,9 +137,10 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
   /// Register a [subscription] that should be canceled when the component
   /// unmounts. Cancellation will be handled automatically by
   /// [componentWillUnmount].
-  @Deprecated(
-      'Subscriptions are now managed by the Disposable mixin. $v3Deprecation')
-  void addSubscription(StreamSubscription subscription) {
-    manageStreamSubscription(subscription);
-  }
+  // FIXME: Ensure that this has 0 usages via Sourcegraph so that nothing is broken.
+  // @Deprecated(
+  //     'Subscriptions are now managed by the Disposable mixin. $v3Deprecation')
+  // void addSubscription(StreamSubscription subscription) {
+  //   manageStreamSubscription(subscription);
+  // }
 }
