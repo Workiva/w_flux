@@ -108,8 +108,10 @@ class Action<T> extends Object with Disposable implements Function {
     return identical(this, other);
   }
 
-  static ActionOptionalPayload<T> optionalPayload<T>() => ActionOptionalPayload<T>();
-  static ActionOptionalPayload<void> noPayload() => ActionOptionalPayload<void>();
+  static ActionOptionalPayload<T> optionalPayload<T>() =>
+      ActionOptionalPayload<T>();
+  static ActionOptionalPayload<void> noPayload() =>
+      ActionOptionalPayload<void>();
 }
 
 typedef _ActionListener<T> = dynamic Function(T event);
