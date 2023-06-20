@@ -27,7 +27,7 @@ class ActionOptionalPayload<T> extends Action<T?> {
   /// Dispatch this [Action] to all listeners. If a payload is supplied, it will
   /// be passed to each listener's callback, otherwise null will be passed.
   @override
-  Future call([T? payload]) => call(payload);
+  Future call([T? payload]) => super.call(payload);
 }
 
 /// A command that can be dispatched and listened to.
