@@ -8,7 +8,7 @@ environment:
   sdk: ">=2.11.0 <3.0.0"
 
 dependencies:
-  meta: ^1.6.0
+  meta: '>=1.6.0  <1.10.0'
   react: ">=5.7.0 <7.0.0"
   w_common: ^3.0.0
 
@@ -19,3 +19,6 @@ dev_dependencies:
   dart_dev: ^4.0.0
   dependency_validator: ^3.0.0
   test: ^1.18.2 
+dependency_validator:
+  ignore:
+    - meta
