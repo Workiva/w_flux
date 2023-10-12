@@ -222,7 +222,7 @@ void main() {
       }, skip: true);
     });
   });
-  
+
   group('Action2', () {
     late Action2<String> action;
 

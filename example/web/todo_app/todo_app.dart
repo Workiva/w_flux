@@ -30,7 +30,6 @@ main() async {
 
   // render the component
   react_client.setClientConfiguration();
-  react_dom.render(
-      ToDoAppComponent({'actions': actions, 'store': store}),
+  react_dom.render(ToDoAppComponent({'actions': actions, 'store': store}),
       querySelector('#content-container'));
 }
