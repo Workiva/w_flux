@@ -22,7 +22,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Action', () {
-    Action<String> action;
+    late Action<String> action;
 
     setUp(() {
       action = Action<String>();
@@ -39,7 +39,7 @@ void main() {
       Completer c = Completer();
       Action<String> _action = Action<String>();
 
-      _action.listen((String payload) {
+      _action.listen((String? payload) {
         expect(payload, equals(null));
         c.complete();
       });
@@ -50,7 +50,7 @@ void main() {
 
     test('should support dispatch with a payload', () async {
       Completer c = Completer();
-      action.listen((String payload) {
+      action.listen((String? payload) {
         expect(payload, equals('990 guerrero'));
         c.complete();
       });
@@ -61,7 +61,7 @@ void main() {
 
     test('should dispatch by default when called', () async {
       Completer c = Completer();
-      action.listen((String payload) {
+      action.listen((String? payload) {
         expect(payload, equals('990 guerrero'));
         c.complete();
       });
@@ -123,7 +123,7 @@ void main() {
           });
         });
 
-        var future = action();
+        Future<dynamic>? future = action();
         expect(asyncListenerCompleted, isFalse);
 
         await future;
@@ -199,8 +199,8 @@ void main() {
 
         stopwatch.reset();
 
-        Completer syncCompleter;
-        Completer asyncCompleter;
+        late Completer syncCompleter;
+        late Completer asyncCompleter;
         var action = Action();
         action.listen((_) => syncCompleter.complete());
         action.listen((_) async {

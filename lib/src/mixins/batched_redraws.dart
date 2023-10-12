@@ -9,14 +9,14 @@ class _RedrawScheduler implements Function {
   Map<BatchedRedraws, List<Function>> _components =
       <BatchedRedraws, List<Function>>{};
 
-  void call(BatchedRedraws component, [callback()]) {
+  void call(BatchedRedraws component, [callback()?]) {
     if (_components.isEmpty) {
       _tick();
     }
 
     _components[component] ??= [];
 
-    if (callback != null) _components[component].add(callback);
+    if (callback != null) _components[component]!.add(callback);
   }
 
   Future _tick() async {
@@ -33,7 +33,7 @@ class _RedrawScheduler implements Function {
         continue;
       }
 
-      Function() chainedCallbacks;
+      Function()? chainedCallbacks;
 
       if (callbacks.isNotEmpty) {
         chainedCallbacks = () {
@@ -67,5 +67,5 @@ _RedrawScheduler _scheduleRedraw = _RedrawScheduler();
 class BatchedRedraws {
   bool shouldBatchRedraw = true;
 
-  void redraw([callback()]) => _scheduleRedraw(this, callback);
+  void redraw([callback()?]) => _scheduleRedraw(this, callback);
 }
