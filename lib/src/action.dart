@@ -20,11 +20,22 @@ import 'package:w_common/disposable.dart';
 
 import 'package:w_flux/src/constants.dart' show v3Deprecation;
 
+/// Like [Action2], but payloads cannot be made non-nullable since the argument
+/// to [call] is optional.
+@Deprecated('Use Action2 instead, which supports non-nullable payloads.')
+class Action<T> extends Action2<T?> {
+  @override
+  String get disposableTypeName => 'Action';
+
+  @override
+  Future call([T? payload]) => super.call(payload);
+}
+
 /// A command that can be dispatched and listened to.
 ///
-/// An [Action] manages a collection of listeners and the manner of
+/// An [Action2] manages a collection of listeners and the manner of
 /// their invocation. It *does not* rely on [Stream] for managing listeners. By
-/// managing its own listeners, an [Action] can track a [Future] that completes
+/// managing its own listeners, an [Action2] can track a [Future] that completes
 /// when all registered listeners have completed. This allows consumers to use
 /// `await` to wait for an action to finish processing.
 ///
@@ -45,15 +56,15 @@ import 'package:w_flux/src/constants.dart' show v3Deprecation;
 /// when a consumer needs to check state changes immediately after invoking an
 /// action.
 ///
-class Action<T> extends Object with Disposable implements Function {
+class Action2<T> extends Object with Disposable implements Function {
   @override
-  String get disposableTypeName => 'Action';
+  String get disposableTypeName => 'Action2';
 
-  List<_ActionListener<T?>> _listeners = [];
+  List<_ActionListener<T>> _listeners = [];
 
   /// Dispatch this [Action] to all listeners. If a payload is supplied, it will
   /// be passed to each listener's callback, otherwise null will be passed.
-  Future call([T? payload]) {
+  Future call(T payload) {
     // Invoke all listeners in a microtask to enable waiting on futures. The
     // microtask queue is emptied before the event loop continues. This ensures
     // synchronous listeners are invoked in the current tick of the event loop
@@ -65,7 +76,7 @@ class Action<T> extends Object with Disposable implements Function {
     // a [Stream]-based action implementation. At smaller sample sizes this
     // implementation slows down in comparison, yielding average times of 0.1 ms
     // for stream-based actions vs. 0.14 ms for this action implementation.
-    Future callListenerInMicrotask(_ActionListener<T?> l) =>
+    Future callListenerInMicrotask(_ActionListener<T> l) =>
         Future.microtask(() => l(payload));
     return Future.wait(_listeners.map(callListenerInMicrotask));
   }
@@ -82,7 +93,7 @@ class Action<T> extends Object with Disposable implements Function {
   /// dispatched. A payload of type [T] will be passed to the callback if
   /// supplied at dispatch time, otherwise null will be passed. Returns an
   /// [ActionSubscription] which provides means to cancel the subscription.
-  ActionSubscription listen(dynamic Function(T? event) onData) {
+  ActionSubscription listen(dynamic Function(T event) onData) {
     _listeners.add(onData);
     return ActionSubscription(() => _listeners.remove(onData));
   }
