@@ -20,15 +20,13 @@ import 'actions.dart';
 
 class ToDoStore extends Store {
   /// Public data
-  List<Todo> _todos;
+  List<Todo> _todos = [];
   List<Todo> get todos => _todos;
 
   /// Internals
   ToDoActions _actions;
 
   ToDoStore(ToDoActions this._actions) {
-    _todos = [];
-
     triggerOnActionV2(_actions.createTodo, (Todo todo) => _todos.add(todo));
     triggerOnActionV2(
         _actions.completeTodo, (Todo todo) => todo.completed = true);
