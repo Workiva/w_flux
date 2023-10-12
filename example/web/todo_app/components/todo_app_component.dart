@@ -30,11 +30,11 @@ class _ToDoAppComponent extends FluxComponent<ToDoActions, ToDoStore> {
     store.todos.forEach((Todo todo) {
       todoListItems.add(TodoListItem({'todo': todo, 'onClick': _completeTodo}));
     });
-    ReactElement? todoList = react.div({'className': 'list-group'}, todoListItems);
+    var todoList = react.div({'className': 'list-group'}, todoListItems);
 
-    ReactElement? pageHeader =
+    var pageHeader =
         react.div({'className': 'page-header'}, react.h1({}, 'My Todos'));
-    ReactElement? clearButton = react.button(
+    var clearButton = react.button(
         {'onClick': _clearList, 'disabled': store.todos.length == 0},
         'Clear Todo List');
 
