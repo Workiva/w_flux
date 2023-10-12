@@ -5,7 +5,7 @@ description: Flux library for uni-directional dataflow inspired by reflux and Fa
 homepage: https://github.com/Workiva/w_flux
 publish_to: none
 environment:
-    sdk: ">=2.11.0 <3.0.0"
+    sdk: '>=2.12.0 <3.0.0'
 dependencies:
   w_flux: 
 

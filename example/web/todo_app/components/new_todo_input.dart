@@ -1,4 +1,4 @@
-// Copyright 2015 Workiva Inc.
+ // Copyright 2015 Workiva Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import 'package:react/react.dart' as react;
 var NewTodoInput = react.registerComponent(() => _NewTodoInput());
 
 class _NewTodoInput extends react.Component2 {
-  String get value => state['value'] as String/*!*/;
-  Function get onSubmit => props['onSubmit'] as Function/*!*/;
+  String get value => state['value'] as String;
+  Function get onSubmit => props['onSubmit'] as Function;
 
   get initialState => {'value': ''};
 
