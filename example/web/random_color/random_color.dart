@@ -36,7 +36,7 @@ main() async {
 }
 
 class RandomColorActions {
-  final Action changeBackgroundColor = Action();
+  final Action2 changeBackgroundColor = Action2();
 }
 
 class RandomColorStore extends Store {
@@ -74,7 +74,7 @@ class _RandomColorComponent
       'This module uses a flux pattern to change its background color.',
       react.button({
         'style': {'padding': '10px', 'margin': '10px'},
-        'onClick': (_) => actions.changeBackgroundColor()
+        'onClick': (_) => actions.changeBackgroundColor(null)
       }, 'Change Background Color')
     ]);
   }

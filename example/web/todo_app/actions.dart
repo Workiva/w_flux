@@ -19,8 +19,8 @@ import 'package:w_flux/w_flux.dart';
 import 'store.dart';
 
 class ToDoActions {
-  final Action<Todo> createTodo = Action<Todo>();
-  final Action<Todo> completeTodo = Action<Todo>();
-  final Action<Todo> deleteTodo = Action<Todo>();
-  final Action clearTodoList = Action<Todo>();
+  final Action2<Todo> createTodo = Action2<Todo>();
+  final Action2<Todo> completeTodo = Action2<Todo>();
+  final Action2<Todo> deleteTodo = Action2<Todo>();
+  final Action2 clearTodoList = Action2<Todo>();
 }
