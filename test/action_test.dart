@@ -22,7 +22,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Action', () {
-    late Action<String> action;
+    Action<String> action;
 
     setUp(() {
       action = Action<String>();
@@ -38,7 +38,7 @@ void main() {
     test('should support dispatch without a payload', () async {
       Completer c = Completer();
       Action<String> _action = Action<String>()
-        ..listen((String? payload) {
+        ..listen((String payload) {
           expect(payload, equals(null));
           c.complete();
         });
@@ -49,7 +49,7 @@ void main() {
 
     test('should support dispatch with a payload', () async {
       Completer c = Completer();
-      action.listen((String? payload) {
+      action.listen((String payload) {
         expect(payload, equals('990 guerrero'));
         c.complete();
       });
@@ -60,7 +60,7 @@ void main() {
 
     test('should dispatch by default when called', () async {
       Completer c = Completer();
-      action.listen((String? payload) {
+      action.listen((String payload) {
         expect(payload, equals('990 guerrero'));
         c.complete();
       });
@@ -122,7 +122,7 @@ void main() {
           });
         });
 
-        Future<dynamic>? future = action();
+        Future<dynamic> future = action();
         expect(asyncListenerCompleted, isFalse);
 
         await future;
@@ -197,8 +197,8 @@ void main() {
 
         stopwatch.reset();
 
-        late Completer syncCompleter;
-        late Completer asyncCompleter;
+        Completer syncCompleter;
+        Completer asyncCompleter;
         var action = Action()
           ..listen((_) => syncCompleter.complete())
           ..listen((_) async {
@@ -222,7 +222,7 @@ void main() {
   });
 
   group('Action2', () {
-    late Action2<String> action;
+    Action2<String> action;
 
     setUp(() {
       action = Action2<String>();
@@ -307,7 +307,7 @@ void main() {
           });
         });
 
-        Future<dynamic>? future = action('payload');
+        Future<dynamic> future = action('payload');
         expect(asyncListenerCompleted, isFalse);
 
         await future;
@@ -362,7 +362,7 @@ void main() {
     });
 
     group('Null typed', () {
-      late Action2<Null> nullAction;
+      Action2<Null> nullAction;
 
       setUp(() {
         nullAction = Action2<Null>();
@@ -412,8 +412,8 @@ void main() {
 
         stopwatch.reset();
 
-        late Completer syncCompleter;
-        late Completer asyncCompleter;
+        Completer syncCompleter;
+        Completer asyncCompleter;
         var action = Action2()
           ..listen((_) => syncCompleter.complete())
           ..listen((_) async {
