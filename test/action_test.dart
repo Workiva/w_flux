@@ -37,14 +37,13 @@ void main() {
 
     test('should support dispatch without a payload', () async {
       Completer c = Completer();
-      Action<String> _action = Action<String>();
+      Action<String> _action = Action<String>()
+        ..listen((String? payload) {
+          expect(payload, equals(null));
+          c.complete();
+        });
 
-      _action.listen((String? payload) {
-        expect(payload, equals(null));
-        c.complete();
-      });
-
-      _action();
+      await _action();
       return c.future;
     });
 
@@ -55,7 +54,7 @@ void main() {
         c.complete();
       });
 
-      action('990 guerrero');
+      await action('990 guerrero');
       return c.future;
     });
 
@@ -66,7 +65,7 @@ void main() {
         c.complete();
       });
 
-      action('990 guerrero');
+      await action('990 guerrero');
       return c.future;
     });
 
@@ -74,14 +73,14 @@ void main() {
       test(
           'should invoke and complete synchronous listeners in future event in '
           'event queue', () async {
-        var action = Action();
         var listenerCompleted = false;
-        action.listen((_) {
-          listenerCompleted = true;
-        });
+        var action = Action()
+          ..listen((_) {
+            listenerCompleted = true;
+          });
 
         // No immediate invocation.
-        action();
+        unawaited(action(null));
         expect(listenerCompleted, isFalse);
 
         // Invoked during the next scheduled event in the queue.
@@ -101,7 +100,7 @@ void main() {
         });
 
         // No immediate invocation.
-        action();
+        unawaited(action(null));
         expect(listenerInvoked, isFalse);
 
         // Invoked during next scheduled event in the queue.
@@ -118,7 +117,7 @@ void main() {
         var action = Action();
         var asyncListenerCompleted = false;
         action.listen((_) async {
-          await Future.delayed(Duration(milliseconds: 100), () {
+          await Future.delayed(const Duration(milliseconds: 100), () {
             asyncListenerCompleted = true;
           });
         });
@@ -131,8 +130,7 @@ void main() {
       });
 
       test('should surface errors in listeners', () {
-        var action = Action();
-        action.listen((_) => throw UnimplementedError());
+        var action = Action()..listen((_) => throw UnimplementedError());
         expect(action(0), throwsUnimplementedError);
       });
     });
@@ -186,9 +184,9 @@ void main() {
         const int sampleSize = 1000;
         var stopwatch = Stopwatch();
 
-        var awaitableAction = Action();
-        awaitableAction.listen((_) => {});
-        awaitableAction.listen((_) async {});
+        var awaitableAction = Action()
+          ..listen((_) => {})
+          ..listen((_) async {});
         stopwatch.start();
         for (var i = 0; i < sampleSize; i++) {
           await awaitableAction();
@@ -201,16 +199,16 @@ void main() {
 
         late Completer syncCompleter;
         late Completer asyncCompleter;
-        var action = Action();
-        action.listen((_) => syncCompleter.complete());
-        action.listen((_) async {
-          asyncCompleter.complete();
-        });
+        var action = Action()
+          ..listen((_) => syncCompleter.complete())
+          ..listen((_) async {
+            asyncCompleter.complete();
+          });
         stopwatch.start();
         for (var i = 0; i < sampleSize; i++) {
           syncCompleter = Completer();
           asyncCompleter = Completer();
-          action();
+          await action();
           await Future.wait([syncCompleter.future, asyncCompleter.future]);
         }
         stopwatch.stop();
@@ -244,7 +242,7 @@ void main() {
         c.complete();
       });
 
-      action('990 guerrero');
+      await action('990 guerrero');
       return c.future;
     });
 
@@ -255,7 +253,7 @@ void main() {
         c.complete();
       });
 
-      action('990 guerrero');
+      await action('990 guerrero');
       return c.future;
     });
 
@@ -263,14 +261,13 @@ void main() {
       test(
           'should invoke and complete synchronous listeners in future event in '
           'event queue', () async {
-        var action = Action2();
         var listenerCompleted = false;
         action.listen((_) {
           listenerCompleted = true;
         });
 
         // No immediate invocation.
-        action(null);
+        unawaited(action('payload'));
         expect(listenerCompleted, isFalse);
 
         // Invoked during the next scheduled event in the queue.
@@ -281,7 +278,6 @@ void main() {
       test(
           'should invoke asynchronous listeners in future event and complete '
           'in another future event', () async {
-        var action = Action2();
         var listenerInvoked = false;
         var listenerCompleted = false;
         action.listen((_) async {
@@ -290,7 +286,7 @@ void main() {
         });
 
         // No immediate invocation.
-        action(null);
+        unawaited(action('payload'));
         expect(listenerInvoked, isFalse);
 
         // Invoked during next scheduled event in the queue.
@@ -304,15 +300,14 @@ void main() {
       });
 
       test('should complete future after listeners complete', () async {
-        var action = Action2();
         var asyncListenerCompleted = false;
         action.listen((_) async {
-          await Future.delayed(Duration(milliseconds: 100), () {
+          await Future.delayed(const Duration(milliseconds: 100), () {
             asyncListenerCompleted = true;
           });
         });
 
-        Future<dynamic>? future = action(null);
+        Future<dynamic>? future = action('payload');
         expect(asyncListenerCompleted, isFalse);
 
         await future;
@@ -320,53 +315,82 @@ void main() {
       });
 
       test('should surface errors in listeners', () {
-        var action = Action2();
-        action.listen((_) => throw UnimplementedError());
-        expect(action(0), throwsUnimplementedError);
+        var actionWithError = action..listen((_) => throw UnimplementedError());
+        expect(actionWithError('payload'), throwsUnimplementedError);
       });
     });
 
     group('listen', () {
       test('should stop listening when subscription is canceled', () async {
-        var action = Action2();
         var listened = false;
         var subscription = action.listen((_) => listened = true);
 
-        await action(null);
+        await action('payload');
         expect(listened, isTrue);
 
         listened = false;
         subscription.cancel();
-        await action(null);
+        await action('payload');
         expect(listened, isFalse);
       });
 
       test('should stop listening when listeners are cleared', () async {
-        var action = Action2();
         var listened = false;
         action.listen((_) => listened = true);
 
-        await action(null);
+        await action('payload');
         expect(listened, isTrue);
 
         listened = false;
         await action.dispose();
-        await action(null);
+        await action('payload');
         expect(listened, isFalse);
       });
 
       test('should stop listening when actions are disposed', () async {
-        var action = Action2();
         var listened = false;
         action.listen((_) => listened = true);
 
-        await action(null);
+        await action('payload');
         expect(listened, isTrue);
 
         listened = false;
         await action.dispose();
-        await action(null);
+        await action('payload');
         expect(listened, isFalse);
+      });
+    });
+
+    group('Null typed', () {
+      late Action2<Null> nullAction;
+
+      setUp(() {
+        nullAction = Action2<Null>();
+      });
+
+      test('should support dispatch with a null payload', () async {
+        Completer c = Completer();
+        nullAction.listen((payload) {
+          expect(payload, isNull);
+          c.complete();
+        });
+
+        await nullAction(null);
+        return c.future;
+      });
+    });
+
+    group('void typed', () {
+      var voidAction = Action2<void>();
+
+      test('should support dispatch with a null payload', () async {
+        Completer c = Completer();
+        voidAction.listen((_) {
+          c.complete();
+        });
+
+        await voidAction(null);
+        return c.future;
       });
     });
 
@@ -375,9 +399,9 @@ void main() {
         const int sampleSize = 1000;
         var stopwatch = Stopwatch();
 
-        var awaitableAction = Action2();
-        awaitableAction.listen((_) => {});
-        awaitableAction.listen((_) async {});
+        var awaitableAction = Action2()
+          ..listen((_) => {})
+          ..listen((_) async {});
         stopwatch.start();
         for (var i = 0; i < sampleSize; i++) {
           await awaitableAction(null);
@@ -390,16 +414,16 @@ void main() {
 
         late Completer syncCompleter;
         late Completer asyncCompleter;
-        var action = Action2();
-        action.listen((_) => syncCompleter.complete());
-        action.listen((_) async {
-          asyncCompleter.complete();
-        });
+        var action = Action2()
+          ..listen((_) => syncCompleter.complete())
+          ..listen((_) async {
+            asyncCompleter.complete();
+          });
         stopwatch.start();
         for (var i = 0; i < sampleSize; i++) {
           syncCompleter = Completer();
           asyncCompleter = Completer();
-          action(null);
+          await action(null);
           await Future.wait([syncCompleter.future, asyncCompleter.future]);
         }
         stopwatch.stop();

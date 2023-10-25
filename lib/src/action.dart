@@ -62,8 +62,8 @@ class Action2<T> extends Object with Disposable implements Function {
 
   List<_ActionListener<T>> _listeners = [];
 
-  /// Dispatch this [Action] to all listeners. If a payload is supplied, it will
-  /// be passed to each listener's callback, otherwise null will be passed.
+  /// Dispatch this [Action2] to all listeners. The non-nullable payload will
+  /// be passed to each listener's callback.
   Future call(T payload) {
     // Invoke all listeners in a microtask to enable waiting on futures. The
     // microtask queue is emptied before the event loop continues. This ensures
@@ -81,7 +81,7 @@ class Action2<T> extends Object with Disposable implements Function {
     return Future.wait(_listeners.map(callListenerInMicrotask));
   }
 
-  /// Cancel all subscriptions that exist on this [Action] as a result of
+  /// Cancel all subscriptions that exist on this [Action2] as a result of
   /// [listen] being called. Useful when tearing down a flux cycle in some
   /// module or unit test.
   @Deprecated('Use (and await) dispose() instead. $v3Deprecation')
@@ -89,7 +89,7 @@ class Action2<T> extends Object with Disposable implements Function {
     _listeners.clear();
   }
 
-  /// Supply a callback that will be called any time this [Action] is
+  /// Supply a callback that will be called any time this [Action2] is
   /// dispatched. A payload of type [T] will be passed to the callback if
   /// supplied at dispatch time, otherwise null will be passed. Returns an
   /// [ActionSubscription] which provides means to cancel the subscription.
@@ -111,13 +111,13 @@ class Action2<T> extends Object with Disposable implements Function {
 
 typedef _ActionListener<T> = dynamic Function(T event);
 
-/// A subscription used to cancel registered listeners to an [Action].
+/// A subscription used to cancel registered listeners to an [Action2].
 class ActionSubscription {
   Function? _onCancel;
 
   ActionSubscription(this._onCancel);
 
-  /// Cancel this subscription to an [Action]
+  /// Cancel this subscription to an [Action2]
   void cancel() {
     if (_onCancel != null) {
       _onCancel!();
