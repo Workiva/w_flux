@@ -20,11 +20,30 @@ import 'package:w_common/disposable.dart';
 
 import 'package:w_flux/src/constants.dart' show v3Deprecation;
 
+/// Like [Action1], but without an expected payload (aka a void payload).
+class Action0 extends Action1<void> {
+  @override
+  String get disposableTypeName => 'Action1';
+
+  @override
+  Future call([void payload]) => super.call(null);
+}
+
+/// Like [Action1], but payloads cannot be made non-nullable since the argument
+/// to [call] is optional.
+class Action<T> extends Action1<T> {
+  @override
+  String get disposableTypeName => 'Action';
+
+  @override
+  Future call([T payload]) => super.call(payload);
+}
+
 /// A command that can be dispatched and listened to.
 ///
-/// An [Action] manages a collection of listeners and the manner of
+/// An [Action1] manages a collection of listeners and the manner of
 /// their invocation. It *does not* rely on [Stream] for managing listeners. By
-/// managing its own listeners, an [Action] can track a [Future] that completes
+/// managing its own listeners, an [Action1] can track a [Future] that completes
 /// when all registered listeners have completed. This allows consumers to use
 /// `await` to wait for an action to finish processing.
 ///
@@ -45,15 +64,15 @@ import 'package:w_flux/src/constants.dart' show v3Deprecation;
 /// when a consumer needs to check state changes immediately after invoking an
 /// action.
 ///
-class Action<T> extends Object with Disposable implements Function {
+class Action1<T> extends Object with Disposable implements Function {
   @override
-  String get disposableTypeName => 'Action';
+  String get disposableTypeName => 'Action1';
 
-  List _listeners = [];
+  List<_ActionListener<T>> _listeners = [];
 
-  /// Dispatch this [Action] to all listeners. If a payload is supplied, it will
-  /// be passed to each listener's callback, otherwise null will be passed.
-  Future call([T payload]) {
+  /// Dispatch this [Action1] to all listeners. The non-nullable payload will
+  /// be passed to each listener's callback.
+  Future call(T payload) {
     // Invoke all listeners in a microtask to enable waiting on futures. The
     // microtask queue is emptied before the event loop continues. This ensures
     // synchronous listeners are invoked in the current tick of the event loop
@@ -65,11 +84,12 @@ class Action<T> extends Object with Disposable implements Function {
     // a [Stream]-based action implementation. At smaller sample sizes this
     // implementation slows down in comparison, yielding average times of 0.1 ms
     // for stream-based actions vs. 0.14 ms for this action implementation.
-    Future callListenerInMicrotask(l) => Future.microtask(() => l(payload));
+    Future callListenerInMicrotask(_ActionListener<T> l) =>
+        Future.microtask(() => l(payload));
     return Future.wait(_listeners.map(callListenerInMicrotask));
   }
 
-  /// Cancel all subscriptions that exist on this [Action] as a result of
+  /// Cancel all subscriptions that exist on this [Action1] as a result of
   /// [listen] being called. Useful when tearing down a flux cycle in some
   /// module or unit test.
   @Deprecated('Use (and await) dispose() instead. $v3Deprecation')
@@ -77,11 +97,11 @@ class Action<T> extends Object with Disposable implements Function {
     _listeners.clear();
   }
 
-  /// Supply a callback that will be called any time this [Action] is
+  /// Supply a callback that will be called any time this [Action1] is
   /// dispatched. A payload of type [T] will be passed to the callback if
   /// supplied at dispatch time, otherwise null will be passed. Returns an
   /// [ActionSubscription] which provides means to cancel the subscription.
-  ActionSubscription listen(dynamic onData(T event)) {
+  ActionSubscription listen(dynamic Function(T event) onData) {
     _listeners.add(onData);
     return ActionSubscription(() => _listeners.remove(onData));
   }
@@ -97,13 +117,15 @@ class Action<T> extends Object with Disposable implements Function {
   }
 }
 
-/// A subscription used to cancel registered listeners to an [Action].
+typedef _ActionListener<T> = dynamic Function(T event);
+
+/// A subscription used to cancel listeners of an [Action0] or [Action1].
 class ActionSubscription {
   Function _onCancel;
 
   ActionSubscription(this._onCancel);
 
-  /// Cancel this subscription to an [Action]
+  /// Cancel this subscription to an [Action], [Action0] or [Action1].
   void cancel() {
     if (_onCancel != null) {
       _onCancel();
