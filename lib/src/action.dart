@@ -62,8 +62,8 @@ class Action2<T> extends Object with Disposable implements Function {
 
   List<_ActionListener<T>> _listeners = [];
 
-  /// Dispatch this [Action2] to all listeners. The non-nullable payload will
-  /// be passed to each listener's callback.
+  /// Dispatch this [Action2] to all listeners. The payload will be passed to
+  /// each listener's callback.
   Future call(T payload) {
     // Invoke all listeners in a microtask to enable waiting on futures. The
     // microtask queue is emptied before the event loop continues. This ensures

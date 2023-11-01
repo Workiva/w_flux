@@ -26,6 +26,9 @@ void main() {
 
     setUp(() {
       action = Action<String>();
+      addTearDown(() async {
+        await action.dispose();
+      });
     });
 
     test('should only be equivalent to itself', () {
@@ -36,37 +39,21 @@ void main() {
     });
 
     test('should support dispatch without a payload', () async {
-      Completer c = Completer();
-      Action<String> _action = Action<String>()
-        ..listen((String payload) {
-          expect(payload, equals(null));
-          c.complete();
-        });
+      Action<String> action = Action<String>()
+        ..listen(expectAsync1((payload) {
+          expect(payload, isNull);
+        }));
 
-      await _action();
-      return c.future;
+      await action();
     });
 
-    test('should support dispatch with a payload', () async {
-      Completer c = Completer();
-      action.listen((String payload) {
+    test('should support dispatch by default when called with a payload',
+        () async {
+      action.listen(expectAsync1((String payload) {
         expect(payload, equals('990 guerrero'));
-        c.complete();
-      });
+      }));
 
       await action('990 guerrero');
-      return c.future;
-    });
-
-    test('should dispatch by default when called', () async {
-      Completer c = Completer();
-      action.listen((String payload) {
-        expect(payload, equals('990 guerrero'));
-        c.complete();
-      });
-
-      await action('990 guerrero');
-      return c.future;
     });
 
     group('dispatch', () {
@@ -117,12 +104,12 @@ void main() {
         var action = Action();
         var asyncListenerCompleted = false;
         action.listen((_) async {
-          await Future.delayed(const Duration(milliseconds: 100), () {
+          await Future.delayed(Duration(milliseconds: 100), () {
             asyncListenerCompleted = true;
           });
         });
 
-        Future<dynamic> future = action();
+        var future = action();
         expect(asyncListenerCompleted, isFalse);
 
         await future;
@@ -226,6 +213,9 @@ void main() {
 
     setUp(() {
       action = Action2<String>();
+      addTearDown(() async {
+        await action.dispose();
+      });
     });
 
     test('should only be equivalent to itself', () {
@@ -235,26 +225,13 @@ void main() {
       expect(_action == _action2, isFalse);
     });
 
-    test('should support dispatch with a payload', () async {
-      Completer c = Completer();
-      action.listen((payload) {
+    test('should support dispatch by default when called with a payload',
+        () async {
+      action.listen(expectAsync1((payload) {
         expect(payload, equals('990 guerrero'));
-        c.complete();
-      });
+      }));
 
       await action('990 guerrero');
-      return c.future;
-    });
-
-    test('should dispatch by default when called', () async {
-      Completer c = Completer();
-      action.listen((payload) {
-        expect(payload, equals('990 guerrero'));
-        c.complete();
-      });
-
-      await action('990 guerrero');
-      return c.future;
     });
 
     group('dispatch', () {
@@ -361,39 +338,6 @@ void main() {
       });
     });
 
-    group('Null typed', () {
-      Action2<Null> nullAction;
-
-      setUp(() {
-        nullAction = Action2<Null>();
-      });
-
-      test('should support dispatch with a null payload', () async {
-        Completer c = Completer();
-        nullAction.listen((payload) {
-          expect(payload, isNull);
-          c.complete();
-        });
-
-        await nullAction(null);
-        return c.future;
-      });
-    });
-
-    group('void typed', () {
-      var voidAction = Action2<void>();
-
-      test('should support dispatch with a null payload', () async {
-        Completer c = Completer();
-        voidAction.listen((_) {
-          c.complete();
-        });
-
-        await voidAction(null);
-        return c.future;
-      });
-    });
-
     group('benchmarks', () {
       test('should dispatch actions faster than streams :(', () async {
         const int sampleSize = 1000;
@@ -433,6 +377,46 @@ void main() {
         print('awaitable action (ms): $averageActionDispatchTime; '
             'stream-based action (ms): $averageStreamDispatchTime');
       }, skip: true);
+    });
+  });
+
+  group('Null typed', () {
+    Action2<Null> nullAction;
+
+    setUp(() {
+      nullAction = Action2<Null>();
+      addTearDown(() async {
+        await nullAction.dispose();
+      });
+    });
+
+    test('should support dispatch with a null payload', () async {
+      nullAction.listen(expectAsync1((payload) {
+        expect(payload, isNull);
+      }));
+
+      await nullAction(null);
+    });
+  });
+
+  group('void typed', () {
+    Action2<void> voidAction;
+
+    setUp(() {
+      voidAction = Action2<void>();
+      addTearDown(() async {
+        await voidAction.dispose();
+      });
+    });
+
+    test('should support dispatch with a null payload', () async {
+      Completer c = Completer();
+      voidAction.listen((_) {
+        c.complete();
+      });
+
+      await voidAction(null);
+      return c.future;
     });
   });
 }
