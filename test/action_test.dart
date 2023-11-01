@@ -33,9 +33,9 @@ void main() {
 
     test('should only be equivalent to itself', () {
       Action _action = Action();
-      Action _action2 = Action();
+      Action _ActionV2 = Action();
       expect(_action == _action, isTrue);
-      expect(_action == _action2, isFalse);
+      expect(_action == _ActionV2, isFalse);
     });
 
     test('should support dispatch without a payload', () async {
@@ -208,21 +208,21 @@ void main() {
     });
   });
 
-  group('Action2', () {
-    Action2<String> action;
+  group('ActionV2', () {
+    ActionV2<String> action;
 
     setUp(() {
-      action = Action2<String>();
+      action = ActionV2<String>();
       addTearDown(() async {
         await action.dispose();
       });
     });
 
     test('should only be equivalent to itself', () {
-      Action2 _action = Action2();
-      Action2 _action2 = Action2();
+      ActionV2 _action = ActionV2();
+      ActionV2 _ActionV2 = ActionV2();
       expect(_action == _action, isTrue);
-      expect(_action == _action2, isFalse);
+      expect(_action == _ActionV2, isFalse);
     });
 
     test('should support dispatch by default when called with a payload',
@@ -343,7 +343,7 @@ void main() {
         const int sampleSize = 1000;
         var stopwatch = Stopwatch();
 
-        var awaitableAction = Action2()
+        var awaitableAction = ActionV2()
           ..listen((_) => {})
           ..listen((_) async {});
         stopwatch.start();
@@ -358,7 +358,7 @@ void main() {
 
         Completer syncCompleter;
         Completer asyncCompleter;
-        var action = Action2()
+        var action = ActionV2()
           ..listen((_) => syncCompleter.complete())
           ..listen((_) async {
             asyncCompleter.complete();
@@ -381,10 +381,10 @@ void main() {
   });
 
   group('Null typed', () {
-    Action2<Null> nullAction;
+    ActionV2<Null> nullAction;
 
     setUp(() {
-      nullAction = Action2<Null>();
+      nullAction = ActionV2<Null>();
       addTearDown(() async {
         await nullAction.dispose();
       });
@@ -400,10 +400,10 @@ void main() {
   });
 
   group('void typed', () {
-    Action2<void> voidAction;
+    ActionV2<void> voidAction;
 
     setUp(() {
-      voidAction = Action2<void>();
+      voidAction = ActionV2<void>();
       addTearDown(() async {
         await voidAction.dispose();
       });

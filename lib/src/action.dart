@@ -20,10 +20,10 @@ import 'package:w_common/disposable.dart';
 
 import 'package:w_flux/src/constants.dart' show v3Deprecation;
 
-/// Like [Action2], but payloads cannot be made non-nullable since the argument
+/// Like [ActionV2], but payloads cannot be made non-nullable since the argument
 /// to [call] is optional.
-@Deprecated('Use Action2 instead, which supports non-nullable payloads.')
-class Action<T> extends Action2<T> {
+@Deprecated('Use ActionV2 instead, which supports non-nullable payloads.')
+class Action<T> extends ActionV2<T> {
   @override
   String get disposableTypeName => 'Action';
 
@@ -33,9 +33,9 @@ class Action<T> extends Action2<T> {
 
 /// A command that can be dispatched and listened to.
 ///
-/// An [Action2] manages a collection of listeners and the manner of
+/// An [ActionV2] manages a collection of listeners and the manner of
 /// their invocation. It *does not* rely on [Stream] for managing listeners. By
-/// managing its own listeners, an [Action2] can track a [Future] that completes
+/// managing its own listeners, an [ActionV2] can track a [Future] that completes
 /// when all registered listeners have completed. This allows consumers to use
 /// `await` to wait for an action to finish processing.
 ///
@@ -56,13 +56,13 @@ class Action<T> extends Action2<T> {
 /// when a consumer needs to check state changes immediately after invoking an
 /// action.
 ///
-class Action2<T> extends Object with Disposable implements Function {
+class ActionV2<T> extends Object with Disposable implements Function {
   @override
-  String get disposableTypeName => 'Action2';
+  String get disposableTypeName => 'ActionV2';
 
   List<_ActionListener<T>> _listeners = [];
 
-  /// Dispatch this [Action2] to all listeners. The payload will be passed to
+  /// Dispatch this [ActionV2] to all listeners. The payload will be passed to
   /// each listener's callback.
   Future call(T payload) {
     // Invoke all listeners in a microtask to enable waiting on futures. The
@@ -81,7 +81,7 @@ class Action2<T> extends Object with Disposable implements Function {
     return Future.wait(_listeners.map(callListenerInMicrotask));
   }
 
-  /// Cancel all subscriptions that exist on this [Action2] as a result of
+  /// Cancel all subscriptions that exist on this [ActionV2] as a result of
   /// [listen] being called. Useful when tearing down a flux cycle in some
   /// module or unit test.
   @Deprecated('Use (and await) dispose() instead. $v3Deprecation')
@@ -89,7 +89,7 @@ class Action2<T> extends Object with Disposable implements Function {
     _listeners.clear();
   }
 
-  /// Supply a callback that will be called any time this [Action2] is
+  /// Supply a callback that will be called any time this [ActionV2] is
   /// dispatched. A payload of type [T] will be passed to the callback if
   /// supplied at dispatch time, otherwise null will be passed. Returns an
   /// [ActionSubscription] which provides means to cancel the subscription.
@@ -111,13 +111,13 @@ class Action2<T> extends Object with Disposable implements Function {
 
 typedef _ActionListener<T> = dynamic Function(T event);
 
-/// A subscription used to cancel registered listeners to an [Action2].
+/// A subscription used to cancel registered listeners to an [ActionV2].
 class ActionSubscription {
   Function _onCancel;
 
   ActionSubscription(this._onCancel);
 
-  /// Cancel this subscription to an [Action2]
+  /// Cancel this subscription to an [ActionV2]
   void cancel() {
     if (_onCancel != null) {
       _onCancel();
