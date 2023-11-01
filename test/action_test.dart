@@ -26,16 +26,14 @@ void main() {
 
     setUp(() {
       action = Action<String>();
-      addTearDown(() async {
-        await action.dispose();
-      });
+      addTearDown(action.dispose);
     });
 
     test('should only be equivalent to itself', () {
-      Action _action = Action();
-      Action _ActionV2 = Action();
-      expect(_action == _action, isTrue);
-      expect(_action == _ActionV2, isFalse);
+      Action action = Action();
+      Action actionV2 = Action();
+      expect(action == action, isTrue);
+      expect(action == actionV2, isFalse);
     });
 
     test('should support dispatch without a payload', () async {
@@ -213,16 +211,14 @@ void main() {
 
     setUp(() {
       action = ActionV2<String>();
-      addTearDown(() async {
-        await action.dispose();
-      });
+      addTearDown(action.dispose);
     });
 
     test('should only be equivalent to itself', () {
-      ActionV2 _action = ActionV2();
-      ActionV2 _ActionV2 = ActionV2();
-      expect(_action == _action, isTrue);
-      expect(_action == _ActionV2, isFalse);
+      ActionV2 action = ActionV2();
+      ActionV2 actionV2 = ActionV2();
+      expect(action == action, isTrue);
+      expect(action == actionV2, isFalse);
     });
 
     test('should support dispatch by default when called with a payload',
@@ -292,8 +288,8 @@ void main() {
       });
 
       test('should surface errors in listeners', () {
-        var actionWithError = action..listen((_) => throw UnimplementedError());
-        expect(actionWithError('payload'), throwsUnimplementedError);
+        action.listen((_) => throw UnimplementedError());
+        expect(action('payload'), throwsUnimplementedError);
       });
     });
 
@@ -385,9 +381,7 @@ void main() {
 
     setUp(() {
       nullAction = ActionV2<Null>();
-      addTearDown(() async {
-        await nullAction.dispose();
-      });
+      addTearDown(nullAction.dispose);
     });
 
     test('should support dispatch with a null payload', () async {
@@ -404,19 +398,13 @@ void main() {
 
     setUp(() {
       voidAction = ActionV2<void>();
-      addTearDown(() async {
-        await voidAction.dispose();
-      });
+      addTearDown(voidAction.dispose);
     });
 
     test('should support dispatch with a null payload', () async {
-      Completer c = Completer();
-      voidAction.listen((_) {
-        c.complete();
-      });
+      voidAction.listen(expectAsync1((_) {}));
 
       await voidAction(null);
-      return c.future;
     });
   });
 }
