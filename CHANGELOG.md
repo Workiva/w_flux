@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 2.11.0
+Create ActionV2 class with non-nullable payloads in preparation for null-safety.
+
 ## 2.10.15
 
 - Dependency upgrades
