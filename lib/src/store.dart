@@ -29,7 +29,7 @@ typedef StoreHandler = Function(Store event);
 ///
 /// General guidelines with respect to a `Store`'s data:
 /// - A `Store`'s data should not be exposed for direct mutation.
-/// - A `Store`'s data should be mutated internally in response to [Action]s.
+/// - A `Store`'s data should be mutated internally in response to [ActionV2]s.
 /// - A `Store` should expose relevant data ONLY via public getters.
 ///
 /// To receive notifications of a `Store`'s data mutations, `Store`s can be
@@ -141,7 +141,7 @@ class Store extends Stream<Store> with Disposable {
   /// Deprecated: 2.9.5
   /// To be removed: 3.0.0
   @deprecated
-  triggerOnAction(Action action, [void onAction(payload)]) {
+  triggerOnAction(ActionV2 action, [void onAction(payload)]) {
     triggerOnActionV2(action, onAction);
   }
 
@@ -153,7 +153,7 @@ class Store extends Stream<Store> with Disposable {
   /// called until that future has resolved.
   ///
   /// If the `Store` has been disposed, this method throws a [StateError].
-  void triggerOnActionV2<T>(Action<T> action,
+  void triggerOnActionV2<T>(ActionV2<T> action,
       [FutureOr<dynamic> onAction(T payload)]) {
     if (isOrWillBeDisposed) {
       throw StateError('Store of type $runtimeType has been disposed');
