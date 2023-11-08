@@ -55,7 +55,7 @@ class _ToDoAppComponent extends FluxComponent<ToDoActions, ToDoStore> {
     this.actions.createTodo(Todo(value));
   }
 
-  _completeTodo(todo) {
+  _completeTodo(Todo todo) {
     this.actions.completeTodo(todo);
   }
 }
