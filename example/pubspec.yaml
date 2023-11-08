@@ -21,3 +21,7 @@ dev_dependencies:
 dependency_overrides:
   w_flux:
     path: ../
+  react:
+    git:
+      url: https://github.com/Workiva/react-dart.git
+      ref: v7_wip
