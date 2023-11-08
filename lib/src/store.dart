@@ -47,6 +47,7 @@ class Store extends Stream<Store> with Disposable {
   final StreamController<Store> _streamController;
 
   /// Broadcast stream of "data updated" events. Listened to in [listen].
+  /// Use of late is ok because we guarantee that it is set in each constructor.
   late Stream<Store> _stream;
 
   /// Construct a new [Store] instance.

@@ -387,7 +387,7 @@ void main() {
     test('should support dispatch with a null payload', () async {
       nullAction.listen(expectAsync1((payload) {
         expect(payload, isNull);
-      } as dynamic Function(Null)));
+      }));
 
       await nullAction(null);
     });

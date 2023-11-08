@@ -20,6 +20,7 @@ dev_dependencies:
   dependency_validator: ^3.0.0
   test: ^1.18.2 
 
+# TODO: remove when null-safe react releases and update react dep above.
 dependency_overrides:
   react:
     git:
