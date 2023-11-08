@@ -47,7 +47,7 @@ class Store extends Stream<Store> with Disposable {
   final StreamController<Store> _streamController;
 
   /// Broadcast stream of "data updated" events. Listened to in [listen].
-  Stream<Store> _stream;
+  Stream<Store>/*!*/ _stream;
 
   /// Construct a new [Store] instance.
   Store() : _streamController = StreamController<Store>.broadcast() {

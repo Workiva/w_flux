@@ -34,7 +34,7 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
   /// There is no strict rule on the [ActionsT] type. Depending on application
   /// structure, there may be [Action]s available directly on this object, or
   /// this object may represent a hierarchy of actions.
-  ActionsT get actions => this.props['actions'] as ActionsT;
+  ActionsT/*!*/ get actions => this.props['actions'] as ActionsT;
 
   /// The class instance defined by [StoresT]. This object should either be an
   /// instance of [Store] or should provide access to one or more [Store]s.
@@ -52,7 +52,7 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
   /// [StoresT] should be a class that provides access to these multiple stores.
   /// Then, you can explicitly select the [Store] instances that should be
   /// listened to by overriding [redrawOn].
-  StoresT get store => this.props['store'] as StoresT;
+  StoresT/*!*/ get store => this.props['store'] as StoresT;
 
   @mustCallSuper
   @override
@@ -77,7 +77,7 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
   ///
   /// Override to set up custom listener behavior.
   @protected
-  void listenToStoreForRedraw(Store store) {
+  void listenToStoreForRedraw(Store/*!*/ store) {
     listenToStream(store, handleRedrawOn);
   }
 
@@ -114,7 +114,7 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
   ///
   ///     @override
   ///     redrawOn() => [store.tasks, store.users];
-  List<Store> redrawOn() {
+  List<Store>/*!*/ redrawOn() {
     if (store is Store) {
       return [store as Store];
     } else {
@@ -130,7 +130,7 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
   /// If possible, however, [redrawOn] should be used instead of this in order
   /// to avoid keeping additional state within this component and manually
   /// managing redraws.
-  Map<Store, StoreHandler> getStoreHandlers() {
+  Map<Store/*!*/, StoreHandler> getStoreHandlers() {
     return {};
   }
 
