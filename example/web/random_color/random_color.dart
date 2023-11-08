@@ -18,7 +18,6 @@ import 'dart:html';
 import 'dart:math';
 
 import 'package:react/react.dart' as react;
-import 'package:over_react/over_react.dart';
 import 'package:react/react_dom.dart' as react_dom;
 import 'package:react/react_client.dart' as react_client;
 
@@ -31,9 +30,7 @@ main() async {
 
   // render the component
   react_client.setClientConfiguration();
-  react_dom.render(
-      ErrorBoundary()(
-          RandomColorComponent({'actions': actions, 'store': store})),
+  react_dom.render(RandomColorComponent({'actions': actions, 'store': store}),
       querySelector('#content-container'));
 }
 
