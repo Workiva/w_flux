@@ -23,12 +23,12 @@ import 'package:w_flux/src/constants.dart' show v3Deprecation;
 /// Like [ActionV2], but payloads cannot be made non-nullable since the argument
 /// to [call] is optional.
 @Deprecated('Use ActionV2 instead, which supports non-nullable payloads.')
-class Action<T> extends ActionV2<T> {
+class Action<T> extends ActionV2<T?> {
   @override
   String get disposableTypeName => 'Action';
 
   @override
-  Future call([T payload]) => super.call(payload);
+  Future call([T? payload]) => super.call(payload);
 }
 
 /// A command that can be dispatched and listened to.
@@ -113,14 +113,14 @@ typedef _ActionListener<T> = dynamic Function(T event);
 
 /// A subscription used to cancel registered listeners to an [ActionV2].
 class ActionSubscription {
-  Function _onCancel;
+  Function? _onCancel;
 
   ActionSubscription(this._onCancel);
 
   /// Cancel this subscription to an [ActionV2]
   void cancel() {
     if (_onCancel != null) {
-      _onCancel();
+      _onCancel!();
       _onCancel = null;
     }
   }

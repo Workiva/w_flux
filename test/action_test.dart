@@ -22,7 +22,7 @@ import 'package:test/test.dart';
 
 void main() {
   group('Action', () {
-    Action<String> action;
+    late Action<String> action;
 
     setUp(() {
       action = Action<String>();
@@ -47,7 +47,7 @@ void main() {
 
     test('should support dispatch by default when called with a payload',
         () async {
-      action.listen(expectAsync1((String payload) {
+      action.listen(expectAsync1((String? payload) {
         expect(payload, equals('990 guerrero'));
       }));
 
@@ -107,7 +107,7 @@ void main() {
           });
         });
 
-        var future = action();
+        Future<dynamic>? future = action();
         expect(asyncListenerCompleted, isFalse);
 
         await future;
@@ -182,8 +182,8 @@ void main() {
 
         stopwatch.reset();
 
-        Completer syncCompleter;
-        Completer asyncCompleter;
+        late Completer syncCompleter;
+        late Completer asyncCompleter;
         var action = Action()
           ..listen((_) => syncCompleter.complete())
           ..listen((_) async {
@@ -207,7 +207,7 @@ void main() {
   });
 
   group('ActionV2', () {
-    ActionV2<String> action;
+    late ActionV2<String> action;
 
     setUp(() {
       action = ActionV2<String>();
@@ -280,7 +280,7 @@ void main() {
           });
         });
 
-        Future<dynamic> future = action('payload');
+        Future<dynamic>? future = action('payload');
         expect(asyncListenerCompleted, isFalse);
 
         await future;
@@ -352,8 +352,8 @@ void main() {
 
         stopwatch.reset();
 
-        Completer syncCompleter;
-        Completer asyncCompleter;
+        late Completer syncCompleter;
+        late Completer asyncCompleter;
         var action = ActionV2()
           ..listen((_) => syncCompleter.complete())
           ..listen((_) async {
@@ -377,7 +377,7 @@ void main() {
   });
 
   group('Null typed', () {
-    ActionV2<Null> nullAction;
+    late ActionV2<Null> nullAction;
 
     setUp(() {
       nullAction = ActionV2<Null>();
@@ -387,14 +387,14 @@ void main() {
     test('should support dispatch with a null payload', () async {
       nullAction.listen(expectAsync1((payload) {
         expect(payload, isNull);
-      }));
+      } as dynamic Function(Null)));
 
       await nullAction(null);
     });
   });
 
   group('void typed', () {
-    ActionV2<void> voidAction;
+    late ActionV2<void> voidAction;
 
     setUp(() {
       voidAction = ActionV2<void>();

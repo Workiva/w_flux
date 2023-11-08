@@ -221,7 +221,7 @@ class TestDefaultComponent extends FluxComponent {
 
   render() => react.div({});
 
-  void setState(_, [callback()]) {
+  void setState(_, [callback()?]) {
     numberOfRedraws++;
     if (callback != null) callback();
   }
@@ -246,7 +246,7 @@ class TestRedrawOnComponent extends FluxComponent<TestActions, TestStores> {
 
   redrawOn() => [store.store1, store.store2];
 
-  void setState(_, [callback()]) {
+  void setState(_, [callback()?]) {
     numberOfRedraws++;
     if (callback != null) callback();
   }
@@ -266,7 +266,7 @@ class TestHandlerPrecedence extends FluxComponent<TestActions, TestStores> {
     numberOfHandlerCalls += 1;
   }
 
-  void setState(_, [callback()]) {
+  void setState(_, [callback()?]) {
     numberOfRedraws++;
     if (callback != null) callback();
   }
@@ -278,7 +278,7 @@ class TestHandlerLifecycle extends FluxComponent<TestActions, TestStore> {
 
   render() => react.div({});
 
-  void setState(_, [callback()]) {
+  void setState(_, [callback()?]) {
     numberOfRedraws++;
     if (callback != null) callback();
   }
