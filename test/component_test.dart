@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// ignore_for_file: always_declare_return_types, type_annotate_public_apis
+
 @TestOn('browser')
 library w_flux.test.component_test;
 
@@ -25,16 +27,16 @@ import 'package:w_flux/w_flux.dart';
 void main() {
   group('FluxComponent', () {
     test('should expose an actions getter', () {
-      TestDefaultComponent component = TestDefaultComponent();
-      TestActions testActions = TestActions();
+      final component = TestDefaultComponent();
+      final testActions = TestActions();
       component.props = {'actions': testActions};
 
       expect(component.actions, equals(testActions));
     });
 
     test('should expose a store getter', () {
-      TestDefaultComponent component = TestDefaultComponent();
-      TestStore testStore = TestStore();
+      final component = TestDefaultComponent();
+      final testStore = TestStore();
       component.props = {'store': testStore};
 
       expect(component.store, equals(testStore));
@@ -42,8 +44,8 @@ void main() {
 
     test('should subscribe to a single store by default', () async {
       // Setup the component
-      TestDefaultComponent component = TestDefaultComponent();
-      TestStore store = TestStore();
+      final component = TestDefaultComponent();
+      final store = TestStore();
       component.props = {'store': store};
       component.componentWillMount();
 
@@ -65,8 +67,8 @@ void main() {
     });
 
     test('should subscribe to any stores returned in redrawOn', () async {
-      TestRedrawOnComponent component = TestRedrawOnComponent();
-      TestStores stores = TestStores();
+      final component = TestRedrawOnComponent();
+      final stores = TestStores();
       component.props = {'store': stores};
       component.componentWillMount();
 
@@ -85,8 +87,8 @@ void main() {
 
     test('should prefer a handler specified in getStoreHandlers over redrawOn',
         () async {
-      TestHandlerPrecedence component = TestHandlerPrecedence();
-      TestStores stores = TestStores();
+      final component = TestHandlerPrecedence();
+      final stores = TestStores();
       component.props = {'store': stores};
       component.componentWillMount();
 
@@ -103,8 +105,8 @@ void main() {
 
     test('should not attempt subscription if store is a composite of stores',
         () async {
-      TestDefaultComponent component = TestDefaultComponent();
-      TestStores stores = TestStores();
+      final component = TestDefaultComponent();
+      final stores = TestStores();
       component.props = {'store': stores};
       component.componentWillMount();
 
@@ -121,8 +123,8 @@ void main() {
         'should call handlers specified in getStoreHandlers when each store triggers',
         () async {
       // Setup the component
-      TestStoreHandlersComponent component = TestStoreHandlersComponent();
-      TestStore store = TestStore();
+      final component = TestStoreHandlersComponent();
+      final store = TestStore();
       component.props = {'store': store};
       component.componentWillMount();
 
@@ -166,10 +168,10 @@ void main() {
     test('should cancel any subscriptions added with addSubscription',
         () async {
       // Setup a new subscription on a component
-      int numberOfCalls = 0;
-      StreamController controller = StreamController();
-      TestDefaultComponent component = TestDefaultComponent();
-      var subscription = controller.stream.listen((_) {
+      var numberOfCalls = 0;
+      final controller = StreamController();
+      final component = TestDefaultComponent();
+      final subscription = controller.stream.listen((_) {
         numberOfCalls += 1;
       });
       component.getManagedDisposer(() async => subscription.cancel());
@@ -190,7 +192,7 @@ void main() {
     });
 
     test('should not redraw after being unmounted', () async {
-      TestDefaultComponent component = TestDefaultComponent();
+      final component = TestDefaultComponent();
       component.componentWillUnmount();
       await component.didDispose;
       component.redraw();
@@ -201,7 +203,7 @@ void main() {
 }
 
 Future animationFrames([int numFrames = 1]) async {
-  for (int i = 0; i < numFrames; i++) {
+  for (var i = 0; i < numFrames; i++) {
     await window.animationFrame;
   }
 }
@@ -219,9 +221,11 @@ class TestStores {
 class TestDefaultComponent extends FluxComponent {
   int numberOfRedraws = 0;
 
+  @override
   render() => react.div({});
 
-  void setState(_, [callback()?]) {
+  @override
+  void setState(_, [Function()? callback]) {
     numberOfRedraws++;
     if (callback != null) callback();
   }
@@ -230,8 +234,10 @@ class TestDefaultComponent extends FluxComponent {
 class TestStoreHandlersComponent extends FluxComponent<TestActions, TestStore> {
   int numberOfHandlerCalls = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   getStoreHandlers() => {store: increment};
 
   increment(Store _) {
@@ -242,11 +248,14 @@ class TestStoreHandlersComponent extends FluxComponent<TestActions, TestStore> {
 class TestRedrawOnComponent extends FluxComponent<TestActions, TestStores> {
   int numberOfRedraws = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   redrawOn() => [store.store1, store.store2];
 
-  void setState(_, [callback()?]) {
+  @override
+  void setState(_, [Function()? callback]) {
     numberOfRedraws++;
     if (callback != null) callback();
   }
@@ -256,17 +265,21 @@ class TestHandlerPrecedence extends FluxComponent<TestActions, TestStores> {
   int numberOfRedraws = 0;
   int numberOfHandlerCalls = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   redrawOn() => [store.store1, store.store2];
 
+  @override
   getStoreHandlers() => {store.store1: increment};
 
   increment(Store _) {
     numberOfHandlerCalls += 1;
   }
 
-  void setState(_, [callback()?]) {
+  @override
+  void setState(_, [Function()? callback]) {
     numberOfRedraws++;
     if (callback != null) callback();
   }
@@ -276,9 +289,11 @@ class TestHandlerLifecycle extends FluxComponent<TestActions, TestStore> {
   int numberOfRedraws = 0;
   List<List<dynamic>> lifecycleCalls = [];
 
+  @override
   render() => react.div({});
 
-  void setState(_, [callback()?]) {
+  @override
+  void setState(_, [Function()? callback]) {
     numberOfRedraws++;
     if (callback != null) callback();
   }

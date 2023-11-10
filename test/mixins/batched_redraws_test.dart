@@ -20,15 +20,18 @@ import 'dart:html';
 
 import 'package:react/react.dart' as react;
 
-import 'package:w_flux/w_flux.dart';
 import 'package:test/test.dart';
+import 'package:w_flux/w_flux.dart';
 
+// ignore: deprecated_member_use
 class _TestComponent extends react.Component with BatchedRedraws {
   int renderCount = 0;
 
+  @override
   dynamic render() => '';
 
-  void setState(_, [callback()?]) {
+  @override
+  void setState(_, [Function()? callback]) {
     renderCount++;
     if (callback != null) callback();
   }

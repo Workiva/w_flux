@@ -56,11 +56,11 @@ class Action<T> extends ActionV2<T?> {
 /// when a consumer needs to check state changes immediately after invoking an
 /// action.
 ///
-class ActionV2<T> extends Object with Disposable implements Function {
+class ActionV2<T> extends Object with Disposable {
   @override
   String get disposableTypeName => 'ActionV2';
 
-  List<_ActionListener<T>> _listeners = [];
+  final _listeners = <_ActionListener<T>>[];
 
   /// Dispatch this [ActionV2] to all listeners. The payload will be passed to
   /// each listener's callback.
@@ -99,11 +99,14 @@ class ActionV2<T> extends Object with Disposable implements Function {
   }
 
   @override
+  // ignore: prefer_void_to_null
   Future<Null> onDispose() async {
     _listeners.clear();
   }
 
   /// Actions are only deemed equivalent if they are the exact same Object
+  @override
+  // ignore: hash_and_equals
   bool operator ==(Object other) {
     return identical(this, other);
   }

@@ -20,21 +20,23 @@ import 'package:meta/meta.dart';
 import 'package:react/react.dart' as react;
 import 'package:w_common/disposable.dart';
 
+import 'package:w_flux/src/action.dart';
 import 'package:w_flux/src/constants.dart' show v3Deprecation;
 import 'package:w_flux/src/store.dart';
 
 /// FluxComponents are responsible for rendering application views and turning
-/// user interactions and events into [Action]s. FluxComponents can use data
+/// user interactions and events into [ActionV2]s. FluxComponents can use data
 /// from one or many [Store] instances to define the resulting component.
+// ignore: deprecated_member_use
 abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
     with Disposable {
-  /// The class instance defined by [ActionsT] that holds all [Action]s that
+  /// The class instance defined by [ActionsT] that holds all [ActionV2]s that
   /// this component needs access to.
   ///
   /// There is no strict rule on the [ActionsT] type. Depending on application
-  /// structure, there may be [Action]s available directly on this object, or
+  /// structure, there may be [ActionV2]s available directly on this object, or
   /// this object may represent a hierarchy of actions.
-  ActionsT get actions => this.props['actions'] as ActionsT;
+  ActionsT get actions => props['actions'] as ActionsT;
 
   /// The class instance defined by [StoresT]. This object should either be an
   /// instance of [Store] or should provide access to one or more [Store]s.
@@ -52,7 +54,7 @@ abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
   /// [StoresT] should be a class that provides access to these multiple stores.
   /// Then, you can explicitly select the [Store] instances that should be
   /// listened to by overriding [redrawOn].
-  StoresT get store => this.props['store'] as StoresT;
+  StoresT get store => props['store'] as StoresT;
 
   @mustCallSuper
   @override

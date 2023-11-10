@@ -36,7 +36,7 @@ typedef StoreHandler = Function(Store event);
 /// listened to. Whenever a `Store`'s data is mutated, the `trigger` method is
 /// used to tell all registered listeners that updated data is available.
 ///
-/// In a typical application using `w_flux`, a [FluxComponent] listens to
+/// In a typical application using `w_flux`, a `FluxComponent` listens to
 /// `Store`s, triggering re-rendering of the UI elements based on the updated
 /// `Store` data.
 class Store extends Stream<Store> with Disposable {
@@ -96,7 +96,7 @@ class Store extends Stream<Store> with Disposable {
   /// needed.
   @override
   StreamSubscription<Store> listen(StoreHandler? onData,
-      {Function? onError, void onDone()?, bool? cancelOnError}) {
+      {Function? onError, void Function()? onDone, bool? cancelOnError}) {
     if (isDisposed) {
       throw StateError('Store of type $runtimeType has been disposed');
     }
@@ -141,8 +141,9 @@ class Store extends Stream<Store> with Disposable {
   /// If the `Store` has been disposed, this method throws a [StateError].
   /// Deprecated: 2.9.5
   /// To be removed: 3.0.0
-  @deprecated
-  triggerOnAction(ActionV2 action, [void onAction(payload)?]) {
+  @Deprecated('Use triggerOnActionV2 instead')
+  // ignore: always_declare_return_types, type_annotate_public_apis
+  triggerOnAction(ActionV2 action, [void Function(dynamic payload)? onAction]) {
     triggerOnActionV2(action, onAction);
   }
 
@@ -155,7 +156,7 @@ class Store extends Stream<Store> with Disposable {
   ///
   /// If the `Store` has been disposed, this method throws a [StateError].
   void triggerOnActionV2<T>(ActionV2<T> action,
-      [FutureOr<dynamic> onAction(T payload)?]) {
+      [FutureOr<dynamic> Function(T payload)? onAction]) {
     if (isOrWillBeDisposed) {
       throw StateError('Store of type $runtimeType has been disposed');
     }

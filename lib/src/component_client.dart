@@ -16,12 +16,13 @@ library w_flux.src.component_client;
 
 import 'package:meta/meta.dart';
 
+import 'package:w_flux/src/action.dart';
 import 'package:w_flux/src/component_common.dart';
 import 'package:w_flux/src/mixins/batched_redraws.dart';
 import 'package:w_flux/src/store.dart';
 
 /// FluxComponents are responsible for rendering application views and turning
-/// user interactions and events into [Action]s. FluxComponents can use data
+/// user interactions and events into [ActionV2]s. FluxComponents can use data
 /// from one or many [Store] instances to define the resulting component.
 ///
 /// This FluxComponent, intended for use on the client, utilizes the
