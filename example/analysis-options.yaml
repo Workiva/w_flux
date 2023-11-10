@@ -1,7 +1,0 @@
-# This analysis_options.yaml is needed so that the Dart analyzer doesn't use the parent directory's analysis_options.yaml,
-# which excludes this example directory.
-
-# analysis_options.yaml docs: https://www.dartlang.org/guides/language/analysis-options
-analyzer:
-  language:
-    strict-casts: true

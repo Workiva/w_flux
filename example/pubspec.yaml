@@ -10,18 +10,13 @@ dependencies:
   w_flux: 
 
 dev_dependencies:
-  react: ">=5.7.0 <7.0.0"
+  react: ^7.0.0
   build_runner: ^2.0.0
   build_web_compilers: ^3.0.0
   dart_dev: ^4.0.0
   dart_style: ^2.1.1
   dependency_validator: ^3.0.0
-  
 
 dependency_overrides:
   w_flux:
     path: ../
-  react:
-    git:
-      url: https://github.com/Workiva/react-dart.git
-      ref: v7_wip
