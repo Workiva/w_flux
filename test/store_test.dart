@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// ignore_for_file: deprecated_member_use_from_same_package, always_declare_return_types, type_annotate_public_apis
+
 @TestOn('browser')
 library w_flux.test.store_test;
 
@@ -34,9 +36,9 @@ class MockTransformer implements StreamTransformer<Store, Store> {
   Stream<Store> bind(Stream<Store> stream) => _buildTransformer().bind(stream);
 
   static StreamTransformer<Store, Store> _buildTransformer() {
-    int count = 0;
+    var count = 0;
     return StreamTransformer<Store, Store>.fromHandlers(
-        handleData: (Store data, EventSink<Store> sink) {
+        handleData: (data, sink) {
       if (count < 2) {
         count++;
         sink.add(data);
@@ -76,7 +78,7 @@ void main() {
     test('should trigger with itself as the payload', () {
       store.listen(expectAsync1((payload) {
         expect(payload, store);
-      }) as StoreHandler);
+      }));
 
       store.trigger();
     });
@@ -85,7 +87,7 @@ void main() {
       // ensure that multiple trigger executions emit
       // exactly 2 throttled triggers to external listeners
       store = Store.withTransformer(MockTransformer());
-      store.listen(expectAsync1((payload) {}, count: 2) as StoreHandler);
+      store.listen(expectAsync1((payload) {}, count: 2));
 
       store.trigger();
       store.trigger();
@@ -94,11 +96,11 @@ void main() {
     });
 
     test('should trigger in response to an action', () async {
-      Action _action = Action();
+      final _action = Action();
       store.triggerOnActionV2(_action);
 
-      _action();
-      Store payload = await store.first;
+      unawaited(_action());
+      final payload = await store.first;
 
       expect(payload, store);
     });
@@ -106,8 +108,8 @@ void main() {
     test(
         'should execute a given method and then trigger in response to an action',
         () {
-      Action _action = Action();
-      bool methodCalled = false;
+      final _action = Action();
+      var methodCalled = false;
       syncCallback(_) {
         methodCalled = true;
       }
@@ -116,15 +118,15 @@ void main() {
       store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(methodCalled, isTrue);
-      }) as StoreHandler);
+      }));
       _action();
     });
 
     test(
         'should execute a given async method and then trigger in response to an action',
         () {
-      Action _action = Action();
-      bool afterTimer = false;
+      final _action = Action();
+      var afterTimer = false;
       asyncCallback(_) async {
         await Future.delayed(Duration(milliseconds: 30));
         afterTimer = true;
@@ -134,25 +136,25 @@ void main() {
       store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(afterTimer, isTrue);
-      }) as StoreHandler);
+      }));
       _action();
     });
 
     test(
         'should execute a given method and then trigger in response to an action with payload',
         () {
-      Action<num> _action = Action<num>();
+      final _action = Action<num>();
       num? counter = 0;
-      store.triggerOnActionV2(_action, (num? payload) => counter = payload);
+      store.triggerOnActionV2(_action, (payload) => counter = payload);
       store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(counter, 17);
-      }) as StoreHandler);
+      }));
       _action(17);
     });
 
     test('cleans up its StreamController on dispose', () {
-      bool afterDispose = false;
+      var afterDispose = false;
 
       store.listen(expectAsync1((payload) async {
         // Safety check to avoid infinite trigger loop
@@ -164,15 +166,15 @@ void main() {
 
         // This should no longer fire after dispose
         store.trigger();
-      }) as StoreHandler);
+      }));
 
       store.trigger();
     });
 
     test('cleans up its ActionSubscriptions on dispose', () {
-      bool afterDispose = false;
+      var afterDispose = false;
 
-      Action _action = Action();
+      final _action = Action();
       store.triggerOnActionV2(_action);
       store.listen(expectAsync1((payload) async {
         // Safety check to avoid infinite trigger loop
@@ -183,8 +185,8 @@ void main() {
         afterDispose = true;
 
         // This should no longer fire after dispose
-        _action();
-      }) as StoreHandler);
+        unawaited(_action());
+      }));
 
       _action();
     });

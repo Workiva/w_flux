@@ -7,17 +7,6 @@ analyzer:
   language:
     strict-casts: true
 
-# ALL lint rules are included. Unused lints should be commented
-# out with a reason. An up to date list of all options is here
-# http://dart-lang.github.io/linter/lints/options/options.html
-# Descriptions of each rule is here http://dart-lang.github.io/linter/lints/
-#
-# To ignore a lint rule on a case by case basic in code just add a comment
-# above it or at the end of the line like: // ignore: <linter rule>
-# example: // ignore: invalid_assignment, const_initialized_with_non_constant_value
-#
-# More info about configuring analysis_options.yaml files
-# https://www.dartlang.org/guides/language/analysis-options#excluding-lines-within-a-file
 linter:
   rules:
     # Declare method return types.

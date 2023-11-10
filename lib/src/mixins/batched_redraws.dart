@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 library w_flux.mixins.batched_redraws;
 
 import 'dart:async';
@@ -5,11 +7,12 @@ import 'dart:html';
 
 import 'package:react/react.dart' as react;
 
-class _RedrawScheduler implements Function {
-  Map<BatchedRedraws, List<Function>> _components =
-      <BatchedRedraws, List<Function>>{};
+import 'package:w_flux/src/component_client.dart';
 
-  void call(BatchedRedraws component, [callback()?]) {
+class _RedrawScheduler {
+  final _components = <BatchedRedraws, List<Function>>{};
+
+  void call(BatchedRedraws component, [Function()? callback]) {
     if (_components.isEmpty) {
       _tick();
     }
@@ -23,11 +26,11 @@ class _RedrawScheduler implements Function {
     await window.animationFrame;
 
     // Making a copy of `_components` so we don't iterate over the map while it's potentially being mutated.
-    var entries = _components.entries.toList();
+    final entries = _components.entries.toList();
     _components.clear();
-    for (var entry in entries) {
-      var component = entry.key;
-      var callbacks = entry.value;
+    for (final entry in entries) {
+      final component = entry.key;
+      final callbacks = entry.value;
       // Skip if the component doesn't want to batch redraw
       if (!component.shouldBatchRedraw) {
         continue;
@@ -37,9 +40,9 @@ class _RedrawScheduler implements Function {
 
       if (callbacks.isNotEmpty) {
         chainedCallbacks = () {
-          callbacks.forEach((callback) {
+          for (final callback in callbacks) {
             callback();
-          });
+          }
         };
       }
 
@@ -53,8 +56,8 @@ class _RedrawScheduler implements Function {
 
 _RedrawScheduler _scheduleRedraw = _RedrawScheduler();
 
-/// A mixin that overrides the [Component.redraw] method of a React
-/// [Component] (including a [FluxComponent]) and prevents the component
+/// A mixin that overrides the [react.Component.redraw] method of a React
+/// [react.Component] (including a [FluxComponent]) and prevents the component
 /// from being redrawn more than once per animation frame.
 ///
 /// Example:
@@ -67,5 +70,5 @@ _RedrawScheduler _scheduleRedraw = _RedrawScheduler();
 class BatchedRedraws {
   bool shouldBatchRedraw = true;
 
-  void redraw([callback()?]) => _scheduleRedraw(this, callback);
+  void redraw([Function()? callback]) => _scheduleRedraw(this, callback);
 }
