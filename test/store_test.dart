@@ -47,7 +47,7 @@ class MockTransformer implements StreamTransformer<Store, Store> {
 
 void main() {
   group('Store', () {
-    Store store;
+    late Store store;
 
     setUp(() {
       store = Store();
@@ -142,8 +142,8 @@ void main() {
         'should execute a given method and then trigger in response to an action with payload',
         () {
       Action<num> _action = Action<num>();
-      num counter = 0;
-      store.triggerOnActionV2(_action, (payload) => counter = payload);
+      num? counter = 0;
+      store.triggerOnActionV2(_action, (num? payload) => counter = payload);
       store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(counter, 17);

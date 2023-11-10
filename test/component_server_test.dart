@@ -188,7 +188,7 @@ class TestDefaultComponent extends FluxComponent {
 
   render() => react.div({});
 
-  redraw([callback()]) {
+  redraw([callback()?]) {
     numberOfRedraws += 1;
   }
 }
@@ -212,7 +212,7 @@ class TestRedrawOnComponent extends FluxComponent<TestActions, TestStores> {
 
   redrawOn() => [store.store1, store.store2];
 
-  redraw([callback()]) {
+  redraw([callback()?]) {
     numberOfRedraws += 1;
   }
 }
@@ -231,7 +231,7 @@ class TestHandlerPrecedence extends FluxComponent<TestActions, TestStores> {
     numberOfHandlerCalls += 1;
   }
 
-  redraw([callback()]) {
+  redraw([callback()?]) {
     numberOfRedraws += 1;
   }
 }

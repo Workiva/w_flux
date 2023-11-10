@@ -5,19 +5,17 @@ description: Flux library for uni-directional dataflow inspired by reflux and Fa
 homepage: https://github.com/Workiva/w_flux
 publish_to: none
 environment:
-    sdk: ">=2.11.0 <3.0.0"
+    sdk: '>=2.12.0 <3.0.0'
 dependencies:
-  over_react: ">=3.12.0 <5.0.0"
   w_flux: 
 
 dev_dependencies:
-  react: ">=5.7.0 <7.0.0"
+  react: ^7.0.0
   build_runner: ^2.0.0
   build_web_compilers: ^3.0.0
   dart_dev: ^4.0.0
   dart_style: ^2.1.1
   dependency_validator: ^3.0.0
-  
 
 dependency_overrides:
   w_flux:
