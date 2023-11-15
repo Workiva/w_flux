@@ -9,7 +9,6 @@ void main(List<String> args) async {
     filePathsFromGlob(Glob('**.dart', recursive: true)),
     aggregate([
       ActionV2FieldAndVariableMigrator(),
-      ActionV2ParameterMigrator(),
       ActionV2ReturnTypeMigrator(),
       ActionV2SuperTypeMigrator(),
     ]),
