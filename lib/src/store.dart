@@ -47,7 +47,8 @@ class Store extends Stream<Store> with Disposable {
   final StreamController<Store> _streamController;
 
   /// Broadcast stream of "data updated" events. Listened to in [listen].
-  Stream<Store> _stream;
+  /// Use of late is ok because we guarantee that it is set in each constructor.
+  late Stream<Store> _stream;
 
   /// Construct a new [Store] instance.
   Store() : _streamController = StreamController<Store>.broadcast() {
@@ -94,8 +95,8 @@ class Store extends Stream<Store> with Disposable {
   /// It is the caller's responsibility to cancel the subscription when
   /// needed.
   @override
-  StreamSubscription<Store> listen(StoreHandler onData,
-      {Function onError, void onDone(), bool cancelOnError}) {
+  StreamSubscription<Store> listen(StoreHandler? onData,
+      {Function? onError, void onDone()?, bool? cancelOnError}) {
     if (isDisposed) {
       throw StateError('Store of type $runtimeType has been disposed');
     }
@@ -141,7 +142,7 @@ class Store extends Stream<Store> with Disposable {
   /// Deprecated: 2.9.5
   /// To be removed: 3.0.0
   @deprecated
-  triggerOnAction(ActionV2 action, [void onAction(payload)]) {
+  triggerOnAction(ActionV2 action, [void onAction(payload)?]) {
     triggerOnActionV2(action, onAction);
   }
 
@@ -154,7 +155,7 @@ class Store extends Stream<Store> with Disposable {
   ///
   /// If the `Store` has been disposed, this method throws a [StateError].
   void triggerOnActionV2<T>(ActionV2<T> action,
-      [FutureOr<dynamic> onAction(T payload)]) {
+      [FutureOr<dynamic> onAction(T payload)?]) {
     if (isOrWillBeDisposed) {
       throw StateError('Store of type $runtimeType has been disposed');
     }

@@ -1,15 +1,15 @@
 name: w_flux
-version: 2.11.0
+version: 3.0.0
 description: Flux library for uni-directional dataflow inspired by reflux and Facebook's
     flux architecture.
 homepage: https://github.com/Workiva/w_flux
 
 environment:
-  sdk: ">=2.11.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   meta: ^1.6.0
-  react: ">=5.7.0 <7.0.0"
+  react: ^7.0.0
   w_common: ^3.0.0
 
 dev_dependencies:

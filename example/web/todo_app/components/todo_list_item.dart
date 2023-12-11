@@ -21,8 +21,8 @@ import '../store.dart';
 var TodoListItem = react.registerComponent(() => _TodoListItem());
 
 class _TodoListItem extends react.Component2 {
-  Todo get todo => props['todo'];
-  Function get onClick => props['onClick'];
+  Todo get todo => props['todo'] as String;
+  Function get onClick => props['onClick'] as Function;
 
   get defaultProps => {'todo': null};
 

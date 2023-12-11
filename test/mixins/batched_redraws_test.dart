@@ -28,7 +28,7 @@ class _TestComponent extends react.Component with BatchedRedraws {
 
   dynamic render() => '';
 
-  void setState(_, [callback()]) {
+  void setState(_, [callback()?]) {
     renderCount++;
     if (callback != null) callback();
   }
@@ -41,8 +41,8 @@ void main() {
   }
 
   group('ScheduledRedraws', () {
-    _TestComponent component;
-    List calls;
+    late _TestComponent component;
+    late List calls;
 
     setUp(() {
       component = _TestComponent();
