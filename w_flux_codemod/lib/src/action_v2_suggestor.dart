@@ -24,13 +24,38 @@ mixin ActionV2Migrator on AstVisitingSuggestor {
     }
     return super.visitNamedType(node);
   }
+
+  @override
+  visitInvocationExpression(InvocationExpression node) {
+    if (shouldMigrate(node)) {
+      for (var arg in node.argumentList.arguments) {
+        final typeLibraryIdentifier =
+            arg.staticType.element?.library?.identifier ?? '';
+        if (arg.staticParameterElement.name == 'Action' &&
+            typeLibraryIdentifier.startsWith('package:w_flux/')) {
+          if (arg.staticParameterElement.parameters.isEmpty) {
+            yieldPatch('ActionV2(null)', arg.offset, arg.end);
+          } else {
+            yieldPatch('ActionV2', arg.offset, arg.end);
+          }
+        }
+      }
+    }
+    return super.visitInvocationExpression(node);
+  }
 }
 
 /// TODO - will likely require overriding [visitInvocationExpression]
 /// and checking the type of the thing being invoked to see if it's an Action
 /// If it is and there are no arguments passed, need to pass in `null`
 class ActionV2DispatchMigrator extends RecursiveAstVisitor
-    with AstVisitingSuggestor, ActionV2Migrator {}
+    with AstVisitingSuggestor, ActionV2Migrator {
+  @override
+  bool shouldMigrate(InvocationExpression node) =>
+      node.staticInvokeType != null &&
+      node.argumentList.arguments.isNotEmpty &&
+      node.function.staticParameterElement.name == 'dispatch';
+}
 
 class ActionV2FieldAndVariableMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator {

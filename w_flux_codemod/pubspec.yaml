@@ -21,9 +21,3 @@ dev_dependencies:
   meta: ^1.11.0
   source_span: ^1.10.0
   test: ^1.24.3
-
-dependency_overrides:
-  codemod:
-    git:
-      url: git@github.com:Workiva/dart_codemod.git
-      ref: add-test-apis-for-testing-resolved-ast-suggestors

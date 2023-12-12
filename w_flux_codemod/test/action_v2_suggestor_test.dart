@@ -1,3 +1,4 @@
+@TestOn('browser')
 library;
 
 import 'package:codemod/codemod.dart';
@@ -52,7 +53,13 @@ ${after}
     }
 
     group('ActionV2DispatchMigrator', () {
-      // TODO
+      Suggestor suggestor() => ActionV2DispatchMigrator();
+      testSuggestor(
+        'Dispatch action with parameter',
+        suggestor,
+        'dispatch(Action(fn() {}))',
+        'dispatch(ActionV2(fn() {}))',
+      );
     });
 
     group('FieldAndVariableMigrator', () {
