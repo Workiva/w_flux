@@ -134,12 +134,12 @@ ${after}
           'class C { var action; C() { action = Action(); } }',
           'class C { var action; C() { action = ActionV2(); } }',
         );
-        // testSuggestor(
-        //   'skips dynamic Actions',
-        //   suggestor,
-        //   'Action a; a = Action();',
-        //   'Action a; Action b = Action(); var c = Action();',
-        // );
+        testSuggestor(
+          'skips dynamic Actions',
+          suggestor,
+          'Action a; Action b = Action(); var c = Action();',
+          'Action a; Action b = Action(); var c = Action();',
+        );
       });
     });
 
