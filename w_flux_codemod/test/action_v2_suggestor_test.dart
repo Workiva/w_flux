@@ -1,5 +1,3 @@
-library;
-
 import 'package:codemod/codemod.dart';
 import 'package:codemod/test.dart';
 import 'package:meta/meta.dart';
@@ -138,7 +136,7 @@ ${after}
           'skips dynamic Actions',
           suggestor,
           'Action a; Action b = Action(); var c = Action();',
-          'Action a; Action b = Action(); var c = Action();',
+          'ActionV2 a; ActionV2 b = ActionV2(); var c = ActionV2();',
         );
       });
     });
