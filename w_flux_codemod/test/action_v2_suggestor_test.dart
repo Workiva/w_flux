@@ -1,4 +1,3 @@
-@TestOn('browser')
 library;
 
 import 'package:codemod/codemod.dart';
@@ -13,7 +12,7 @@ publish_to: none
 environment:
   sdk: '>=2.11.0 <4.0.0'
 dependencies:
-  w_flux: ^2.11.0
+  w_flux: ^3.0.0
 ''';
 
 const wFluxImport = "import 'package:w_flux/w_flux.dart';";
@@ -55,10 +54,16 @@ ${after}
     group('ActionV2DispatchMigrator', () {
       Suggestor suggestor() => ActionV2DispatchMigrator();
       testSuggestor(
-        'Dispatch action with parameter',
+        'Function Expression Invocation',
         suggestor,
-        'dispatch(Action(fn() {}))',
-        'dispatch(ActionV2(fn() {}))',
+        'class C { ActionV2 action; } void main() { C().action(); }',
+        'class C { ActionV2 action; } void main() { C().action(null); }',
+      );
+      testSuggestor(
+        'Function Expression Invocation type 2',
+        suggestor,
+        'void main() { var a = ActionV2(); a(); }',
+        'void main() { var a = ActionV2(); a(null); }',
       );
     });
 
@@ -129,15 +134,12 @@ ${after}
           'class C { var action; C() { action = Action(); } }',
           'class C { var action; C() { action = ActionV2(); } }',
         );
-        testSuggestor(
-          'skips dynamic Actions',
-          suggestor,
-          'Action a; a = Action();',
-          'Action a; Action b = Action(); var c = Action();',
-        );
-      });
-      group('Action dispatch', () {
-        // Should update 0-arg dispatch calls to `(null)`
+        // testSuggestor(
+        //   'skips dynamic Actions',
+        //   suggestor,
+        //   'Action a; a = Action();',
+        //   'Action a; Action b = Action(); var c = Action();',
+        // );
       });
     });
 

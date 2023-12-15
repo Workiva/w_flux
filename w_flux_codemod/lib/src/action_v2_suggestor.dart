@@ -3,7 +3,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:codemod/codemod.dart';
 
 mixin ActionV2Migrator on AstVisitingSuggestor {
-  bool shouldMigrate(NamedType node);
+  bool shouldMigrate(dynamic node);
 
   @override
   bool shouldResolveAst(_) => true;
@@ -26,22 +26,16 @@ mixin ActionV2Migrator on AstVisitingSuggestor {
   }
 
   @override
-  visitInvocationExpression(InvocationExpression node) {
+  visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
     if (shouldMigrate(node)) {
-      for (var arg in node.argumentList.arguments) {
-        final typeLibraryIdentifier =
-            arg.staticType.element?.library?.identifier ?? '';
-        if (arg.staticParameterElement.name == 'Action' &&
-            typeLibraryIdentifier.startsWith('package:w_flux/')) {
-          if (arg.staticParameterElement.parameters.isEmpty) {
-            yieldPatch('ActionV2(null)', arg.offset, arg.end);
-          } else {
-            yieldPatch('ActionV2', arg.offset, arg.end);
-          }
-        }
+      final typeLibraryIdentifier =
+          node.function.staticType?.element?.library?.identifier ?? '';
+      if (typeLibraryIdentifier.startsWith('package:w_flux/') &&
+          node.argumentList.arguments.isEmpty) {
+        yieldPatch('(null)', node.end - 2, node.end);
       }
     }
-    return super.visitInvocationExpression(node);
+    return super.visitFunctionExpressionInvocation(node);
   }
 }
 
@@ -51,48 +45,60 @@ mixin ActionV2Migrator on AstVisitingSuggestor {
 class ActionV2DispatchMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator {
   @override
-  bool shouldMigrate(InvocationExpression node) =>
-      node.staticInvokeType != null &&
-      node.argumentList.arguments.isNotEmpty &&
-      node.function.staticParameterElement.name == 'dispatch';
+  bool shouldMigrate(node) {
+    if (node is FunctionExpressionInvocation) {
+      final name = node.function.staticType?.element?.displayName;
+      // the type migration should have happened prior to this suggestor.
+      return name == 'ActionV2';
+    }
+    return false;
+  }
 }
 
 class ActionV2FieldAndVariableMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator {
   @override
-  bool shouldMigrate(NamedType node) =>
-      node.parent is DeclaredIdentifier ||
-      node.parent is DeclaredVariablePattern ||
-      node.parent is FieldFormalParameter ||
-      node.parent is VariableDeclarationList ||
-      node.thisOrAncestorOfType<ConstructorReference>() != null ||
-      node.thisOrAncestorOfType<InstanceCreationExpression>() != null;
+  bool shouldMigrate(node) {
+    node as NamedType;
+    return node.parent is DeclaredIdentifier ||
+        node.parent is DeclaredVariablePattern ||
+        node.parent is FieldFormalParameter ||
+        node.parent is VariableDeclarationList ||
+        node.thisOrAncestorOfType<ConstructorReference>() != null ||
+        node.thisOrAncestorOfType<InstanceCreationExpression>() != null;
+  }
 }
 
 class ActionV2ParameterMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator {
   @override
-  bool shouldMigrate(NamedType node) =>
-      node.thisOrAncestorOfType<FormalParameter>() != null &&
-      node.thisOrAncestorOfType<FieldFormalParameter>() == null;
+  bool shouldMigrate(node) {
+    node as NamedType;
+    return node.thisOrAncestorOfType<FormalParameter>() != null &&
+        node.thisOrAncestorOfType<FieldFormalParameter>() == null;
+  }
 }
 
 class ActionV2ReturnTypeMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator {
   @override
-  bool shouldMigrate(NamedType node) =>
-      node.parent is FunctionDeclaration ||
-      node.parent is FunctionTypeAlias ||
-      node.parent is GenericFunctionType ||
-      node.parent is MethodDeclaration;
+  shouldMigrate(node) {
+    node as NamedType;
+    return node.parent is FunctionDeclaration ||
+        node.parent is FunctionTypeAlias ||
+        node.parent is GenericFunctionType ||
+        node.parent is MethodDeclaration;
+  }
 }
 
 class ActionV2SuperTypeMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator {
   @override
-  bool shouldMigrate(NamedType node) =>
-      node.parent is ExtendsClause ||
-      node.parent is ImplementsClause ||
-      node.parent is OnClause ||
-      node.parent is TypeParameter;
+  bool shouldMigrate(node) {
+    node as NamedType;
+    return node.parent is ExtendsClause ||
+        node.parent is ImplementsClause ||
+        node.parent is OnClause ||
+        node.parent is TypeParameter;
+  }
 }

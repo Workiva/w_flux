@@ -12,6 +12,7 @@ void main(List<String> args) async {
       ActionV2ParameterMigrator(),
       ActionV2ReturnTypeMigrator(),
       ActionV2SuperTypeMigrator(),
+      ActionV2DispatchMigrator(),
     ]),
     args: args,
   );
