@@ -12,7 +12,7 @@ mixin ActionV2Migrator on AstVisitingSuggestor {
 }
 
 mixin ActionV2NamedTypeMigrator on ActionV2Migrator {
-  bool shouldMigrate(dynamic node);
+  bool shouldMigrate(NamedType node);
 
   @override
   visitNamedType(NamedType node) {
@@ -48,47 +48,39 @@ class ActionV2DispatchMigrator extends RecursiveAstVisitor
 class ActionV2FieldAndVariableMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator, ActionV2NamedTypeMigrator {
   @override
-  bool shouldMigrate(node) {
-    node as NamedType;
-    return node.parent is DeclaredIdentifier ||
-        node.parent is DeclaredVariablePattern ||
-        node.parent is FieldFormalParameter ||
-        node.parent is VariableDeclarationList ||
-        node.thisOrAncestorOfType<ConstructorReference>() != null ||
-        node.thisOrAncestorOfType<InstanceCreationExpression>() != null;
-  }
+  bool shouldMigrate(node) =>
+      node.parent is DeclaredIdentifier ||
+      node.parent is DeclaredVariablePattern ||
+      node.parent is FieldFormalParameter ||
+      node.parent is VariableDeclarationList ||
+      node.thisOrAncestorOfType<ConstructorReference>() != null ||
+      node.thisOrAncestorOfType<InstanceCreationExpression>() != null;
 }
 
 class ActionV2ParameterMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator, ActionV2NamedTypeMigrator {
   @override
-  bool shouldMigrate(node) {
-    node as NamedType;
-    return node.thisOrAncestorOfType<FormalParameter>() != null &&
-        node.thisOrAncestorOfType<FieldFormalParameter>() == null;
-  }
+  bool shouldMigrate(node) =>
+      node.thisOrAncestorOfType<FormalParameter>() != null &&
+      node.thisOrAncestorOfType<FieldFormalParameter>() == null;
 }
 
 class ActionV2ReturnTypeMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator, ActionV2NamedTypeMigrator {
   @override
-  shouldMigrate(node) {
-    node as NamedType;
-    return node.parent is FunctionDeclaration ||
-        node.parent is FunctionTypeAlias ||
-        node.parent is GenericFunctionType ||
-        node.parent is MethodDeclaration;
-  }
+  shouldMigrate(node) =>
+      node.parent is FunctionDeclaration ||
+      node.parent is FunctionTypeAlias ||
+      node.parent is GenericFunctionType ||
+      node.parent is MethodDeclaration;
 }
 
 class ActionV2SuperTypeMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator, ActionV2NamedTypeMigrator {
   @override
-  bool shouldMigrate(node) {
-    node as NamedType;
-    return node.parent is ExtendsClause ||
-        node.parent is ImplementsClause ||
-        node.parent is OnClause ||
-        node.parent is TypeParameter;
-  }
+  bool shouldMigrate(node) =>
+      node.parent is ExtendsClause ||
+      node.parent is ImplementsClause ||
+      node.parent is OnClause ||
+      node.parent is TypeParameter;
 }

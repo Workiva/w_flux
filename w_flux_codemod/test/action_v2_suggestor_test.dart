@@ -174,7 +174,7 @@ ${after}
           'class C { var action; C() { action = ActionV2(); } }',
         );
         testSuggestor(
-          'skips dynamic Actions',
+          'function initialization',
           suggestor,
           'Action a; Action b = Action(); var c = Action();',
           'ActionV2 a; ActionV2 b = ActionV2(); var c = ActionV2();',

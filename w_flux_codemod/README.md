@@ -39,13 +39,13 @@ To be able to support non-nullable payloads (in addition to nullable payloads), 
 
     - step by step:
     ```bash
-    dart pub global run w_flux_codemod:action_v2_migrate_step_1.dart
-    dart pub global run w_flux_codemod:action_v2_migrate_step_2.dart
+    dart pub global run w_flux_codemod:action_v2_migrate_step_1
+    dart pub global run w_flux_codemod:action_v2_migrate_step_2
     ```
 
     - all at once:
     ```bash
-    dart pub global run w_flux_codemod:action_v2_migrate.dart
+    dart pub global run w_flux_codemod:action_v2_migrate
     ```
 
 3. Review the changes:
