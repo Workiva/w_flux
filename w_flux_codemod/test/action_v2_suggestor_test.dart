@@ -109,12 +109,28 @@ ${after}
     group('FieldAndVariableMigrator', () {
       Suggestor suggestor() => ActionV2FieldAndVariableMigrator();
       group('VariableDeclarationList', () {
-        testSuggestor(
-          'with type, no intializer',
-          suggestor,
-          'Action<num> action;',
-          'ActionV2<num> action;',
-        );
+        group('with type, no intializer', () {
+          testSuggestor(
+            'standard import',
+            suggestor,
+            'Action<num> action;',
+            'ActionV2<num> action;',
+          );
+          testSuggestor(
+            'prefixed import',
+            suggestor,
+            'w_flux.Action<num> action;',
+            'w_flux.ActionV2<num> action;',
+            importMode: WFluxImportMode.prefixed,
+          );
+          testSuggestor(
+            'ignore types not from w_flux',
+            suggestor,
+            'Action<num> action;',
+            'Action<num> action;',
+            importMode: WFluxImportMode.none,
+          );
+        });
         testSuggestor(
           'with type and intializer',
           suggestor,
@@ -184,12 +200,28 @@ ${after}
 
     group('ParameterMigrator', () {
       Suggestor suggestor() => ActionV2ParameterMigrator();
-      testSuggestor(
-        'SimpleFormalParameter.type (function)',
-        suggestor,
-        'fn(Action action) {}',
-        'fn(ActionV2 action) {}',
-      );
+      group('SimpleFormalParameter.type (function)', () {
+        testSuggestor(
+          'standard prefix',
+          suggestor,
+          'fn(Action action) {}',
+          'fn(ActionV2 action) {}',
+        );
+        testSuggestor(
+          'prefixed import',
+          suggestor,
+          'fn(w_flux.Action action) {}',
+          'fn(w_flux.ActionV2 action) {}',
+          importMode: WFluxImportMode.prefixed,
+        );
+        testSuggestor(
+          'ignore types not from w_flux',
+          suggestor,
+          'fn(Action action) {}',
+          'fn(Action action) {}',
+          importMode: WFluxImportMode.none,
+        );
+      });
       testSuggestor(
         'SimpleFormalParameter.type (method)',
         suggestor,
@@ -206,12 +238,29 @@ ${after}
 
     group('ReturnTypeMigrator', () {
       Suggestor suggestor() => ActionV2ReturnTypeMigrator();
-      testSuggestor(
-        'FunctionDeclaration.returnType',
-        suggestor,
-        'Action fn() {}',
-        'ActionV2 fn() {}',
-      );
+
+      group('FunctionDeclaration.returnType', () {
+        testSuggestor(
+          'standard import',
+          suggestor,
+          'Action fn() {}',
+          'ActionV2 fn() {}',
+        );
+        testSuggestor(
+          'prefixed import',
+          suggestor,
+          'w_flux.Action fn() {}',
+          'w_flux.ActionV2 fn() {}',
+          importMode: WFluxImportMode.prefixed,
+        );
+        testSuggestor(
+          'ignore types not from w_flux',
+          suggestor,
+          'Action fn() {}',
+          'Action fn() {}',
+          importMode: WFluxImportMode.none,
+        );
+      });
       testSuggestor(
         'FunctionTypeAlias.returnType',
         suggestor,
@@ -252,6 +301,29 @@ ${after}
 
     group('TypeParameterMigrator', () {
       Suggestor suggestor() => ActionV2SuperTypeMigrator();
+
+      group('ExtendsClause.superclass', () {
+        testSuggestor(
+          'standard import',
+          suggestor,
+          'class C extends Action {}',
+          'class C extends ActionV2 {}',
+        );
+        testSuggestor(
+          'prefixed import',
+          suggestor,
+          'class C extends w_flux.Action {}',
+          'class C extends w_flux.ActionV2 {}',
+          importMode: WFluxImportMode.prefixed,
+        );
+        testSuggestor(
+          'ignore types not from w_flux',
+          suggestor,
+          'class C extends Action {}',
+          'class C extends Action {}',
+          importMode: WFluxImportMode.none,
+        );
+      });
       testSuggestor(
         'ExtendsClause.superclass',
         suggestor,
