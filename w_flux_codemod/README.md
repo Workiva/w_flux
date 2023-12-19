@@ -51,8 +51,8 @@ To be able to support non-nullable payloads (in addition to nullable payloads), 
 3. Review the changes:
 
     - It's advisable to review the changes and ensure they are correct and meet your project's requirements.
-
-    - Dart Analysis should be able to catch any errors that may occur with the codemod, and a passing CI should suffice for QA when making these updates.
+    - This codemod is not gauranteed to catch every implementation of `Action` and convert to `ActionV2`. For example: assigning `Action` to prop in a callback will be missed by this codemod.
+    - Dart Analysis should be able to catch anything missed or errors caused by the codemod, and a passing CI should suffice for QA when making these updates.
 
 
 ## Example
