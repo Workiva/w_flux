@@ -12,8 +12,15 @@ void main(List<String> args) async {
       ActionV2FieldAndVariableMigrator(),
       ActionV2ReturnTypeMigrator(),
       ActionV2SuperTypeMigrator(),
-      ActionV2DispatchMigrator(),
     ]),
+    args: args,
+  );
+  if (exitCode != 0) {
+    return;
+  }
+  exitCode = await runInteractiveCodemod(
+    filePathsFromGlob(Glob('**.dart', recursive: true)),
+    ActionV2DispatchMigrator(),
     args: args,
   );
 }

@@ -3,14 +3,16 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:codemod/codemod.dart';
 
 mixin ActionV2Migrator on AstVisitingSuggestor {
-  bool shouldMigrate(dynamic node);
-
   @override
   bool shouldResolveAst(_) => true;
 
   @override
   bool shouldSkip(FileContext context) =>
       !context.sourceText.contains('Action');
+}
+
+mixin ActionV2NamedTypeMigrator on ActionV2Migrator {
+  bool shouldMigrate(dynamic node);
 
   @override
   visitNamedType(NamedType node) {
@@ -24,39 +26,27 @@ mixin ActionV2Migrator on AstVisitingSuggestor {
     }
     return super.visitNamedType(node);
   }
+}
 
+class ActionV2DispatchMigrator extends RecursiveAstVisitor
+    with AstVisitingSuggestor, ActionV2Migrator {
   @override
   visitFunctionExpressionInvocation(FunctionExpressionInvocation node) {
-    if (shouldMigrate(node)) {
-      final typeLibraryIdentifier =
-          node.function.staticType?.element?.library?.identifier ?? '';
-      if (typeLibraryIdentifier.startsWith('package:w_flux/') &&
-          node.argumentList.arguments.isEmpty) {
-        yieldPatch('(null)', node.end - 2, node.end);
-      }
+    final typeLibraryIdentifier =
+        node.function.staticType?.element?.library?.identifier ?? '';
+    final staticTypeName = node.function.staticType?.element?.name;
+    if (typeLibraryIdentifier.startsWith('package:w_flux/') &&
+        // The type migration should have happened prior to this suggestor.
+        staticTypeName == 'ActionV2' &&
+        node.argumentList.arguments.isEmpty) {
+      yieldPatch('(null)', node.end - 2, node.end);
     }
     return super.visitFunctionExpressionInvocation(node);
   }
 }
 
-/// TODO - will likely require overriding [visitInvocationExpression]
-/// and checking the type of the thing being invoked to see if it's an Action
-/// If it is and there are no arguments passed, need to pass in `null`
-class ActionV2DispatchMigrator extends RecursiveAstVisitor
-    with AstVisitingSuggestor, ActionV2Migrator {
-  @override
-  bool shouldMigrate(node) {
-    if (node is FunctionExpressionInvocation) {
-      final name = node.function.staticType?.element?.displayName;
-      // the type migration should have happened prior to this suggestor.
-      return name == 'ActionV2';
-    }
-    return false;
-  }
-}
-
 class ActionV2FieldAndVariableMigrator extends RecursiveAstVisitor
-    with AstVisitingSuggestor, ActionV2Migrator {
+    with AstVisitingSuggestor, ActionV2Migrator, ActionV2NamedTypeMigrator {
   @override
   bool shouldMigrate(node) {
     node as NamedType;
@@ -70,7 +60,7 @@ class ActionV2FieldAndVariableMigrator extends RecursiveAstVisitor
 }
 
 class ActionV2ParameterMigrator extends RecursiveAstVisitor
-    with AstVisitingSuggestor, ActionV2Migrator {
+    with AstVisitingSuggestor, ActionV2Migrator, ActionV2NamedTypeMigrator {
   @override
   bool shouldMigrate(node) {
     node as NamedType;
@@ -80,7 +70,7 @@ class ActionV2ParameterMigrator extends RecursiveAstVisitor
 }
 
 class ActionV2ReturnTypeMigrator extends RecursiveAstVisitor
-    with AstVisitingSuggestor, ActionV2Migrator {
+    with AstVisitingSuggestor, ActionV2Migrator, ActionV2NamedTypeMigrator {
   @override
   shouldMigrate(node) {
     node as NamedType;
@@ -92,7 +82,7 @@ class ActionV2ReturnTypeMigrator extends RecursiveAstVisitor
 }
 
 class ActionV2SuperTypeMigrator extends RecursiveAstVisitor
-    with AstVisitingSuggestor, ActionV2Migrator {
+    with AstVisitingSuggestor, ActionV2Migrator, ActionV2NamedTypeMigrator {
   @override
   bool shouldMigrate(node) {
     node as NamedType;

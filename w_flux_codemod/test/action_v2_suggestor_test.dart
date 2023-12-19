@@ -13,7 +13,22 @@ dependencies:
   w_flux: ^3.0.0
 ''';
 
-const wFluxImport = "import 'package:w_flux/w_flux.dart';";
+String wFluxImport(WFluxImportMode mode) {
+  switch (mode) {
+    case WFluxImportMode.none:
+      return '';
+    case WFluxImportMode.standard:
+      return "import 'package:w_flux/w_flux.dart';";
+    case WFluxImportMode.prefixed:
+      return "import 'package:w_flux/w_flux.dart' as w_flux;";
+  }
+}
+
+enum WFluxImportMode {
+  none, // don't import w_flux
+  standard, // import w_flux
+  prefixed, // import w_flux with a prefix
+}
 
 void main() {
   group('ActionV2 suggestors', () {
@@ -29,16 +44,16 @@ void main() {
       Suggestor Function() suggestor,
       String before,
       String after, {
-      bool shouldImportWFlux = true,
+      WFluxImportMode importMode = WFluxImportMode.standard,
       bool shouldMigrateVariablesAndFields = false,
     }) {
       test(description, () async {
         final context = await pkg.addFile('''
-${shouldImportWFlux ? wFluxImport : ''}
+${wFluxImport(importMode)}
 ${before}
 ''');
         final expectedOutput = '''
-${shouldImportWFlux ? wFluxImport : ''}
+${wFluxImport(importMode)}
 ${after}
 ''';
         expectSuggestorGeneratesPatches(
@@ -52,16 +67,42 @@ ${after}
     group('ActionV2DispatchMigrator', () {
       Suggestor suggestor() => ActionV2DispatchMigrator();
       testSuggestor(
-        'Function Expression Invocation',
+        'local invocation of variable',
+        suggestor,
+        'void main() { var a = ActionV2(); a(); }',
+        'void main() { var a = ActionV2(); a(null); }',
+      );
+      testSuggestor(
+        'local invocation of field',
+        suggestor,
+        'class C { ActionV2 action; dispatch() => action(); }',
+        'class C { ActionV2 action; dispatch() => action(null); }',
+      );
+      testSuggestor(
+        'external invocation of field',
         suggestor,
         'class C { ActionV2 action; } void main() { C().action(); }',
         'class C { ActionV2 action; } void main() { C().action(null); }',
       );
       testSuggestor(
-        'Function Expression Invocation type 2',
+        'with import prefix',
         suggestor,
-        'void main() { var a = ActionV2(); a(); }',
-        'void main() { var a = ActionV2(); a(null); }',
+        'void main() { var a = w_flux.ActionV2(); a(); }',
+        'void main() { var a = w_flux.ActionV2(); a(null); }',
+        importMode: WFluxImportMode.prefixed,
+      );
+      testSuggestor(
+        'ignores Action type',
+        suggestor,
+        'void main() { var a = Action(); a(); }',
+        'void main() { var a = Action(); a(); }',
+      );
+      testSuggestor(
+        'ignores types not from w_flux',
+        suggestor,
+        'class ActionV2 { call(); } void main() { var a = ActionV2(); a(); }',
+        'class ActionV2 { call(); } void main() { var a = ActionV2(); a(); }',
+        importMode: WFluxImportMode.none,
       );
     });
 
