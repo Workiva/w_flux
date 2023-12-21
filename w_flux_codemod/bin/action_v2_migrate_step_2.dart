@@ -11,6 +11,7 @@ void main(List<String> args) async {
       ActionV2FieldAndVariableMigrator(),
       ActionV2ReturnTypeMigrator(),
       ActionV2SuperTypeMigrator(),
+      ActionV2ImportMigrator(),
     ]),
     args: args,
   );

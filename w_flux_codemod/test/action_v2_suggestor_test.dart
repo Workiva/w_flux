@@ -13,7 +13,7 @@ dependencies:
   w_flux: ^3.0.0
 ''';
 
-String wFluxImport(WFluxImportMode mode) {
+String wFluxInputImport(WFluxImportMode mode) {
   switch (mode) {
     case WFluxImportMode.none:
       return '';
@@ -21,6 +21,27 @@ String wFluxImport(WFluxImportMode mode) {
       return "import 'package:w_flux/w_flux.dart';";
     case WFluxImportMode.prefixed:
       return "import 'package:w_flux/w_flux.dart' as w_flux;";
+    case WFluxImportMode.shown:
+      return "import 'package:w_flux/w_flux.dart' show Action;";
+    case WFluxImportMode.multipleShown:
+      return "import 'package:w_flux/w_flux.dart' show Action, FluxComponent;";
+    case WFluxImportMode.hidden:
+      return "import 'package:w_flux/w_flux.dart' hide Action;";
+  }
+}
+
+String wFluxOutputImport(WFluxImportMode mode) {
+  switch (mode) {
+    case WFluxImportMode.none:
+    case WFluxImportMode.standard:
+    case WFluxImportMode.prefixed:
+      return wFluxInputImport(mode);
+    case WFluxImportMode.shown:
+      return "import 'package:w_flux/w_flux.dart' show ActionV2;";
+    case WFluxImportMode.multipleShown:
+      return "import 'package:w_flux/w_flux.dart' show ActionV2, FluxComponent;";
+    case WFluxImportMode.hidden:
+      return "import 'package:w_flux/w_flux.dart' hide ActionV2;";
   }
 }
 
@@ -28,6 +49,9 @@ enum WFluxImportMode {
   none, // don't import w_flux
   standard, // import w_flux
   prefixed, // import w_flux with a prefix
+  shown, // import but just show Action
+  multipleShown,
+  hidden, // hide from w_flux
 }
 
 void main() {
@@ -39,21 +63,17 @@ void main() {
     });
 
     @isTest
-    void testSuggestor(
-      String description,
-      Suggestor Function() suggestor,
-      String before,
-      String after, {
-      WFluxImportMode importMode = WFluxImportMode.standard,
-      bool shouldMigrateVariablesAndFields = false,
-    }) {
+    void testSuggestor(String description, Suggestor Function() suggestor,
+        String before, String after,
+        {WFluxImportMode importMode = WFluxImportMode.standard,
+        shouldImport = true}) {
       test(description, () async {
         final context = await pkg.addFile('''
-${wFluxImport(importMode)}
+${shouldImport ? wFluxInputImport(importMode) : ''}
 ${before}
 ''');
         final expectedOutput = '''
-${wFluxImport(importMode)}
+${shouldImport ? wFluxOutputImport(importMode) : ''}
 ${after}
 ''';
         expectSuggestorGeneratesPatches(
@@ -64,25 +84,99 @@ ${after}
       });
     }
 
+    group('ActionV2ImportMigrator', () {
+      Suggestor suggestor() => ActionV2ImportMigrator();
+
+      testSuggestor(
+        'shown import',
+        suggestor,
+        '',
+        '',
+        importMode: WFluxImportMode.shown,
+      );
+
+      testSuggestor(
+        'multiple shown import',
+        suggestor,
+        '',
+        '',
+        importMode: WFluxImportMode.multipleShown,
+      );
+
+      testSuggestor(
+        'hidden import',
+        suggestor,
+        '',
+        '',
+        importMode: WFluxImportMode.hidden,
+      );
+    });
+
     group('ActionV2DispatchMigrator', () {
       Suggestor suggestor() => ActionV2DispatchMigrator();
-      // test each import type for the dispatch migrator
-      group('local invocation of variable', () {
+
+      group(
+          'test each import type for the dispatch migrator - local variable invocation',
+          () {
         testSuggestor(
-          'with standard import',
+          'standard import',
           suggestor,
           'void main() { var a = ActionV2(); a(); }',
           'void main() { var a = ActionV2(); a(null); }',
         );
         testSuggestor(
-          'with import prefix',
+          'import prefix',
           suggestor,
           'void main() { var a = w_flux.ActionV2(); a(); }',
           'void main() { var a = w_flux.ActionV2(); a(null); }',
           importMode: WFluxImportMode.prefixed,
         );
+        // the following 3 tests use the "output" import statement because those
+        // import statements should have been migrated by the other suggestors.
         testSuggestor(
-          'types not from w_flux',
+          'shown import',
+          suggestor,
+          '''
+          ${wFluxOutputImport(WFluxImportMode.shown)}
+          void main() { var a = ActionV2(); a(); }
+          ''',
+          '''
+          ${wFluxOutputImport(WFluxImportMode.shown)}
+          void main() { var a = ActionV2(); a(null); }
+          ''',
+          importMode: WFluxImportMode.shown,
+          shouldImport: false,
+        );
+        testSuggestor(
+          'multiple shown imports',
+          suggestor,
+          '''
+          ${wFluxOutputImport(WFluxImportMode.multipleShown)}
+          void main() { var a = ActionV2(); a(); }
+          ''',
+          '''
+          ${wFluxOutputImport(WFluxImportMode.multipleShown)}
+          void main() { var a = ActionV2(); a(null); }
+          ''',
+          importMode: WFluxImportMode.multipleShown,
+          shouldImport: false,
+        );
+        testSuggestor(
+          'ignores types when hidden from w_flux',
+          suggestor,
+          '''
+          ${wFluxOutputImport(WFluxImportMode.hidden)}
+          void main() { var a = ActionV2(); a(); }
+          ''',
+          '''
+          ${wFluxOutputImport(WFluxImportMode.hidden)}
+          void main() { var a = ActionV2(); a(); }
+          ''',
+          importMode: WFluxImportMode.hidden,
+          shouldImport: false,
+        );
+        testSuggestor(
+          'ignores types not from w_flux',
           suggestor,
           'class ActionV2 { call(); } void main() { var a = ActionV2(); a(); }',
           'class ActionV2 { call(); } void main() { var a = ActionV2(); a(); }',
@@ -107,13 +201,31 @@ ${after}
         'void main() { var a = Action(); a(); }',
         'void main() { var a = Action(); a(); }',
       );
+      testSuggestor(
+        'nested dispatch',
+        suggestor,
+        '''
+          class A { final ActionV2 action = ActionV2(); }
+          class B { final actions = A(); }
+          void main() {
+            B().actions.action();
+          }
+        ''',
+        '''
+          class A { final ActionV2 action = ActionV2(); }
+          class B { final actions = A(); }
+          void main() {
+            B().actions.action(null);
+          }
+        ''',
+      );
     });
 
     group('FieldAndVariableMigrator', () {
       Suggestor suggestor() => ActionV2FieldAndVariableMigrator();
       group('VariableDeclarationList', () {
         // test each import type on a named type migrator
-        group('with type, no intializer', () {
+        group('each import variation for type, with no intializer', () {
           testSuggestor(
             'standard import',
             suggestor,
@@ -126,6 +238,13 @@ ${after}
             'w_flux.Action<num> action;',
             'w_flux.ActionV2<num> action;',
             importMode: WFluxImportMode.prefixed,
+          );
+          testSuggestor(
+            'ignore Action when hidden from w_flux',
+            suggestor,
+            'Action<num> action;',
+            'Action<num> action;',
+            importMode: WFluxImportMode.hidden,
           );
           testSuggestor(
             'ignore types not from w_flux',
@@ -153,6 +272,12 @@ ${after}
           'Action a; Action b = Action(); var c = Action();',
           'ActionV2 a; ActionV2 b = ActionV2(); var c = ActionV2();',
         );
+        testSuggestor(
+          'nested type',
+          suggestor,
+          'List<Action<num>> actions = [Action<num>(), Action<num>()];',
+          'List<ActionV2<num>> actions = [ActionV2<num>(), ActionV2<num>()];',
+        );
       });
       group('FieldDeclaration', () {
         testSuggestor(
@@ -178,6 +303,28 @@ ${after}
           suggestor,
           'class C { Action a; Action b = Action(); var c = Action(); }',
           'class C { ActionV2 a; ActionV2 b = ActionV2(); var c = ActionV2(); }',
+        );
+        testSuggestor(
+          'nested Action type',
+          suggestor,
+          '''abstract class Actions {
+              final Action openAction = Action();
+              final Action closeAction = Action();
+
+              List<Action> get actions => [
+                    openAction,
+                    closeAction,
+                  ];
+            }''',
+          '''abstract class Actions {
+              final ActionV2 openAction = ActionV2();
+              final ActionV2 closeAction = ActionV2();
+
+              List<ActionV2> get actions => [
+                    openAction,
+                    closeAction,
+                  ];
+            }''',
         );
       });
       group('InstanceCreationExpression', () {

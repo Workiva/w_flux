@@ -23,8 +23,47 @@ mixin ActionV2NamedTypeMigrator on ActionV2Migrator {
           typeLibraryIdentifier.startsWith('package:w_flux/')) {
         yieldPatch('ActionV2', typeNameToken.offset, typeNameToken.end);
       }
+      return super.visitNamedType(node);
     }
-    return super.visitNamedType(node);
+  }
+}
+
+class ActionV2ImportMigrator extends RecursiveAstVisitor
+    with AstVisitingSuggestor, ActionV2Migrator {
+  @override
+  visitShowCombinator(ShowCombinator node) {
+    final parent = node.parent;
+    if (parent is ImportDirective) {
+      final uri = parent.uri.stringValue;
+      final shownNamesList = node.shownNames.map((id) => id.name);
+      if (uri != null &&
+          uri.startsWith('package:w_flux/') &&
+          shownNamesList.contains('Action')) {
+        final updatedNamesList =
+            shownNamesList.map((name) => name == 'Action' ? 'ActionV2' : name);
+        yieldPatch('${node.keyword} ${updatedNamesList.join(', ')}',
+            node.offset, node.end);
+      }
+    }
+    return super.visitShowCombinator(node);
+  }
+
+  @override
+  visitHideCombinator(HideCombinator node) {
+    final parent = node.parent;
+    if (parent is ImportDirective) {
+      final uri = parent.uri.stringValue;
+      final hiddenNamesList = node.hiddenNames.map((id) => id.name);
+      if (uri != null &&
+          uri.startsWith('package:w_flux/') &&
+          hiddenNamesList.contains('Action')) {
+        final updatedNamesList = hiddenNamesList
+            .map((name) => name == 'Action' ? 'ActionV2' : name)
+            .join(', ');
+        yieldPatch('${node.keyword} $updatedNamesList', node.offset, node.end);
+      }
+    }
+    return super.visitHideCombinator(node);
   }
 }
 
@@ -53,8 +92,10 @@ class ActionV2FieldAndVariableMigrator extends RecursiveAstVisitor
       node.parent is DeclaredVariablePattern ||
       node.parent is FieldFormalParameter ||
       node.parent is VariableDeclarationList ||
+      node.parent is TypeArgumentList ||
       node.thisOrAncestorOfType<ConstructorReference>() != null ||
-      node.thisOrAncestorOfType<InstanceCreationExpression>() != null;
+      node.thisOrAncestorOfType<InstanceCreationExpression>() != null ||
+      node.typeArguments != null;
 }
 
 class ActionV2ParameterMigrator extends RecursiveAstVisitor

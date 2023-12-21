@@ -32,21 +32,23 @@ To be able to support non-nullable payloads (in addition to nullable payloads), 
 
 1. Ensure you have the codemod package installed.
     ```bash
-    dart pub global activate w_flux_codemod
+    dart pub global activate -sgit git@github.com:Workiva/w_flux.git --git-path=w_flux_codemod
     ```
 
 2. Run the codemod:
 
     - step by step:
     ```bash
-    dart pub global run w_flux_codemod:action_v2_migrate_step_1
-    dart pub global run w_flux_codemod:action_v2_migrate_step_2
+    dart pub global run w_flux_codemod:action_v2_migrate_step_1 --yes-to-all
+    dart pub global run w_flux_codemod:action_v2_migrate_step_2 --yes-to-all
     ```
 
     - all at once:
     ```bash
-    dart pub global run w_flux_codemod:action_v2_migrate
+    dart pub global run w_flux_codemod:action_v2_migrate --yes-to-all
     ```
+
+    - The optional command `--yes-to-all` will automatically accept all changes. You can exclude this command to go through every change one by one.
 
 3. Review the changes:
 
