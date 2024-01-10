@@ -4,7 +4,16 @@ import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as p;
 
-final _logger = Logger('orcm.pubspec');
+final _logger = Logger('w_flux_codemod.pubspec');
+
+Future<void> pubGetForAllPackageRoots(Iterable<String> files) async {
+  _logger.info(
+      'Running `pub get` if needed so that all Dart files can be resolved...');
+  final packageRoots = files.map(findPackageRootFor).toSet();
+  for (final packageRoot in packageRoots) {
+    await runPubGetIfNeeded(packageRoot);
+  }
+}
 
 bool _isPubGetNecessary(String packageRoot) {
   final packageConfig =

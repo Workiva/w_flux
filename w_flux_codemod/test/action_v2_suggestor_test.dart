@@ -121,14 +121,14 @@ ${after}
         testSuggestor(
           'standard import',
           suggestor,
-          'void main() { var a = ActionV2(); a(); }',
-          'void main() { var a = ActionV2(); a(null); }',
+          'void main() { var a = Action(); a(); }',
+          'void main() { var a = Action(); a(null); }',
         );
         testSuggestor(
           'import prefix',
           suggestor,
-          'void main() { var a = w_flux.ActionV2(); a(); }',
-          'void main() { var a = w_flux.ActionV2(); a(null); }',
+          'void main() { var a = w_flux.Action(); a(); }',
+          'void main() { var a = w_flux.Action(); a(null); }',
           importMode: WFluxImportMode.prefixed,
         );
         // the following 3 tests use the "output" import statement because those
@@ -136,50 +136,29 @@ ${after}
         testSuggestor(
           'shown import',
           suggestor,
-          '''
-          ${wFluxOutputImport(WFluxImportMode.shown)}
-          void main() { var a = ActionV2(); a(); }
-          ''',
-          '''
-          ${wFluxOutputImport(WFluxImportMode.shown)}
-          void main() { var a = ActionV2(); a(null); }
-          ''',
+          'void main() { var a = Action(); a(); }',
+          'void main() { var a = Action(); a(null); }',
           importMode: WFluxImportMode.shown,
-          shouldImport: false,
         );
         testSuggestor(
           'multiple shown imports',
           suggestor,
-          '''
-          ${wFluxOutputImport(WFluxImportMode.multipleShown)}
-          void main() { var a = ActionV2(); a(); }
-          ''',
-          '''
-          ${wFluxOutputImport(WFluxImportMode.multipleShown)}
-          void main() { var a = ActionV2(); a(null); }
-          ''',
+          'void main() { var a = Action(); a(); }',
+          'void main() { var a = Action(); a(null); }',
           importMode: WFluxImportMode.multipleShown,
-          shouldImport: false,
         );
         testSuggestor(
           'ignores types when hidden from w_flux',
           suggestor,
-          '''
-          ${wFluxOutputImport(WFluxImportMode.hidden)}
-          void main() { var a = ActionV2(); a(); }
-          ''',
-          '''
-          ${wFluxOutputImport(WFluxImportMode.hidden)}
-          void main() { var a = ActionV2(); a(); }
-          ''',
+          'void main() { var a = Action(); a(); }',
+          'void main() { var a = Action(); a(); }',
           importMode: WFluxImportMode.hidden,
-          shouldImport: false,
         );
         testSuggestor(
           'ignores types not from w_flux',
           suggestor,
-          'class ActionV2 { call(); } void main() { var a = ActionV2(); a(); }',
-          'class ActionV2 { call(); } void main() { var a = ActionV2(); a(); }',
+          'class Action { call(); } void main() { var a = Action(); a(); }',
+          'class Action { call(); } void main() { var a = Action(); a(); }',
           importMode: WFluxImportMode.none,
         );
       });
@@ -212,7 +191,7 @@ ${after}
           }
         ''',
         '''
-          class A { final ActionV2 action = ActionV2(); }
+          class A { final Action action = Action(); }
           class B { final actions = A(); }
           void main() {
             B().actions.action(null);
@@ -242,9 +221,16 @@ ${after}
           testSuggestor(
             'ignore Action when hidden from w_flux',
             suggestor,
-            'Action<num> action;',
-            'Action<num> action;',
+            '''
+            ${wFluxOutputImport(WFluxImportMode.hidden)}
+            'Action<num> action;'
+            ''',
+            '''
+            ${wFluxOutputImport(WFluxImportMode.hidden)}
+            'Action<num> action;'
+            ''',
             importMode: WFluxImportMode.hidden,
+            shouldImport: false,
           );
           testSuggestor(
             'ignore types not from w_flux',
@@ -304,27 +290,32 @@ ${after}
           'class C { Action a; Action b = Action(); var c = Action(); }',
           'class C { ActionV2 a; ActionV2 b = ActionV2(); var c = ActionV2(); }',
         );
+        // List<Action> is a return type and will not be modified in this suggestor
         testSuggestor(
           'nested Action type',
           suggestor,
-          '''abstract class Actions {
+          '''
+            abstract class Actions {
               final Action openAction = Action();
               final Action closeAction = Action();
 
-              List<Action> get actions => [
+              List<Action> get actions => <Action>[
                     openAction,
                     closeAction,
                   ];
-            }''',
-          '''abstract class Actions {
+            }
+          ''',
+          '''
+            abstract class Actions {
               final ActionV2 openAction = ActionV2();
               final ActionV2 closeAction = ActionV2();
 
-              List<ActionV2> get actions => [
+              List<Action> get actions => <Action>[
                     openAction,
                     closeAction,
                   ];
-            }''',
+            }
+          ''',
         );
       });
       group('InstanceCreationExpression', () {
@@ -415,6 +406,33 @@ ${after}
         suggestor,
         'Action<num> fn() {}',
         'ActionV2<num> fn() {}',
+      );
+      // field declarations (final Action) should not be migrated in this codemod
+      testSuggestor(
+        'nested return type',
+        suggestor,
+        '''
+          abstract class Actions {
+            final Action openAction = Action();
+            final Action closeAction = Action();
+
+            List<Action> get actions => <Action>[
+                  openAction,
+                  closeAction,
+                ];
+          }
+        ''',
+        '''
+          abstract class Actions {
+            final Action openAction = Action();
+            final Action closeAction = Action();
+
+            List<ActionV2> get actions => <ActionV2>[
+                  openAction,
+                  closeAction,
+                ];
+          }
+        ''',
       );
     });
 

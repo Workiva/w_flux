@@ -75,8 +75,7 @@ class ActionV2DispatchMigrator extends RecursiveAstVisitor
         node.function.staticType?.element?.library?.identifier ?? '';
     final staticTypeName = node.function.staticType?.element?.name;
     if (typeLibraryIdentifier.startsWith('package:w_flux/') &&
-        // The type migration should have happened prior to this suggestor.
-        staticTypeName == 'ActionV2' &&
+        staticTypeName == 'Action' &&
         node.argumentList.arguments.isEmpty) {
       yieldPatch('(null)', node.end - 2, node.end);
     }
@@ -88,14 +87,14 @@ class ActionV2FieldAndVariableMigrator extends RecursiveAstVisitor
     with AstVisitingSuggestor, ActionV2Migrator, ActionV2NamedTypeMigrator {
   @override
   bool shouldMigrate(node) =>
-      node.parent is DeclaredIdentifier ||
-      node.parent is DeclaredVariablePattern ||
-      node.parent is FieldFormalParameter ||
-      node.parent is VariableDeclarationList ||
-      node.parent is TypeArgumentList ||
-      node.thisOrAncestorOfType<ConstructorReference>() != null ||
-      node.thisOrAncestorOfType<InstanceCreationExpression>() != null ||
-      node.typeArguments != null;
+      node.thisOrAncestorOfType<MethodDeclaration>() == null &&
+      (node.parent is DeclaredIdentifier ||
+          node.parent is DeclaredVariablePattern ||
+          node.parent is FieldFormalParameter ||
+          node.parent is VariableDeclarationList ||
+          node.parent is TypeArgumentList ||
+          node.thisOrAncestorOfType<ConstructorReference>() != null ||
+          node.thisOrAncestorOfType<InstanceCreationExpression>() != null);
 }
 
 class ActionV2ParameterMigrator extends RecursiveAstVisitor
@@ -103,6 +102,7 @@ class ActionV2ParameterMigrator extends RecursiveAstVisitor
   @override
   bool shouldMigrate(node) =>
       node.thisOrAncestorOfType<FormalParameter>() != null &&
+      node.thisOrAncestorOfType<MethodDeclaration>() == null &&
       node.thisOrAncestorOfType<FieldFormalParameter>() == null;
 }
 
@@ -113,7 +113,7 @@ class ActionV2ReturnTypeMigrator extends RecursiveAstVisitor
       node.parent is FunctionDeclaration ||
       node.parent is FunctionTypeAlias ||
       node.parent is GenericFunctionType ||
-      node.parent is MethodDeclaration;
+      node.thisOrAncestorOfType<MethodDeclaration>() != null;
 }
 
 class ActionV2SuperTypeMigrator extends RecursiveAstVisitor
