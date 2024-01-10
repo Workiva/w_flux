@@ -13,7 +13,7 @@ dependencies:
   w_flux: ^3.0.0
 ''';
 
-String wFluxInputImport(WFluxImportMode mode) {
+String wFluxImport(WFluxImportMode mode) {
   switch (mode) {
     case WFluxImportMode.none:
       return '';
@@ -30,12 +30,12 @@ String wFluxInputImport(WFluxImportMode mode) {
   }
 }
 
-String wFluxOutputImport(WFluxImportMode mode) {
+String wFluxMigratedImport(WFluxImportMode mode) {
   switch (mode) {
     case WFluxImportMode.none:
     case WFluxImportMode.standard:
     case WFluxImportMode.prefixed:
-      return wFluxInputImport(mode);
+      return wFluxImport(mode);
     case WFluxImportMode.shown:
       return "import 'package:w_flux/w_flux.dart' show ActionV2;";
     case WFluxImportMode.multipleShown:
@@ -66,16 +66,16 @@ void main() {
     void testSuggestor(String description, Suggestor Function() suggestor,
         String before, String after,
         {WFluxImportMode importMode = WFluxImportMode.standard,
-        shouldImport = true}) {
+        migrateImport = false}) {
       test(description, () async {
         final context = await pkg.addFile('''
-${shouldImport ? wFluxInputImport(importMode) : ''}
-${before}
-''');
+          ${wFluxImport(importMode)}
+          ${before}
+        ''');
         final expectedOutput = '''
-${shouldImport ? wFluxOutputImport(importMode) : ''}
-${after}
-''';
+          ${migrateImport ? wFluxMigratedImport(importMode) : wFluxImport(importMode)}
+          ${after}
+        ''';
         expectSuggestorGeneratesPatches(
           suggestor(),
           context,
@@ -93,6 +93,7 @@ ${after}
         '',
         '',
         importMode: WFluxImportMode.shown,
+        migrateImport: true,
       );
 
       testSuggestor(
@@ -101,6 +102,7 @@ ${after}
         '',
         '',
         importMode: WFluxImportMode.multipleShown,
+        migrateImport: true,
       );
 
       testSuggestor(
@@ -109,6 +111,7 @@ ${after}
         '',
         '',
         importMode: WFluxImportMode.hidden,
+        migrateImport: true,
       );
     });
 
@@ -165,26 +168,20 @@ ${after}
       testSuggestor(
         'local invocation of field',
         suggestor,
-        'class C { ActionV2 action; dispatch() => action(); }',
-        'class C { ActionV2 action; dispatch() => action(null); }',
+        'class C { Action action; dispatch() => action(); }',
+        'class C { Action action; dispatch() => action(null); }',
       );
       testSuggestor(
         'external invocation of field',
         suggestor,
-        'class C { ActionV2 action; } void main() { C().action(); }',
-        'class C { ActionV2 action; } void main() { C().action(null); }',
-      );
-      testSuggestor(
-        'ignores Action type',
-        suggestor,
-        'void main() { var a = Action(); a(); }',
-        'void main() { var a = Action(); a(); }',
+        'class C { Action action; } void main() { C().action(); }',
+        'class C { Action action; } void main() { C().action(null); }',
       );
       testSuggestor(
         'nested dispatch',
         suggestor,
         '''
-          class A { final ActionV2 action = ActionV2(); }
+          class A { final Action action = Action(); }
           class B { final actions = A(); }
           void main() {
             B().actions.action();
@@ -221,16 +218,9 @@ ${after}
           testSuggestor(
             'ignore Action when hidden from w_flux',
             suggestor,
-            '''
-            ${wFluxOutputImport(WFluxImportMode.hidden)}
-            'Action<num> action;'
-            ''',
-            '''
-            ${wFluxOutputImport(WFluxImportMode.hidden)}
-            'Action<num> action;'
-            ''',
+            'Action<num> action;',
+            'Action<num> action;',
             importMode: WFluxImportMode.hidden,
-            shouldImport: false,
           );
           testSuggestor(
             'ignore types not from w_flux',
@@ -349,12 +339,6 @@ ${after}
         'fn(ActionV2 action) {}',
       );
       testSuggestor(
-        'SimpleFormalParameter.type (method)',
-        suggestor,
-        'class C { m(Action action) {} }',
-        'class C { m(ActionV2 action) {} }',
-      );
-      testSuggestor(
         'Parameter type with a generic',
         suggestor,
         'fn(Action<num> action) {}',
@@ -400,6 +384,13 @@ ${after}
         suggestor,
         'class C { Action m() {} }',
         'class C { ActionV2 m() {} }',
+      );
+
+      testSuggestor(
+        'MethodDeclaration SimpleFormalParameter.type',
+        suggestor,
+        'class C { m(Action action) {} }',
+        'class C { m(ActionV2 action) {} }',
       );
       testSuggestor(
         'Return type with a generic',
