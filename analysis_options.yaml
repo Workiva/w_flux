@@ -1,7 +1,8 @@
-# analysis_options.yaml docs: https://www.dartlang.org/guides/language/analysis-options 
+# analysis_options.yaml docs: https://www.dartlang.org/guides/language/analysis-options
 analyzer:
   exclude:
     - "example/**"
+    - "w_flux_codemod/**"
 
   language:
     strict-casts: true
@@ -712,5 +713,3 @@ linter:
     # reason: Trying to assigning a value to void is an error.
     # 0 issues
     - void_checks
-
-
