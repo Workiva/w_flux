@@ -94,10 +94,10 @@ void main() {
     });
 
     test('should trigger in response to an action', () async {
-      Action _action = Action();
+      ActionV2 _action = ActionV2();
       store.triggerOnActionV2(_action);
 
-      _action();
+      _action(null);
       Store payload = await store.first;
 
       expect(payload, store);
@@ -106,7 +106,7 @@ void main() {
     test(
         'should execute a given method and then trigger in response to an action',
         () {
-      Action _action = Action();
+      ActionV2 _action = ActionV2();
       bool methodCalled = false;
       syncCallback(_) {
         methodCalled = true;
@@ -117,13 +117,13 @@ void main() {
         expect(payload, store);
         expect(methodCalled, isTrue);
       }) as StoreHandler);
-      _action();
+      _action(null);
     });
 
     test(
         'should execute a given async method and then trigger in response to an action',
         () {
-      Action _action = Action();
+      ActionV2 _action = ActionV2();
       bool afterTimer = false;
       asyncCallback(_) async {
         await Future.delayed(Duration(milliseconds: 30));
@@ -135,13 +135,13 @@ void main() {
         expect(payload, store);
         expect(afterTimer, isTrue);
       }) as StoreHandler);
-      _action();
+      _action(null);
     });
 
     test(
         'should execute a given method and then trigger in response to an action with payload',
         () {
-      Action<num> _action = Action<num>();
+      ActionV2<num> _action = ActionV2<num>();
       num? counter = 0;
       store.triggerOnActionV2(_action, (num? payload) => counter = payload);
       store.listen(expectAsync1((payload) {
@@ -172,7 +172,7 @@ void main() {
     test('cleans up its ActionSubscriptions on dispose', () {
       bool afterDispose = false;
 
-      Action _action = Action();
+      ActionV2 _action = ActionV2();
       store.triggerOnActionV2(_action);
       store.listen(expectAsync1((payload) async {
         // Safety check to avoid infinite trigger loop
@@ -183,15 +183,15 @@ void main() {
         afterDispose = true;
 
         // This should no longer fire after dispose
-        _action();
+        _action(null);
       }) as StoreHandler);
 
-      _action();
+      _action(null);
     });
 
     test('does not allow adding action subscriptions after dispose', () async {
       await store.dispose();
-      expect(() => store.triggerOnActionV2(Action()), throwsStateError);
+      expect(() => store.triggerOnActionV2(ActionV2()), throwsStateError);
     });
 
     test('does not allow listening after dispose', () async {

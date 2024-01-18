@@ -22,27 +22,27 @@ import 'package:test/test.dart';
 
 void main() {
   group('Action', () {
-    late Action<String> action;
+    late ActionV2<String> action;
 
     setUp(() {
-      action = Action<String>();
+      action = ActionV2<String>();
       addTearDown(action.dispose);
     });
 
     test('should only be equivalent to itself', () {
-      Action action = Action();
-      Action actionV2 = Action();
+      ActionV2 action = ActionV2();
+      ActionV2 actionV2 = ActionV2();
       expect(action == action, isTrue);
       expect(action == actionV2, isFalse);
     });
 
     test('should support dispatch without a payload', () async {
-      Action<String> action = Action<String>()
+      ActionV2<String> action = ActionV2<String>()
         ..listen(expectAsync1((payload) {
           expect(payload, isNull);
         }));
 
-      await action();
+      await action(null);
     });
 
     test('should support dispatch by default when called with a payload',
@@ -59,7 +59,7 @@ void main() {
           'should invoke and complete synchronous listeners in future event in '
           'event queue', () async {
         var listenerCompleted = false;
-        var action = Action()
+        var action = ActionV2()
           ..listen((_) {
             listenerCompleted = true;
           });
@@ -76,7 +76,7 @@ void main() {
       test(
           'should invoke asynchronous listeners in future event and complete '
           'in another future event', () async {
-        var action = Action();
+        var action = ActionV2();
         var listenerInvoked = false;
         var listenerCompleted = false;
         action.listen((_) async {
@@ -99,7 +99,7 @@ void main() {
       });
 
       test('should complete future after listeners complete', () async {
-        var action = Action();
+        var action = ActionV2();
         var asyncListenerCompleted = false;
         action.listen((_) async {
           await Future.delayed(Duration(milliseconds: 100), () {
@@ -107,7 +107,7 @@ void main() {
           });
         });
 
-        Future<dynamic>? future = action();
+        Future<dynamic>? future = action(null);
         expect(asyncListenerCompleted, isFalse);
 
         await future;
@@ -115,51 +115,51 @@ void main() {
       });
 
       test('should surface errors in listeners', () {
-        var action = Action()..listen((_) => throw UnimplementedError());
+        var action = ActionV2()..listen((_) => throw UnimplementedError());
         expect(action(0), throwsUnimplementedError);
       });
     });
 
     group('listen', () {
       test('should stop listening when subscription is canceled', () async {
-        var action = Action();
+        var action = ActionV2();
         var listened = false;
         var subscription = action.listen((_) => listened = true);
 
-        await action();
+        await action(null);
         expect(listened, isTrue);
 
         listened = false;
         subscription.cancel();
-        await action();
+        await action(null);
         expect(listened, isFalse);
       });
 
       test('should stop listening when listeners are cleared', () async {
-        var action = Action();
+        var action = ActionV2();
         var listened = false;
         action.listen((_) => listened = true);
 
-        await action();
+        await action(null);
         expect(listened, isTrue);
 
         listened = false;
         await action.dispose();
-        await action();
+        await action(null);
         expect(listened, isFalse);
       });
 
       test('should stop listening when actions are disposed', () async {
-        var action = Action();
+        var action = ActionV2();
         var listened = false;
         action.listen((_) => listened = true);
 
-        await action();
+        await action(null);
         expect(listened, isTrue);
 
         listened = false;
         await action.dispose();
-        await action();
+        await action(null);
         expect(listened, isFalse);
       });
     });
@@ -169,12 +169,12 @@ void main() {
         const int sampleSize = 1000;
         var stopwatch = Stopwatch();
 
-        var awaitableAction = Action()
+        var awaitableAction = ActionV2()
           ..listen((_) => {})
           ..listen((_) async {});
         stopwatch.start();
         for (var i = 0; i < sampleSize; i++) {
-          await awaitableAction();
+          await awaitableAction(null);
         }
         stopwatch.stop();
         var averageActionDispatchTime =
@@ -184,7 +184,7 @@ void main() {
 
         late Completer syncCompleter;
         late Completer asyncCompleter;
-        var action = Action()
+        var action = ActionV2()
           ..listen((_) => syncCompleter.complete())
           ..listen((_) async {
             asyncCompleter.complete();
@@ -193,7 +193,7 @@ void main() {
         for (var i = 0; i < sampleSize; i++) {
           syncCompleter = Completer();
           asyncCompleter = Completer();
-          await action();
+          await action(null);
           await Future.wait([syncCompleter.future, asyncCompleter.future]);
         }
         stopwatch.stop();

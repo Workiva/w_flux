@@ -48,7 +48,7 @@ class _ToDoAppComponent extends FluxComponent<ToDoActions, ToDoStore> {
   }
 
   _clearList(_) {
-    this.actions.clearTodoList();
+    this.actions.clearTodoList(null);
   }
 
   _createTodo(String value) {
