@@ -5,6 +5,8 @@ on:
     branches:
       - 'master'
       - 'test_consume_*'
+    tags:
+      - '**'
   pull_request:
     branches:
       - '**'
@@ -15,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        sdk: [ 2.18.7, 2.19.6 ]
+        sdk: [ 2.19.6 ]
     steps:
       - uses: actions/checkout@v2
       - uses: dart-lang/setup-dart@v0.2
@@ -45,3 +47,10 @@ jobs:
       - name: Verify formatting
         run: dart format --set-exit-if-changed .
         if: always() && steps.install.outcome == 'success'
+
+      - name: SBOM
+        if: ${{ matrix.sdk == '2.19.6' }}
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./  
+          format: cyclonedx-json
