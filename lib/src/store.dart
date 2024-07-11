@@ -39,6 +39,7 @@ typedef StoreHandler = Function(Store event);
 /// In a typical application using `w_flux`, a `FluxComponent` listens to
 /// `Store`s, triggering re-rendering of the UI elements based on the updated
 /// `Store` data.
+// ignore: prefer_mixin
 class Store extends Stream<Store> with Disposable {
   @override
   String get disposableTypeName => 'Store';

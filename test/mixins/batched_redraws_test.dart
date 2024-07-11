@@ -23,7 +23,7 @@ import 'package:react/react.dart' as react;
 import 'package:test/test.dart';
 import 'package:w_flux/w_flux.dart';
 
-// ignore: deprecated_member_use
+// ignore: deprecated_member_use, prefer_mixin
 class _TestComponent extends react.Component with BatchedRedraws {
   int renderCount = 0;
 

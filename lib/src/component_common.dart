@@ -29,7 +29,9 @@ import 'package:w_flux/src/store.dart';
 /// from one or many [Store] instances to define the resulting component.
 // ignore: deprecated_member_use
 abstract class FluxComponentCommon<ActionsT, StoresT> extends react.Component
-    with Disposable {
+    with
+        // ignore: prefer_mixin
+        Disposable {
   /// The class instance defined by [ActionsT] that holds all [ActionV2]s that
   /// this component needs access to.
   ///

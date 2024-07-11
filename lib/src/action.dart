@@ -56,6 +56,7 @@ class Action<T> extends ActionV2<T?> {
 /// when a consumer needs to check state changes immediately after invoking an
 /// action.
 ///
+// ignore: prefer_mixin
 class ActionV2<T> extends Object with Disposable {
   @override
   String get disposableTypeName => 'ActionV2';
