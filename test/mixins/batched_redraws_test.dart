@@ -26,8 +26,10 @@ import 'package:test/test.dart';
 class _TestComponent extends react.Component with BatchedRedraws {
   int renderCount = 0;
 
+  @override
   dynamic render() => '';
 
+  @override
   void setState(_, [callback()?]) {
     renderCount++;
     if (callback != null) callback();

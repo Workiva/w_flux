@@ -56,7 +56,7 @@ class Action<T> extends ActionV2<T?> {
 /// when a consumer needs to check state changes immediately after invoking an
 /// action.
 ///
-class ActionV2<T> extends Object with Disposable implements Function {
+class ActionV2<T> extends Object with Disposable {
   @override
   String get disposableTypeName => 'ActionV2';
 
@@ -104,9 +104,14 @@ class ActionV2<T> extends Object with Disposable implements Function {
   }
 
   /// Actions are only deemed equivalent if they are the exact same Object
+  @override
   bool operator ==(Object other) {
     return identical(this, other);
   }
+
+  @override
+  int get hashCode =>
+      Object.hashAll([disposableTypeName.hashCode, _listeners.hashCode]);
 }
 
 typedef _ActionListener<T> = dynamic Function(T event);

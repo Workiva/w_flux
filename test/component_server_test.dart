@@ -186,8 +186,10 @@ class TestStores {
 class TestDefaultComponent extends FluxComponent {
   int numberOfRedraws = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   redraw([callback()?]) {
     numberOfRedraws += 1;
   }
@@ -196,8 +198,10 @@ class TestDefaultComponent extends FluxComponent {
 class TestStoreHandlersComponent extends FluxComponent<TestActions, TestStore> {
   int numberOfHandlerCalls = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   getStoreHandlers() => {store: increment};
 
   increment(Store _) {
@@ -208,10 +212,13 @@ class TestStoreHandlersComponent extends FluxComponent<TestActions, TestStore> {
 class TestRedrawOnComponent extends FluxComponent<TestActions, TestStores> {
   int numberOfRedraws = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   redrawOn() => [store.store1, store.store2];
 
+  @override
   redraw([callback()?]) {
     numberOfRedraws += 1;
   }
@@ -221,16 +228,20 @@ class TestHandlerPrecedence extends FluxComponent<TestActions, TestStores> {
   int numberOfRedraws = 0;
   int numberOfHandlerCalls = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   redrawOn() => [store.store1, store.store2];
 
+  @override
   getStoreHandlers() => {store.store1: increment};
 
   increment(Store _) {
     numberOfHandlerCalls += 1;
   }
 
+  @override
   redraw([callback()?]) {
     numberOfRedraws += 1;
   }
