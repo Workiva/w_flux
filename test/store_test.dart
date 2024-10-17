@@ -76,7 +76,7 @@ void main() {
     test('should trigger with itself as the payload', () {
       store.listen(expectAsync1((payload) {
         expect(payload, store);
-      }) as StoreHandler);
+      }));
 
       store.trigger();
     });
@@ -85,7 +85,7 @@ void main() {
       // ensure that multiple trigger executions emit
       // exactly 2 throttled triggers to external listeners
       store = Store.withTransformer(MockTransformer());
-      store.listen(expectAsync1((payload) {}, count: 2) as StoreHandler);
+      store.listen(expectAsync1((payload) {}, count: 2));
 
       store.trigger();
       store.trigger();
@@ -116,7 +116,7 @@ void main() {
       store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(methodCalled, isTrue);
-      }) as StoreHandler);
+      }));
       _action();
     });
 
@@ -134,7 +134,7 @@ void main() {
       store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(afterTimer, isTrue);
-      }) as StoreHandler);
+      }));
       _action();
     });
 
@@ -147,7 +147,7 @@ void main() {
       store.listen(expectAsync1((payload) {
         expect(payload, store);
         expect(counter, 17);
-      }) as StoreHandler);
+      }));
       _action(17);
     });
 
@@ -164,7 +164,7 @@ void main() {
 
         // This should no longer fire after dispose
         store.trigger();
-      }) as StoreHandler);
+      }));
 
       store.trigger();
     });
@@ -184,7 +184,7 @@ void main() {
 
         // This should no longer fire after dispose
         _action();
-      }) as StoreHandler);
+      }));
 
       _action();
     });

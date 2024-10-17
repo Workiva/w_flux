@@ -219,8 +219,10 @@ class TestStores {
 class TestDefaultComponent extends FluxComponent {
   int numberOfRedraws = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   void setState(_, [callback()?]) {
     numberOfRedraws++;
     if (callback != null) callback();
@@ -230,8 +232,10 @@ class TestDefaultComponent extends FluxComponent {
 class TestStoreHandlersComponent extends FluxComponent<TestActions, TestStore> {
   int numberOfHandlerCalls = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   getStoreHandlers() => {store: increment};
 
   increment(Store _) {
@@ -242,10 +246,13 @@ class TestStoreHandlersComponent extends FluxComponent<TestActions, TestStore> {
 class TestRedrawOnComponent extends FluxComponent<TestActions, TestStores> {
   int numberOfRedraws = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   redrawOn() => [store.store1, store.store2];
 
+  @override
   void setState(_, [callback()?]) {
     numberOfRedraws++;
     if (callback != null) callback();
@@ -256,16 +263,20 @@ class TestHandlerPrecedence extends FluxComponent<TestActions, TestStores> {
   int numberOfRedraws = 0;
   int numberOfHandlerCalls = 0;
 
+  @override
   render() => react.div({});
 
+  @override
   redrawOn() => [store.store1, store.store2];
 
+  @override
   getStoreHandlers() => {store.store1: increment};
 
   increment(Store _) {
     numberOfHandlerCalls += 1;
   }
 
+  @override
   void setState(_, [callback()?]) {
     numberOfRedraws++;
     if (callback != null) callback();
@@ -276,8 +287,10 @@ class TestHandlerLifecycle extends FluxComponent<TestActions, TestStore> {
   int numberOfRedraws = 0;
   List<List<dynamic>> lifecycleCalls = [];
 
+  @override
   render() => react.div({});
 
+  @override
   void setState(_, [callback()?]) {
     numberOfRedraws++;
     if (callback != null) callback();
