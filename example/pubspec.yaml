@@ -12,7 +12,7 @@ dependencies:
 dev_dependencies:
   react: ^7.0.0
   build_runner: ^2.0.0
-  build_web_compilers: ^3.0.0
+  build_web_compilers: '>=3.0.0 <5.0.0'
   dart_dev: ^4.0.0
   dart_style: ^2.1.1
   dependency_validator: ^3.0.0
