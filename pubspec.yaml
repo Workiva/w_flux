@@ -8,7 +8,7 @@ environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
-  meta: ^1.6.0
+  meta: ^1.16.0
   react: ^7.0.0
   w_common: ^3.0.0
 
