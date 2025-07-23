@@ -21,6 +21,5 @@ import 'store.dart';
 class ToDoActions {
   final Action<Todo> createTodo = Action<Todo>();
   final Action<Todo> completeTodo = Action<Todo>();
-  final Action<Todo> deleteTodo = Action<Todo>();
   final Action clearTodoList = Action<Todo>();
 }
