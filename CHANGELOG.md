@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.0.1
+Check out the detailed [release notes](//github.com/Workiva/w_flux/releases/tag/3.0.1).
+
+- Completed migration to ActionV2.
+- Dependency and CI improvements.
+
 ## 3.0.0
 Migrate w_flux to null-safety.
 
