@@ -10,7 +10,7 @@ environment:
 dependencies:
   meta: ^1.16.0
   react: ^7.3.0
-  w_common: ^3.0.0
+  w_common: '>=3.0.0 <5.0.0'
 
 dev_dependencies:
   build_runner: ^2.0.0
