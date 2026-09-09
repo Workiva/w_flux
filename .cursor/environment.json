@@ -1,4 +1,5 @@
 {
   "name": "w_flux",
-  "install": "./.cursor/install.sh"
+  "install": "./.cursor/install.sh",
+  "start": "./.cursor/start.sh"
 }
